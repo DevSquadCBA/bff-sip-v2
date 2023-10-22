@@ -1,33 +1,108 @@
 ---
 title: Sistema integral provimat v1.0.0
-language_tabs:
-  - shell: Shell
-  - http: HTTP
-  - javascript: JavaScript
-  - ruby: Ruby
-  - python: Python
-  - php: PHP
-  - java: Java
-  - go: Go
-toc_footers: []
-includes: []
 search: true
 highlight_theme: darkula
 headingLevel: 2
 
 ---
 
-<!-- Generator: Widdershins v4.0.1 -->
+<h1 id="sistema-integral-provimat">Sistema integral piatti v2.0.0</h1>
 
-<h1 id="sistema-integral-provimat">Sistema integral provimat v1.0.0</h1>
-
-> Este es el BFF para el sistema provimat.
+> Bff para el sistema integral provimat/piatti
 
 Base URLs:
+
 
 * <a href="http://127.0.0.1/">http://127.0.0.1/</a>
 
 <h1 id="sistema-integral-provimat-clientes">Clientes</h1>
+
+<a id="opIdCreateClient"></a>
+
+`POST /client`
+<a id="opIdgetClients"></a>
+
+`GET /client`
+<a id="opIdGetClientById"></a>
+
+`GET /client/{idClient}`
+<a id="opIdUpdateClient"></a>
+
+`PUT /client/{idClient}`
+<a id="opIdDeleteClient"></a>
+
+`DELETE /client/{idClient}`
+<a id="opIdGetClientsList"></a>
+
+`GET /clients`
+<a id="opIdCreateBudget"></a>
+
+`POST /budget`
+<a id="opIdGetBudgets"></a>
+
+`GET /budget`
+<a id="opIdDeleteBudget"></a>
+
+`DELETE /budget/{idBudget}`
+<a id="opIdUpdateBudget"></a>
+
+`PUT /budget/{idBudget}`
+<a id="opIdGetClientBudget"></a>
+
+`GET /budgets/{idClient}`
+<a id="opIdagregar productos"></a>
+
+`POST /budget/{idBudget}/addProduc
+<a id="opIdCreateProduct"></a>
+
+`POST /product`
+<a id="opIdGetProducts"></a>
+
+`GET /product`
+<a id="opIdGetProductById"></a>
+
+`GET /product/{idProduct}`
+<a id="opIdDeleteProduct"></a>
+
+`DELETE /product/{idProduct}`
+<a id="opIdUpdateProduct"></a>
+
+`PUT /product/{idProduct}`
+<a id="opIdGetProductWithProvider"></a>
+
+`GET /products`
+<a id="opIdCreateProvider"></a>
+
+`POST /provider`
+<a id="opIdGetProviders"></a>
+
+`GET /provider`
+<a id="opIdDeleteProvider"></a>
+
+`DELETE /provider/{idProvider}`
+<a id="opIdGetProviderById"></a>
+
+`GET /provider/{idProvider}`
+<a id="opIdUpdateProvider"></a>
+
+`PUT /provider/{idProvider}`
+<a id="opIdupdateProductPricesFromBudget"></a>
+
+`POST /provider/{idProvider}`
+<a id="opIdSearchClient"></a>
+
+`POST /search/client`
+<a id="opIdSearchBudget"></a>
+
+`POST /search/budget`
+<a id="opIdSearchProduct"></a>
+
+`POST /search/product`
+<a id="opIdSearchProvider"></a>
+
+`POST /search/provider`
+
+
 
 ## CreateClient
 
@@ -87,6 +162,7 @@ null
 This operation does not require authentication
 </aside>
 
+
 ## getClients
 
 <a id="opIdgetClients"></a>
@@ -125,6 +201,7 @@ null
 <aside class="success">
 This operation does not require authentication
 </aside>
+
 
 ## GetClientById
 
@@ -171,6 +248,7 @@ null
 This operation does not require authentication
 </aside>
 
+
 ## UpdateClient
 
 <a id="opIdUpdateClient"></a>
@@ -193,6 +271,7 @@ null
 |---|---|---|---|---|
 |idClient|path|any|true|el id del cliente|
 |client|query|any|true|El cliente con todos los datos|
+|body|body|any|false|none|
 
 > Example responses
 
@@ -222,6 +301,7 @@ null
 <aside class="success">
 This operation does not require authentication
 </aside>
+
 
 ## DeleteClient
 
@@ -268,6 +348,7 @@ null
 This operation does not require authentication
 </aside>
 
+
 ## GetClientsList
 
 <a id="opIdGetClientsList"></a>
@@ -308,6 +389,7 @@ This operation does not require authentication
 </aside>
 
 <h1 id="sistema-integral-provimat-presupuestos">Presupuestos</h1>
+
 
 ## CreateBudget
 
@@ -371,6 +453,7 @@ null
 This operation does not require authentication
 </aside>
 
+
 ## GetBudgets
 
 <a id="opIdGetBudgets"></a>
@@ -409,6 +492,7 @@ null
 <aside class="success">
 This operation does not require authentication
 </aside>
+
 
 ## DeleteBudget
 
@@ -454,6 +538,7 @@ null
 <aside class="success">
 This operation does not require authentication
 </aside>
+
 
 ## UpdateBudget
 
@@ -513,6 +598,7 @@ null
 This operation does not require authentication
 </aside>
 
+
 ## GetClientBudget
 
 <a id="opIdGetClientBudget"></a>
@@ -561,6 +647,7 @@ This operation does not require authentication
 </aside>
 
 <h1 id="sistema-integral-provimat-agrega-productos">agrega productos</h1>
+
 
 ## agregar productos
 
@@ -621,6 +708,7 @@ This operation does not require authentication
 
 <h1 id="sistema-integral-provimat-productos">Productos</h1>
 
+
 ## CreateProduct
 
 <a id="opIdCreateProduct"></a>
@@ -680,6 +768,7 @@ null
 This operation does not require authentication
 </aside>
 
+
 ## GetProducts
 
 <a id="opIdGetProducts"></a>
@@ -718,6 +807,7 @@ null
 <aside class="success">
 This operation does not require authentication
 </aside>
+
 
 ## GetProductById
 
@@ -764,6 +854,7 @@ null
 This operation does not require authentication
 </aside>
 
+
 ## DeleteProduct
 
 <a id="opIdDeleteProduct"></a>
@@ -808,6 +899,7 @@ null
 <aside class="success">
 This operation does not require authentication
 </aside>
+
 
 ## UpdateProduct
 
@@ -869,6 +961,7 @@ null
 This operation does not require authentication
 </aside>
 
+
 ## GetProductWithProvider
 
 <a id="opIdGetProductWithProvider"></a>
@@ -909,6 +1002,7 @@ This operation does not require authentication
 </aside>
 
 <h1 id="sistema-integral-provimat-proveedores">Proveedores</h1>
+
 
 ## CreateProvider
 
@@ -965,6 +1059,7 @@ null
 This operation does not require authentication
 </aside>
 
+
 ## GetProviders
 
 <a id="opIdGetProviders"></a>
@@ -1003,6 +1098,7 @@ null
 <aside class="success">
 This operation does not require authentication
 </aside>
+
 
 ## DeleteProvider
 
@@ -1049,6 +1145,7 @@ null
 This operation does not require authentication
 </aside>
 
+
 ## GetProviderById
 
 <a id="opIdGetProviderById"></a>
@@ -1093,6 +1190,7 @@ null
 <aside class="success">
 This operation does not require authentication
 </aside>
+
 
 ## UpdateProvider
 
@@ -1150,6 +1248,7 @@ null
 This operation does not require authentication
 </aside>
 
+
 ## updateProductPricesFromBudget
 
 <a id="opIdupdateProductPricesFromBudget"></a>
@@ -1206,6 +1305,7 @@ This operation does not require authentication
 
 <h1 id="sistema-integral-provimat-search">Search</h1>
 
+
 ## SearchClient
 
 <a id="opIdSearchClient"></a>
@@ -1258,6 +1358,7 @@ null
 <aside class="success">
 This operation does not require authentication
 </aside>
+
 
 ## SearchBudget
 
@@ -1312,6 +1413,7 @@ null
 This operation does not require authentication
 </aside>
 
+
 ## SearchProduct
 
 <a id="opIdSearchProduct"></a>
@@ -1364,6 +1466,7 @@ null
 <aside class="success">
 This operation does not require authentication
 </aside>
+
 
 ## SearchProvider
 
