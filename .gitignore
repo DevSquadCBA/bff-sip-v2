@@ -128,3 +128,7 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+.aws-sam
+node_modules
+/scripts/env_vars.json

@@ -1,0 +1,1055 @@
+openapi: 3.0.1
+info:
+  title: Sistema integral provimat
+  version: 1.0.0
+
+# security:
+#     - CustomSecurityAuthorizer: []
+
+servers:
+  - url: "https://dev-sip.devsquadcba.com/api"
+    description: Develop
+  - url: "https://sip.devsquadcba.com/api"
+    description: Produccion
+  - url: http://127.0.0.1/
+    description: localhost
+
+paths:
+  /client:
+    #C
+    # post:
+    #   tags:
+    #     - Clientes
+    #   summary: Crea un nuevo Cliente
+    #   description: Crea un nuevo cliente
+    #   operationId: CreateClient
+    #   requestBody:
+    #     content:
+    #       application/json:
+    #         schema: 
+    #           $ref: "#/components/schemas/Client"
+    #   responses:
+    #     200:
+    #       description: listado de clientes
+    #       content: {}
+    #       headers:
+    #         Access-Control-Allow-Origin:
+    #           schema:
+    #             type: string
+    #         Access-Control-Allow-Methods:
+    #           schema:
+    #             type: string
+    #         Access-Control-Allow-Headers:
+    #           schema:
+    #             type: string
+    #     500:
+    #       description: Error
+    #       content:
+    #         application/json:
+    #           schema: {}
+    # #R
+    get:
+      tags:
+        - Clientes
+      summary: Obtiene todos los clientes
+      description: Obtiene un listado de todos los clientes activos y no activos
+      operationId: getClients
+      parameters: []
+      responses:
+        200:
+          description: listado de clientes
+          content: {}
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: {}
+  # /client/{idClient}:
+  #   get:
+  #     tags:
+  #       - Clientes
+  #     summary: Obtiene un solo cliente a través de su ID
+  #     description: Obtiene un solo cliente a través de su ID del sistema.
+  #     operationId: GetClientById
+  #     parameters:
+  #       - name: idClient
+  #         in: path
+  #         description: el id del cliente
+  #         schema: {}
+  #         required: true
+  #     responses:
+  #       200:
+  #         description: Un cliente
+  #         content: {}
+  #         headers:
+  #           Access-Control-Allow-Origin:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Methods:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Headers:
+  #             schema:
+  #               type: string
+  #       500:
+  #         description: Error
+  #         content:
+  #           application/json:
+  #             schema: {}
+  #   #U
+  #   put:
+  #     tags:
+  #       - Clientes
+  #     summary: Actualiza un Cliente
+  #     description: Crea un nuevo cliente
+  #     operationId: UpdateClient
+  #     parameters:
+  #       - name: idClient
+  #         in: path
+  #         description: el id del cliente
+  #         schema: {}
+  #         required: true
+  #       - name: client
+  #         in: query
+  #         description: El cliente con todos los datos
+  #         schema: {}
+  #         required: true
+  #     requestBody:
+  #       content:
+  #         application/json:
+  #           schema: {}
+  #     responses:
+  #       200:
+  #         description: listado de clientes
+  #         content: {}
+  #         headers:
+  #           Access-Control-Allow-Origin:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Methods:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Headers:
+  #             schema:
+  #               type: string
+  #       500:
+  #         description: Error
+  #         content:
+  #           application/json:
+  #             schema: {}
+  #   #D
+  #   delete:
+  #     tags:
+  #       - Clientes
+  #     summary: Da de baja un Cliente
+  #     description: Da de baja un cliente del sistema.
+  #     operationId: DeleteClient
+  #     parameters:
+  #       - name: idClient
+  #         in: path
+  #         description: el id del cliente
+  #         schema: {}
+  #         required: true
+  #     responses:
+  #       200:
+  #         description: listado de clientes
+  #         content: {}
+  #         headers:
+  #           Access-Control-Allow-Origin:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Methods:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Headers:
+  #             schema:
+  #               type: string
+  #       500:
+  #         description: Error
+  #         content:
+  #           application/json:
+  #             schema: {}
+  # /clients:
+  #   get:
+  #     tags:
+  #       - Clientes
+  #     summary: Obtiene los clientes con datos. 
+  #     description: Obtiene los clientes con los campos correspondientes para renderizar la tabla
+  #     operationId: GetClientsList
+  #     responses:
+  #       200:
+  #         description: Un array de clientes
+  #         content: {}
+  #         headers:
+  #           Access-Control-Allow-Origin:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Methods:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Headers:
+  #             schema:
+  #               type: string
+  #       500:
+  #         description: Error
+  #         content:
+  #           application/json:
+  #             schema: {}
+  # /budget:
+  #   post:
+  #     tags:
+  #       - Presupuestos
+  #     summary: Crea un nuevo Presupuesto
+  #     description: Crea un nuevo Presupuesto
+  #     operationId: CreateBudget
+  #     requestBody:
+  #       content:
+  #         application/json:
+  #           schema:
+  #             $ref: "#/components/schemas/NewBudget"
+  #     responses:
+  #       200:
+  #         description: Devuelve el id del presupuesto creado
+  #         content: {}
+  #         headers:
+  #           Access-Control-Allow-Origin:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Methods:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Headers:
+  #             schema:
+  #               type: string
+  #       500:
+  #         description: Error
+  #         content:
+  #           application/json:
+  #             schema: {}
+  #   get:
+  #     tags:
+  #       - Presupuestos
+  #     summary: Obtiene todos los presupuestos
+  #     description: Obtiene un listado de todos los presupuestos
+  #     operationId: GetBudgets
+  #     parameters: []
+  #     responses:
+  #       200:
+  #         description: estos son todos los presupuestos
+  #         content: {}
+  #         headers:
+  #           Access-Control-Allow-Origin:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Methods:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Headers:
+  #             schema:
+  #               type: string
+  #       500:
+  #         description: Error
+  #         content:
+  #           application/json:
+  #             schema: {}
+  # /budget/{idBudget}:
+  #   get:
+  #     tags:
+  #       - Presupuestos
+  #     summary: Obtiene un presupuesto
+  #     description: Obtiene un presupuesto basandose en el id
+  #     operationId: DeleteBudget
+  #     parameters:
+  #       - name: idBudget
+  #         in: path
+  #         description: el id del presupuesto
+  #         schema: {}
+  #         required: true
+  #     responses:
+  #       200:
+  #         description: un presupuesto
+  #         content: {}
+  #         headers:
+  #           Access-Control-Allow-Origin:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Methods:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Headers:
+  #             schema:
+  #               type: string
+  #       500:
+  #         description: Error
+  #         content:
+  #           application/json:
+  #             schema: {}
+  #   put:
+  #     tags:
+  #       - Presupuestos
+  #     summary: Actualiza un Presupuesto
+  #     description: Actualiza un presupuesto
+  #     operationId: UpdateBudget
+  #     parameters:
+  #       - name: idBudget
+  #         in: path
+  #         description: el id del presupuesto
+  #         schema: {}
+  #         required: true
+  #     requestBody:
+  #       content:
+  #         application/json:
+  #           schema:
+  #             $ref: "#/components/schemas/Budget"
+  #     responses:
+  #       200:
+  #         description: resultado
+  #         content: {}
+  #         headers:
+  #           Access-Control-Allow-Origin:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Methods:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Headers:
+  #             schema:
+  #               type: string
+  #       500:
+  #         description: Error
+  #         content:
+  #           application/json:
+  #             schema: {}
+  #   delete:
+  #     tags:
+  #       - Presupuestos
+  #     summary: Da de baja un Presupuesto
+  #     description: Da de baja logica un presupuesto que estaba en estado pendiente
+  #     operationId: DeleteBudget
+  #     parameters:
+  #       - name: idBudget
+  #         in: path
+  #         description: el id del presupuesto
+  #         schema: {}
+  #         required: true
+  #     responses:
+  #       200:
+  #         description: listado de clientes
+  #         content: {}
+  #         headers:
+  #           Access-Control-Allow-Origin:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Methods:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Headers:
+  #             schema:
+  #               type: string
+  #       500:
+  #         description: Error
+  #         content:
+  #           application/json:
+  #             schema: {}
+  # /budgets/{idClient}:
+  #   # /budgetS/0?idBudget=1&status=pending
+  #   get:
+  #     tags:
+  #       - Presupuestos
+  #     summary: Obtiene todos los presupuestos de un cliente
+  #     description: Obtiene los presupuestos de un cliente en concreto
+  #     operationId: GetClientBudget
+  #     parameters:
+  #       - name: idClient
+  #         in: path
+  #         description: el id del cliente
+  #         schema: {}
+  #         required: true
+  #       - name: idBudget
+  #         in: query
+  #         description: el id del presupuesto en particular
+  #         schema:
+  #           type: integer
+  #           format: int64
+  #         required: false
+  #       - name: status
+  #         in: query
+  #         description: el estatus
+  #         schema:
+  #           type: string
+  #         required: false
+  #     responses:
+  #       200:
+  #         description: listado de clientes
+  #         content: {}
+  #         headers:
+  #           Access-Control-Allow-Origin:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Methods:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Headers:
+  #             schema:
+  #               type: string
+  #       500:
+  #         description: Error
+  #         content:
+  #           application/json:
+  #             schema: {}
+  # /budget/{idBudget}/addProducts:
+  #   post:
+  #     tags:
+  #       - agrega productos
+  #     summary: agrega,quita,actualiza productos de un presupuesto
+  #     description: agrega,quita,actualiza productos de un presupuesto
+  #     operationId: agregar productos
+  #     parameters:
+  #       - name: idBudget
+  #         in: path
+  #         description: el id del presupuesto
+  #         schema: {}
+  #         required: true
+  #     requestBody:
+  #       content:
+  #         application/json:
+  #           schema:
+  #             $ref: "#/components/schemas/addProducts"
+  #     responses:
+  #       200:
+  #         description: crea productos
+  #         content: {}
+  #         headers:
+  #           Access-Control-Allow-Origin:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Methods:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Headers:
+  #             schema:
+  #               type: string
+  #       500:
+  #         description: Error
+  #         content:
+  #           application/json:
+  #             schema: {}
+  # /product:
+  #   post:
+  #     tags:
+  #       - Productos
+  #     summary: Crea un nuevo Producto
+  #     description: Crea un nuevo Producto
+  #     operationId: CreateProduct
+  #     requestBody:
+  #       content:
+  #         application/json:
+  #           schema:
+  #             $ref: "#/components/schemas/Product"
+  #     responses:
+  #       200:
+  #         description: Devuelve el id del Producto creado
+  #         content: {}
+  #         headers:
+  #           Access-Control-Allow-Origin:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Methods:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Headers:
+  #             schema:
+  #               type: string
+  #       500:
+  #         description: Error
+  #         content:
+  #           application/json:
+  #             schema: {}
+  #   get:
+  #     tags:
+  #       - Productos
+  #     summary: Te devuelve todos los productos
+  #     description: Te devuelve todos los productos
+  #     operationId: GetProducts
+  #     responses:
+  #       200:
+  #         description: listado de productos
+  #         content: {}
+  #         headers:
+  #           Access-Control-Allow-Origin:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Methods:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Headers:
+  #             schema:
+  #               type: string
+  #       500:
+  #         description: Error
+  #         content:
+  #           application/json:
+  #             schema: {}
+  # /product/{idProduct}:
+  #   get:
+  #     tags:
+  #       - Productos
+  #     summary: Obtiene un producto
+  #     description: Obtiene un producto en particular basado en su id
+  #     operationId: GetProductById
+  #     parameters:
+  #       - name: idProduct
+  #         in: path
+  #         description: el id del producto
+  #         schema: {}
+  #         required: true
+  #     responses:
+  #       200:
+  #         description: Un producto
+  #         content: {}
+  #         headers:
+  #           Access-Control-Allow-Origin:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Methods:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Headers:
+  #             schema:
+  #               type: string
+  #       500:
+  #         description: Error
+  #         content:
+  #           application/json:
+  #             schema: {}
+  #   delete:
+  #     tags:
+  #       - Productos
+  #     summary: Da de baja un producto
+  #     description: Da de baja logica un producto que estaba en estado pendiente
+  #     operationId: DeleteProduct
+  #     parameters:
+  #       - name: idProduct
+  #         in: path
+  #         description: el id del producto
+  #         schema: {}
+  #         required: true
+  #     responses:
+  #       200:
+  #         description: listado de clientes
+  #         content: {}
+  #         headers:
+  #           Access-Control-Allow-Origin:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Methods:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Headers:
+  #             schema:
+  #               type: string
+  #       500:
+  #         description: Error
+  #         content:
+  #           application/json:
+  #             schema: {}
+  #   put:
+  #     tags:
+  #       - Productos
+  #     summary: Crea un nuevo Producto
+  #     description: Crea un nuevo Producto
+  #     operationId: UpdateProduct
+  #     parameters:
+  #       - name: idProduct
+  #         in: path
+  #         description: el id del Producto
+  #         schema: {}
+  #         required: true
+  #     requestBody:
+  #       content:
+  #         application/json:
+  #           schema:
+  #             $ref: "#/components/schemas/Product"
+  #     responses:
+  #       200:
+  #         description: Devuelve el id del presupuesto creado
+  #         content: {}
+  #         headers:
+  #           Access-Control-Allow-Origin:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Methods:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Headers:
+  #             schema:
+  #               type: string
+  #       500:
+  #         description: Error
+  #         content:
+  #           application/json:
+  #             schema: {}
+  # /products:
+  #   get:
+  #     tags:
+  #       - Productos
+  #     summary: Obtiene los productos con datos. 
+  #     description: Obtiene los productos con sus respectivos proveedores.
+  #     operationId: GetProductWithProvider
+  #     responses:
+  #       200:
+  #         description: Productos con proveedores
+  #         content: {}
+  #         headers:
+  #           Access-Control-Allow-Origin:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Methods:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Headers:
+  #             schema:
+  #               type: string
+  #       500:
+  #         description: Error
+  #         content:
+  #           application/json:
+  #             schema: {}
+  # /provider:
+  #   post:
+  #     tags:
+  #       - Proveedores
+  #     summary: Crea un nuevo Proveedor
+  #     description: Crea un nuevo Proveedor
+  #     operationId: CreateProvider
+  #     requestBody:
+  #       content:
+  #         application/json:
+  #           schema:
+  #             $ref: "#/components/schemas/Provider"
+  #     responses:
+  #       200:
+  #         description: Devuelve el id del proveedor creado
+  #         content: {}
+  #         headers:
+  #           Access-Control-Allow-Origin:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Methods:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Headers:
+  #             schema:
+  #               type: string
+  #       500:
+  #         description: Error
+  #         content:
+  #           application/json:
+  #             schema: {}
+  #   get:
+  #     tags:
+  #       - Proveedores
+  #     summary: Te devuelve todos los Proveedores
+  #     description: Te devuelve todos los Proveedores
+  #     operationId: GetProviders
+  #     responses:
+  #       200:
+  #         description: listado de clientes
+  #         content: {}
+  #         headers:
+  #           Access-Control-Allow-Origin:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Methods:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Headers:
+  #             schema:
+  #               type: string
+  #       500:
+  #         description: Error
+  #         content:
+  #           application/json:
+  #             schema: {}
+  # /provider/{idProvider}:
+  #   delete:
+  #     tags:
+  #       - Proveedores
+  #     summary: Da de baja un Proveedor
+  #     description: Da de baja logica un Proveedor
+  #     operationId: DeleteProvider
+  #     parameters:
+  #       - name: idProvider
+  #         in: path
+  #         description: el id del Proveedores
+  #         schema: {}
+  #         required: true
+  #     responses:
+  #       200:
+  #         description: listado de clientes
+  #         content: {}
+  #         headers:
+  #           Access-Control-Allow-Origin:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Methods:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Headers:
+  #             schema:
+  #               type: string
+  #       500:
+  #         description: Error
+  #         content:
+  #           application/json:
+  #             schema: {}
+  #   get:
+  #     tags:
+  #       - Proveedores
+  #     summary: Te devuelve el Proveedor
+  #     description: Te devuelve el Proveedores con el id proporcionado
+  #     operationId: GetProviderById
+  #     parameters:
+  #       - name: idProvider
+  #         in: path
+  #         description: el id del proveedor
+  #         schema: {}
+  #         required: true
+  #     responses:
+  #       200:
+  #         description: listado de clientes
+  #         content: {}
+  #         headers:
+  #           Access-Control-Allow-Origin:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Methods:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Headers:
+  #             schema:
+  #               type: string
+  #       500:
+  #         description: Error
+  #         content:
+  #           application/json:
+  #             schema: {}
+  #   put:
+  #     tags:
+  #       - Proveedores
+  #     summary: Actualiza un Proveedor
+  #     description: Actualiza un Proveedor
+  #     operationId: UpdateProvider
+  #     parameters:
+  #       - name: idProvider
+  #         in: path
+  #         description: el id del presupuesto
+  #         schema: {}
+  #         required: true
+  #     requestBody:
+  #       content:
+  #         application/json:
+  #           schema:
+  #             $ref: "#/components/schemas/Provider"
+  #     responses:
+  #       200:
+  #         description: Devuelve el id del presupuesto creado
+  #         content: {}
+  #         headers:
+  #           Access-Control-Allow-Origin:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Methods:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Headers:
+  #             schema:
+  #               type: string
+  #       500:
+  #         description: Error
+  #         content:
+  #           application/json:
+  #             schema: {}
+  #   post:
+  #     tags:
+  #       - Proveedores
+  #     summary: Actualiza precios basado en un porcentaje
+  #     description: El porcentaje de actualización de los precios de un proveedor
+  #     operationId: updateProductPricesFromBudget
+  #     parameters:
+  #       - name: idProvider
+  #         in: path
+  #         description: el id del proveedor
+  #         schema: {}
+  #         required: true
+  #     requestBody:
+  #       content:
+  #         application/json:
+  #           schema:
+  #             $ref: "#/components/schemas/percentPrice"
+  #     responses:
+  #       200:
+  #         description: listado de productos actualizados
+  #         content: {}
+  #         headers:
+  #           Access-Control-Allow-Origin:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Methods:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Headers:
+  #             schema:
+  #               type: string
+  #       500:
+  #         description: Error
+  #         content:
+  #           application/json:
+  #             schema: {}
+  # /search/client:
+  #   post:
+  #     tags:
+  #       - Search
+  #     summary: Busca clientes
+  #     description: Te devuelve clientes que coincidan con la consulta
+  #     operationId: SearchClient
+  #     requestBody:
+  #       content:
+  #         application/json:
+  #           schema:
+  #             $ref: "#/components/schemas/Search"
+  #             required: true
+  #     responses:
+  #       200:
+  #         description: listado de clientes
+  #         content: {}
+  #         headers:
+  #           Access-Control-Allow-Origin:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Methods:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Headers:
+  #             schema:
+  #               type: string
+  #       500:
+  #         description: Error
+  #         content:
+  #           application/json:
+  #             schema: {}
+  # /search/budget:
+  #   post:
+  #     tags:
+  #       - Search
+  #     summary: Busca el Presupuesto
+  #     description: Te devuelve el presupuesto que coincidan con la consulta
+  #     operationId: SearchBudget
+  #     requestBody:
+  #       content:
+  #         application/json:
+  #           schema:
+  #             $ref: "#/components/schemas/Search"
+  #             required: true
+  #     responses:
+  #       200:
+  #         description: listado de presupuestos
+  #         content: {}
+  #         headers:
+  #           Access-Control-Allow-Origin:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Methods:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Headers:
+  #             schema:
+  #               type: string
+  #       500:
+  #         description: Error
+  #         content:
+  #           application/json:
+  #             schema: {}
+  # /search/product:
+  #   post:
+  #     tags:
+  #       - Search
+  #     summary: Busca productos
+  #     description: Te devuelve productos que coincidan con la consulta
+  #     operationId: SearchProduct
+  #     requestBody:
+  #       content:
+  #         application/json:
+  #           schema:
+  #             $ref: "#/components/schemas/Search"
+  #             required: true
+  #     responses:
+  #       200:
+  #         description: listado de productos
+  #         content: {}
+  #         headers:
+  #           Access-Control-Allow-Origin:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Methods:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Headers:
+  #             schema:
+  #               type: string
+  #       500:
+  #         description: Error
+  #         content:
+  #           application/json:
+  #             schema: {}
+  # /search/provider:
+  #   post:
+  #     tags:
+  #       - Search
+  #     summary: Busca Provedores
+  #     description: Te devuelve provedores que coincidan con la consulta
+  #     operationId: SearchProvider
+  #     requestBody:
+  #       content:
+  #         application/json:
+  #           schema:
+  #             $ref: "#/components/schemas/Search"
+  #             required: true
+  #     responses:
+  #       200:
+  #         description: listado de provedores
+  #         content: {}
+  #         headers:
+  #           Access-Control-Allow-Origin:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Methods:
+  #             schema:
+  #               type: string
+  #           Access-Control-Allow-Headers:
+  #             schema:
+  #               type: string
+  #       500:
+  #         description: Error
+  #         content:
+  #           application/json:
+  #             schema: {}            
+components:
+  schemas:
+    Search:
+      type: object
+      required: 
+        - q
+      properties:
+        q:
+          type: string
+    Client:
+      type: object
+      required:
+        - name
+        - lastName
+        - whatsapp
+      properties:
+        name:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        phone:
+          type: integer
+        whatsapp:
+          type: integer
+        direction:
+          type: string
+    Budget:
+      type: object
+      properties:
+        id:
+          type: integer
+        date:
+          type: string
+          example: "2023/01/01 00:00:00"
+        clientId:
+          type: integer
+        status:
+          type: string
+          enum: [iniciated,waiting_shipping,to_confirm,out_of_stock,in_tansit,finished]
+        deleted:
+          type: boolean
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        salePrice:
+          type: integer
+        purchasePrice:
+          type: integer
+        provider:
+          type: integer
+        img:
+          type: string
+        daysDelay:
+          type: integer
+    Provider:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        daysDelay:
+          type: integer
+    NewBudget:
+      type: object
+      properties:
+        creationDate:
+          type: string
+          example: "2023/01/01 00:00:00"
+        clientId:
+          type: integer
+          minimum: 1
+        state:
+          type: string
+          enum: [iniciated,waiting_shipping,to_confirm,out_of_stock,in_tansit,finished]
+          example: initiated
+        total:
+          type: integer
+          example: 10000
+          minimum: 1
+        products:
+          type: object
+          $ref: "#/components/schemas/addProducts"
+    addProducts:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+            example: 1
+          quantity:
+            type: integer
+            example: 2
+    percentPrice:
+      type: object
+      required: 
+          - percent
+      properties: 
+        percent: 
+          type: number
+          example: 10
+          

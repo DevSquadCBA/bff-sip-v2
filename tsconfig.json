@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+        "target": "es2020",
+        "alwaysStrict": true,
+        "strict": true,
+        "preserveConstEnums": true,
+        "noUnusedLocals": true,
+        "noImplicitOverride": true,
+        "noEmit": true,
+        "sourceMap": true,
+        "module": "esnext",
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "baseUrl": "./src",
+        "declaration": true,
+        "declarationDir": "./types"
+    },
+    "exclude": [
+        "node_modules"
+    ]
+}
