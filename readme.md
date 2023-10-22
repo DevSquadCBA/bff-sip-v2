@@ -15,35 +15,48 @@ Base URLs:
 
 * <a href="http://127.0.0.1/">http://127.0.0.1/</a>
 
+### clients
+<a href="#CreateClient">POST /client</a><br>
+<a href="#getClients">GET /client</a><br>
+<a href="#GetClientById">GET /client/{idClient}</a><br>
+<a href="#UpdateClient">PUT /client/{idClient}</a><br>
+<a href="#DeleteClient">DELETE /client/{idClient}</a><br>
+<a href="#GetClientsList">GET /clients</a><br>
+<br>
 
-<a href="#CreateClient">POST /client</a>
-<a href="#getClients">GET /client</a>
-<a href="#GetClientById">GET /client/{idClient}</a>
-<a href="#UpdateClient">PUT /client/{idClient}</a>
-<a href="#DeleteClient">DELETE /client/{idClient}</a>
-<a href="#GetClientsList">GET /clients</a>
-<a href="#CreateBudget">POST /budget</a>
-<a href="#GetBudgets">GET /budget</a>
-<a href="#DeleteBudget">DELETE /budget/{idBudget}</a>
-<a href="#UpdateBudget">PUT /budget/{idBudget}</a>
-<a href="#GetClientBudget">GET /budgets/{idClient}</a>
-<a href="#agregar productos">POST /budget/{idBudget}/addProduct</a>
-<a href="#CreateProduct">POST /product</a>
-<a href="#GetProducts">GET /product</a>
-<a href="#GetProductById">GET /product/{idProduct}</a>
-<a href="#DeleteProduct">DELETE /product/{idProduct}</a>
-<a href="#UpdateProduct">PUT /product/{idProduct}</a>
-<a href="#GetProductWithProvider">GET /products</a>
-<a href="#CreateProvider">POST /provider</a>
-<a href="#GetProviders">GET /provider</a>
-<a href="#DeleteProvider">DELETE /provider/{idProvider}</a>
-<a href="#GetProviderById">GET /provider/{idProvider}</a>
-<a href="#UpdateProvider">PUT /provider/{idProvider}</a>
-<a href="#updateProductPricesFromBudget">POST /provider/{idProvider}</a>
-<a href="#SearchClient">POST /search/client</a>
-<a href="#SearchBudget">POST /search/budget</a>
-<a href="#SearchProduct">POST /search/product</a>
-<a href="#SearchProvider">POST /search/provider</a>
+### budgets
+<a href="#CreateBudget">POST /budget</a><br>
+<a href="#GetBudgets">GET /budget</a><br>
+<a href="#DeleteBudget">DELETE /budget/{idBudget}</a><br>
+<a href="#UpdateBudget">PUT /budget/{idBudget}</a><br>
+<a href="#GetClientBudget">GET /budgets/{idClient}</a><br>
+<a href="#agregar productos">POST /budget/{idBudget}/addProduct</a><br>
+<br>
+
+### products
+<a href="#CreateProduct">POST /product</a><br>
+<a href="#GetProducts">GET /product</a><br>
+<a href="#GetProductById">GET /product/{idProduct}</a><br>
+<a href="#DeleteProduct">DELETE /product/{idProduct}</a><br>
+<a href="#UpdateProduct">PUT /product/{idProduct}</a><br>
+<a href="#GetProductWithProvider">GET /products</a><br>
+<br>
+
+### providers
+<a href="#CreateProvider">POST /provider</a><br>
+<a href="#GetProviders">GET /provider</a><br>
+<a href="#DeleteProvider">DELETE /provider/{idProvider}</a><br>
+<a href="#GetProviderById">GET /provider/{idProvider}</a><br>
+<a href="#UpdateProvider">PUT /provider/{idProvider}</a><br>
+<a href="#updateProductPricesFromBudget">POST /provider/{idProvider}</a><br>
+<br>
+
+### search
+<a href="#SearchClient">POST /search/client</a><br>
+<a href="#SearchBudget">POST /search/budget</a><br>
+<a href="#SearchProduct">POST /search/product</a><br>
+<a href="#SearchProvider">POST /search/provider</a><br>
+
 
 <h1 id="sistema-integral-provimat-clientes">Clientes</h1>
 
