@@ -1,11 +1,3 @@
----
-title: Sistema integral provimat v1.0.0
-search: true
-highlight_theme: darkula
-headingLevel: 2
-
----
-
 <h1 id="sistema-integral-provimat">Sistema integral piatti v2.0.0</h1>
 
 > Bff para el sistema integral provimat/piatti
