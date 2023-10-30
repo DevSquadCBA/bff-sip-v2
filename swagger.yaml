@@ -486,6 +486,7 @@ paths:
       summary: Te devuelve todos los productos
       description: Te devuelve todos los productos
       operationId: GetProducts
+      parameters: []
       responses:
         200:
           description: listado de productos
@@ -516,12 +517,16 @@ paths:
         - name: idProduct
           in: path
           description: el id del producto
-          schema: {}
+          schema: 
+            type: number
           required: true
       responses:
         200:
           description: Un producto
-          content: {}
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
           headers:
             Access-Control-Allow-Origin:
               schema:
