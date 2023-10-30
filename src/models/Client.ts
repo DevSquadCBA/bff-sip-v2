@@ -1,6 +1,6 @@
 import DbModel from "./DbModel";
 
-type ClientConstructor = {
+export type IClient = {
     id: number|null,
     name: string,
     fantasy_name: string,
@@ -15,7 +15,7 @@ type ClientConstructor = {
     creationDate: Date|number,
     deleted?: boolean,
 }
-export default class Client extends DbModel implements ClientConstructor{
+export default class Client extends DbModel implements IClient{
     name: string;
     fantasy_name: string;
     fiscalCategory: string;
@@ -28,7 +28,7 @@ export default class Client extends DbModel implements ClientConstructor{
     direction: string;
     creationDate: Date|number;
     deleted: boolean;
-    constructor(input:ClientConstructor){
+    constructor(input:IClient){
         super('clients');
         this.id = input.id;
         this.name = input.name;
@@ -47,5 +47,9 @@ export default class Client extends DbModel implements ClientConstructor{
     static async getAll(offset:string, limit:string){
         const dbModel = new DbModel('clients');
         return dbModel.getAll(offset,limit);
+    }
+    static async getById(idClient:string){
+        const dbModel = new DbModel('clients');
+        return dbModel.getById(idClient);
     }
 }

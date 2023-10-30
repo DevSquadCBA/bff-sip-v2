@@ -1,4 +1,5 @@
 import mysql from 'mysql2/promise';
+import { InternalServerError } from 'types/errors';
 export default class DbModel{
     id: number|null;
     table: string;
@@ -57,6 +58,17 @@ export default class DbModel{
         }catch(e){
             console.error(e);
             throw(e);
+        }
+    }
+
+    async getById(id:string){
+        const query = `SELECT * FROM ${this.table} WHERE id = ${id};`
+        try{
+            const [first] = await this.executeQuery(query) as mysql.RowDataPacket[];
+            return first;
+        }catch(e){
+            console.error(e);
+            throw new InternalServerError('Error al conectar con la base de datos');
         }
     }
 }

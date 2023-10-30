@@ -153,25 +153,25 @@ Resources:
 #                         Path: /clients
 #                         Method: GET
 #                         ApiId: !Ref ProvimatRestApi
-#     GetClientByIdFunction:
-#         Type: AWS::Serverless::Function
-#         Metadata:
-#             BuildMethod: esbuild
-#             BuildProperties:
-#                 Minify: true
-#                 Sourcemap: true
-#                 MainFields: "module,main"
-#         Properties:
-#             FunctionName: !Sub '${Environment}-GetClientById'
-#             Handler: getClientById.Handler
-#             CodeUri: ./src/functions/client
-#             Events:
-#                 HttpEvent:
-#                     Type: HttpApi
-#                     Properties:
-#                         Path: /client/{idClient}
-#                         Method: GET
-#                         ApiId: !Ref ProvimatRestApi
+    GetClientByIdFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-GetClientById'
+            Handler: getClientById.Handler
+            CodeUri: ./src/functions/client
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /client/{idClient}
+                        Method: GET
+                        ApiId: !Ref ProvimatRestApi
 #     CreateClientsFunction:
 #         Type: AWS::Serverless::Function
 #         Metadata:
