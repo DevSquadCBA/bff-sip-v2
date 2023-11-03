@@ -250,25 +250,25 @@ Resources:
 #                         Path: /budget
 #                         Method: POST
 #                         ApiId: !Ref ProvimatRestApi
-#     GetBudgetFunction:
-#         Type: AWS::Serverless::Function
-#         Metadata:
-#             BuildMethod: esbuild
-#             BuildProperties:
-#                 Minify: true
-#                 Sourcemap: true
-#                 MainFields: "module,main"
-#         Properties:
-#             FunctionName: !Sub '${Environment}-Get-Budget'
-#             Handler: getBudgets.Handler
-#             CodeUri: ./src/functions/budget
-#             Events:
-#                 HttpEvent:
-#                     Type: HttpApi
-#                     Properties:
-#                         Path: /budget
-#                         Method: GET
-#                         ApiId: !Ref ProvimatRestApi
+    GetBudgetFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-Get-Budget'
+            Handler: getBudgets.Handler
+            CodeUri: ./src/functions/budget
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /budget
+                        Method: GET
+                        ApiId: !Ref ProvimatRestApi
 #     GetBudgetByIdFunction:
 #         Type: AWS::Serverless::Function
 #         Metadata:
