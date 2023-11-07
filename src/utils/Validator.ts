@@ -3,7 +3,8 @@ import { ApiGatewayParsedEvent } from "types/response-factory/proxies";
 
 export enum Validators{
     OFFSET_AND_LIMITS = 'OffsetAndLimitValidator',
-    ID_CLIENT = 'validateIdClient'
+    ID_CLIENT = 'validateIdClient',
+    ID_PROVIDER = 'validateIdProvider'
 }
 
 function offsetAndLimitValidator(queryStringParameters:{offset?:string, limit?: string}){
@@ -33,11 +34,23 @@ function validateIdClient(pathParameters:{idClient?:string}){
     return pathParameters;
 }
 
+function validateIdProvider(queryStringParameters:{idProvider?:string}){
+    if(!queryStringParameters.idProvider){
+        throw new BadRequestError('Es necesario enviar un idProvider');
+    }
+    if(!/^[0-9]+$/.test(queryStringParameters.idProvider)){
+        throw new BadRequestError('El idProvider debe ser un número');
+    }
+    return queryStringParameters;
+}
+
 export function validate(validations: Validators[], event:ApiGatewayParsedEvent):ApiGatewayParsedEvent{
     if(validations.includes(Validators.OFFSET_AND_LIMITS)){
         event.queryStringParameters = offsetAndLimitValidator(event.queryStringParameters)
     }else if(validations.includes(Validators.ID_CLIENT)){
         event.pathParameters = validateIdClient(event.pathParameters);
+    }else if(validations.includes(Validators.ID_PROVIDER)){
+        event.queryStringParameters = validateIdProvider(event.queryStringParameters);
     }
     return event;
 }

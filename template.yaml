@@ -59,6 +59,7 @@ Mappings:
         Parameters:
             FilterPattern: '[event=REPORT* || event="*DATADOG_EVENT*"]'
 
+
 Resources:
     GetParametersRole:
         Type: 'AWS::IAM::Role'

@@ -5,7 +5,7 @@ import { LambdaResolver } from 'utils/lambdaResolver';
 interface Event extends ApiGatewayParsedEvent {
     pathParameters:{
         idClient:string
-    }
+    },
 }
 
 const domain = async (event:Event): Promise<{body:IClient, statusCode:number}> => {

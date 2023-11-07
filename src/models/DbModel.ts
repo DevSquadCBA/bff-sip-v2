@@ -11,7 +11,7 @@ export default class DbModel{
     }
     async createConnection():Promise<mysql.Connection>{
         if(this.connection){
-            return this.connection
+            return await this.connection
         }
         return mysql.createConnection({
             host: process.env.HOST,
@@ -47,6 +47,7 @@ export default class DbModel{
     async executeQuery(q:string){
         this.connection = await this.createConnection();
         const [response] = await this.connection.query(q);
+        this.connection.destroy();
         return response;
     }
     async getAll(offset:string,limit:string){
