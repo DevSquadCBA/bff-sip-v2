@@ -12,6 +12,7 @@ describe('This is the testsuit for getClientById', ()=>{
         }
     }
     it('should return a valid Client',async ()=>{
+        process.env.expectedResponse = JSON.stringify([{name:'pepe', id:1}])
         const response = await getClientById(event) as {body:IClient, statusCode: number};
         expect(response.statusCode).toBe(200);
     })
