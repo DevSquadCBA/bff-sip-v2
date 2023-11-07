@@ -4,7 +4,8 @@ import { ApiGatewayParsedEvent } from "types/response-factory/proxies";
 export enum Validators{
     OFFSET_AND_LIMITS = 'OffsetAndLimitValidator',
     ID_CLIENT = 'validateIdClient',
-    ID_PROVIDER = 'validateIdProvider'
+    ID_PROVIDER = 'validateIdProvider',
+    ID_PRODUCT = 'validateIdProduct'
 }
 
 function offsetAndLimitValidator(queryStringParameters:{offset?:string, limit?: string}){

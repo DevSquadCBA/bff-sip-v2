@@ -1,4 +1,4 @@
-import Provider, { IProvider } from 'models/Provider';
+import Budget, { IBudget } from 'models/Budget';
 import { ApiGatewayParsedEvent } from 'types/response-factory/proxies';
 import { Validators } from 'utils/Validator';
 import { LambdaResolver } from 'utils/lambdaResolver';
@@ -9,9 +9,9 @@ interface Event extends ApiGatewayParsedEvent {
     }
 }
 
-const domain = async (event:Event): Promise<{body:IProvider[], statusCode:number}> => {
+const domain = async (event:Event): Promise<{body:IBudget[], statusCode:number}> => {
     return {
-        body: await Provider.getAll(event.queryStringParameters.offset, event.queryStringParameters.limit) as IProvider[],
+        body: await Budget.getAll(event.queryStringParameters.offset, event.queryStringParameters.limit) as IBudget[],
         statusCode: 200
     }
 }
