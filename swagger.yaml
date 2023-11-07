@@ -706,8 +706,11 @@ paths:
           required: true
       responses:
         200:
-          description: listado de clientes
-          content: {}
+          description: un proveedor
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Provider'
           headers:
             Access-Control-Allow-Origin:
               schema:
