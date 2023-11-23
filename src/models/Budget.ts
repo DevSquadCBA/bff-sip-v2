@@ -51,4 +51,9 @@ export default class Budget extends DbModel implements IBudget{
         const dbModel = new DbModel('budget');
         return dbModel.getById(idBudget);
     }
+//  me parecia que tenia que crear una funcion para crear nuevos    
+// static async createNew(IBudget)
+//         const dbModel = new DbModel('budget');
+//         return DbModel.createNew(IBudget);
 }
+

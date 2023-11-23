@@ -27,7 +27,7 @@ export default class Product extends DbModel implements IProduct{
     daysDelay: Date|number;
     deleted: boolean;
     constructor(input:IProduct){
-        super('product');
+        super('products');
         this.id = input.id;
         this.code= input.code;
         this.name= input.name;
@@ -42,11 +42,11 @@ export default class Product extends DbModel implements IProduct{
         this.deleted= input.deleted || false;
     }
     static async getAll(offset:string, limit:string){
-        const dbModel = new DbModel('product');
+        const dbModel = new DbModel('products');
         return dbModel.getAll(offset,limit);
     }
     static async getById(idProduct:string){
-        const dbModel = new DbModel('product');
+        const dbModel = new DbModel('products');
         return dbModel.getById(idProduct);
     }
 }

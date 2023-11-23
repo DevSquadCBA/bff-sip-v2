@@ -72,4 +72,13 @@ export default class DbModel{
             throw new InternalServerError('Error al conectar con la base de datos');
         }
     }
+    // async createNew(table){
+    //     const query = `INSERT INTO ${this.table}` //para insertar en la tabla datos nuevos
+    //     try{
+    //         //aqui no sé muy bien como hacer la logica. 
+    //     }catch(e){
+    //         console.error(e);
+    //         throw new InternalServerError('Estos datos ya existen');
+    //     }
+    // }
 }

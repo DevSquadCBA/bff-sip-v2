@@ -35,14 +35,23 @@ function validateIdClient(pathParameters:{idClient?:string}){
     return pathParameters;
 }
 
-function validateIdProvider(queryStringParameters:{idProvider?:string}){
-    if(!queryStringParameters.idProvider){
+function validateIdProvider(pathParameters:{idProvider?:string}){
+    if(!pathParameters.idProvider){
         throw new BadRequestError('Es necesario enviar un idProvider');
     }
-    if(!/^[0-9]+$/.test(queryStringParameters.idProvider)){
+    if(!/^[0-9]+$/.test(pathParameters.idProvider)){
         throw new BadRequestError('El idProvider debe ser un número');
     }
-    return queryStringParameters;
+    return pathParameters;
+}
+function validateIdProduct(pathParameters:{idProduct?:string}){
+    if(!pathParameters.idProduct){
+        throw new BadRequestError('Es necesario enviar un idProduct');
+    }
+    if(!/^[0-9]+$/.test(pathParameters.idProduct)){
+        throw new BadRequestError('El idProduct debe ser un número');
+    }
+    return pathParameters;
 }
 
 export function validate(validations: Validators[], event:ApiGatewayParsedEvent):ApiGatewayParsedEvent{
@@ -51,7 +60,9 @@ export function validate(validations: Validators[], event:ApiGatewayParsedEvent)
     }else if(validations.includes(Validators.ID_CLIENT)){
         event.pathParameters = validateIdClient(event.pathParameters);
     }else if(validations.includes(Validators.ID_PROVIDER)){
-        event.queryStringParameters = validateIdProvider(event.queryStringParameters);
+        event.pathParameters = validateIdProvider(event.pathParameters);
+    }else if(validations.includes(Validators.ID_PRODUCT)){
+        event.pathParameters = validateIdProduct(event.pathParameters);
     }
     return event;
 }
