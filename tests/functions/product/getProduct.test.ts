@@ -1,4 +1,4 @@
-import { Handler as getProduct } from "functions/product/getProduct";
+import { Handler as getProduct } from "functions/product/getProducts";
 import { mockEvent } from "types/response-factory/mocks";
 
 describe('Test suit for getProduct',()=>{

@@ -1,55 +1,54 @@
-import DbModel from "./DbModel";
+import { CreationOptional, InferAttributes, InferCreationAttributes } from 'sequelize';
+import { Model,DataType } from 'sequelize-typescript';
+import sequelize from 'services/sequelize';
 
 export type IClient = {
-    id: number|null,
     name: string,
-    fantasy_name: string,
+    fantasy_name?: string,
     fiscalCategory: string,
-    idNumber: string,
-    email: string,
-    phone: number,
-    whatsapp: number,
-    province: string,
-    localidad: string,
-    direction: string,
+    dni: string,
+    email?: string,
+    phone?: number,
+    whatsapp?: number,
+    province?: string,
+    localidad?: string,
+    direction?: string,
     creationDate: Date|number,
     deleted?: boolean,
 }
-export default class Client extends DbModel implements IClient{
-    name: string;
-    fantasy_name: string;
-    fiscalCategory: string;
-    idNumber: string;
-    email: string;
-    phone: number;
-    whatsapp: number;
-    province: string;
-    localidad: string;
-    direction: string;
-    creationDate: Date|number;
-    deleted: boolean;
-    constructor(input:IClient){
-        super('clients');
-        this.id = input.id;
-        this.name = input.name;
-        this.fantasy_name = input.fantasy_name;
-        this.fiscalCategory = input.fiscalCategory;
-        this.idNumber = input.idNumber;
-        this.email = input.email;
-        this.phone = input.phone;
-        this.whatsapp = input.whatsapp;
-        this.province = input.province;
-        this.localidad = input.localidad;
-        this.direction = input.direction;
-        this.creationDate = input.creationDate;
-        this.deleted = input.deleted || false;
-    }
-    static async getAll(offset:string, limit:string){
-        const dbModel = new DbModel('clients');
-        return dbModel.getAll(offset,limit);
-    }
-    static async getById(idClient:string){
-        const dbModel = new DbModel('clients');
-        return dbModel.getById(idClient);
-    }
+
+export class Client extends Model<InferAttributes<Client>, InferCreationAttributes<Client>>{
+    declare id: CreationOptional<number>;
+    declare name: string;
+    declare fantasy_name: CreationOptional<string>;
+    declare fiscalCategory: string;
+    declare dni: string;
+    declare email: CreationOptional<string>;
+    declare phone: CreationOptional<number>;
+    declare whatsapp: CreationOptional<number>;
+    declare province: CreationOptional<string>;
+    declare localidad: CreationOptional<string>;
+    declare direction: CreationOptional<string>;
+    declare deleted: CreationOptional<boolean>;
 }
+
+Client.init(
+    {
+        id: { type: DataType.INTEGER, primaryKey: true, autoIncrement: true },
+        name: { type: DataType.STRING},
+        fantasy_name: {type: DataType.STRING , allowNull: true, defaultValue: null},
+        fiscalCategory: { type: DataType.STRING},
+        dni: { type: DataType.STRING },
+        email: { type: DataType.STRING, allowNull: true, defaultValue: null},
+        phone: { type: DataType.INTEGER, allowNull: true, defaultValue: null},
+        whatsapp: { type: DataType.INTEGER, allowNull: true, defaultValue: null},
+        province: { type: DataType.STRING, allowNull: true, defaultValue: null},
+        localidad: { type: DataType.STRING, allowNull: true, defaultValue: null},
+        direction: { type: DataType.STRING, allowNull: true, defaultValue: null},
+        deleted: { type: DataType.BOOLEAN, defaultValue: false },
+    },
+    {
+        tableName: 'clients',
+        sequelize
+    }    
+)

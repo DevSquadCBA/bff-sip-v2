@@ -3,20 +3,13 @@ import { ApiGatewayParsedEvent } from 'types/response-factory/proxies';
 import { Validators } from 'utils/Validator';
 import { LambdaResolver } from 'utils/lambdaResolver';
 interface Event extends ApiGatewayParsedEvent {
-    queryStringParameters: {
-        offset: string
-        limit: string
-    }
+    body: IClient
 }
 
-const domain = async (event:Event): Promise<{body:IClient[], statusCode:number}> => {
-    const offset = parseInt(event.queryStringParameters.offset);
-    const limit = parseInt(event.queryStringParameters.limit);
-
-    const clients = await Client.findAll({ offset, limit }) as IClient[];
-
+const domain = async (event:Event): Promise<{body:number, statusCode:number}> => {
+    const client = await Client.create(event.body);
     return {
-        body: clients,
+        body: client.id,
         statusCode: 200
     }    
 }

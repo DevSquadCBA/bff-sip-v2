@@ -173,25 +173,25 @@ Resources:
                         Path: /client/{idClient}
                         Method: GET
                         ApiId: !Ref ProvimatRestApi
-#     CreateClientsFunction:
-#         Type: AWS::Serverless::Function
-#         Metadata:
-#             BuildMethod: esbuild
-#             BuildProperties:
-#                 Minify: true
-#                 Sourcemap: true
-#                 MainFields: "module,main"
-#         Properties:
-#             FunctionName: !Sub '${Environment}-CreateClients'
-#             Handler: createClients.Handler
-#             CodeUri: ./src/functions/client
-#             Events:
-#                 HttpEvent:
-#                     Type: HttpApi
-#                     Properties:
-#                         Path: /client
-#                         Method: POST
-#                         ApiId: !Ref ProvimatRestApi
+    CreateClientsFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-CreateClient'
+            Handler: createClient.Handler
+            CodeUri: ./src/functions/client
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /client
+                        Method: POST
+                        ApiId: !Ref ProvimatRestApi
 #     UpdateClientsFunction:
 #         Type: AWS::Serverless::Function
 #         Metadata:
@@ -262,7 +262,7 @@ Resources:
         Properties:
             FunctionName: !Sub '${Environment}-Get-Budget'
             Handler: getBudgets.Handler
-            CodeUri: ./src/functions/budget
+            CodeUri: ./src/functions/budgets
             Events:
                 HttpEvent:
                     Type: HttpApi
