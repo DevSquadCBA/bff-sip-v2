@@ -1,4 +1,6 @@
-import DbModel from "./DbModel";
+import { InferAttributes, InferCreationAttributes} from'sequelize';
+import { Model, DataType } from 'sequelize-typescript';
+import sequelize from 'services/sequelize';
 
 export type IProduct = {
     id: number|null,
@@ -14,39 +16,39 @@ export type IProduct = {
     daysDelay: Date|number,
     deleted?: boolean,
 }
-export default class Product extends DbModel implements IProduct{
-    code: number;
-    name: string;
-    salePrice: number;
-    purchasePrice: string;
-    provider: string;
-    stockeable: number;
-    negativeStock: number;
-    productType: string;
-    img: string;
-    daysDelay: Date|number;
-    deleted: boolean;
-    constructor(input:IProduct){
-        super('products');
-        this.id = input.id;
-        this.code= input.code;
-        this.name= input.name;
-        this.salePrice= input.salePrice;
-        this.purchasePrice= input.purchasePrice;
-        this.provider= input.provider;
-        this.stockeable= input.stockeable;
-        this.negativeStock= input.negativeStock;
-        this.productType= input.productType;
-        this.img= input.img;
-        this.daysDelay= input.daysDelay;
-        this.deleted= input.deleted || false;
+export class Product extends Model<InferAttributes<Product>, InferCreationAttributes<Product>>{ 
+    declare id: number|null;
+    declare code: number;
+    declare name: string;
+    declare salePrice: number;
+    declare purchasePrice: string;
+    declare provider: string;
+    declare stockeable: number;
+    declare negativeStock: number;
+    declare productType: string;
+    declare img: string;
+    declare daysDelay: Date|number;
+    declare deleted: boolean;
+}   
+
+Product.init(
+
+    {
+        id: { type: DataType.INTEGER, primaryKey: true, autoIncrement: true, allowNull: true },
+        code: { type: DataType.INTEGER, allowNull: false },
+        name: { type: DataType.STRING, allowNull: false },
+        salePrice: { type: DataType.FLOAT, allowNull: false },
+        purchasePrice: { type: DataType.STRING, allowNull: false },
+        provider: { type: DataType.STRING, allowNull: false },
+        stockeable: { type: DataType.INTEGER, allowNull: false },
+        negativeStock: { type: DataType.INTEGER, allowNull: false },
+        productType: { type: DataType.STRING, allowNull: false },
+        img: { type: DataType.STRING, allowNull: false },
+        daysDelay: { type: DataType.DATE, allowNull: false },
+        deleted: { type: DataType.BOOLEAN, defaultValue: false },
+    },
+    {
+        tableName: 'products',
+        sequelize,
     }
-    static async getAll(offset:string, limit:string){
-        const dbModel = new DbModel('products');
-        return dbModel.getAll(offset,limit);
-    }
-    static async getById(idProduct:string){
-        const dbModel = new DbModel('products');
-        return dbModel.getById(idProduct);
-    }
-}
+)
