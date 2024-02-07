@@ -7,7 +7,9 @@ interface Event extends ApiGatewayParsedEvent {
 }
 
 const domain = async (event:Event): Promise<{body:number, statusCode:number}> => {
-    const client = await Client.create(event.body);
+    const parsedBody = JSON.parse(event.body as unknown as string);
+    console.log(parsedBody);
+    const client = await Client.create(parsedBody);
     return {
         body: client.id,
         statusCode: 200

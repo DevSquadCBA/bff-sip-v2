@@ -22,7 +22,7 @@
     "start": "( Write-Output 'Powershell' && ./scripts/local_invoke.bat ) || ( CALL ./scripts/local_invoke.bat ) || ( bash -c 'uname -a | grep -q -i Linux' && bash -c ./scripts/local_invoke.sh ) ||( bash -c 'uname -a | grep -q -i Darwin' && bash -c ./scripts/local_invoke.sh )",
     "test": "npm run coverage",
     "coverage": "jest --coverage",
-    "debug": "node ./scripts/generateEnvVars.mjs && nodemon --ext \"js,json,yaml\" --exec \"sam build -c -p && sam local start-api -d 9999 --parameter-overrides Environment=develop -n scripts/env_vars.json --host 0.0.0.0 --profile default --region us-east-1\"",
-    "dev": "node ./scripts/generateEnvVars.mjs && nodemon --ext \"js,json,yaml\" --exec \"sam build -c -p && sam local start-api --parameter-overrides Environment=develop -n scripts/env_vars.json --host 0.0.0.0 --profile default --region us-east-1\""
+    "debug": "node ./scripts/generateEnvVars.mjs && nodemon --ext \"ts,json,yaml\" --exec \"sam build -c -p && sam local start-api -d 9999 --parameter-overrides Environment=develop -n scripts/env_vars.json --host 0.0.0.0 --profile default --region us-east-1\"",
+    "dev": "node ./scripts/generateEnvVars.mjs && nodemon --ext \"ts,json,yaml\" --exec \"sam build -c -p && sam local start-api --parameter-overrides Environment=develop -n scripts/env_vars.json --host 0.0.0.0 --profile default --region us-east-1\""
   }
 }

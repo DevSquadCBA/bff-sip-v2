@@ -1,6 +1,5 @@
-import { CreationOptional, InferAttributes, InferCreationAttributes } from 'sequelize';
-import { Model,DataType } from 'sequelize-typescript';
-import sequelize from 'services/sequelize';
+import { Model, Column, Table, DataType, PrimaryKey, AutoIncrement } from 'sequelize-typescript';
+import { CreationOptional} from 'sequelize';
 
 export type IClient = {
     name: string,
@@ -16,39 +15,46 @@ export type IClient = {
     creationDate: Date|number,
     deleted?: boolean,
 }
-
-export class Client extends Model<InferAttributes<Client>, InferCreationAttributes<Client>>{
+@Table({
+    tableName: 'clients'
+})
+export class Client extends Model {
+    @PrimaryKey
+    @AutoIncrement
+    @Column(DataType.INTEGER)
     declare id: CreationOptional<number>;
+
+    @Column(DataType.STRING)
     declare name: string;
+
+    @Column({ type: DataType.STRING, allowNull: true })
     declare fantasy_name: CreationOptional<string>;
+
+    @Column(DataType.STRING)
     declare fiscalCategory: string;
+
+    @Column(DataType.STRING)
     declare dni: string;
+
+    @Column({ type: DataType.STRING, allowNull: true })
     declare email: CreationOptional<string>;
+
+    @Column({ type: DataType.INTEGER, allowNull: true })
     declare phone: CreationOptional<number>;
+
+    @Column({ type: DataType.INTEGER, allowNull: true })
     declare whatsapp: CreationOptional<number>;
+
+    @Column({ type: DataType.STRING, allowNull: true })
     declare province: CreationOptional<string>;
+
+    @Column({ type: DataType.STRING, allowNull: true })
     declare localidad: CreationOptional<string>;
+
+    @Column({ type: DataType.STRING, allowNull: true })
     declare direction: CreationOptional<string>;
+
+    @Column({ type: DataType.BOOLEAN, defaultValue: false })
     declare deleted: CreationOptional<boolean>;
 }
 
-Client.init(
-    {
-        id: { type: DataType.INTEGER, primaryKey: true, autoIncrement: true },
-        name: { type: DataType.STRING},
-        fantasy_name: {type: DataType.STRING , allowNull: true, defaultValue: null},
-        fiscalCategory: { type: DataType.STRING},
-        dni: { type: DataType.STRING },
-        email: { type: DataType.STRING, allowNull: true, defaultValue: null},
-        phone: { type: DataType.INTEGER, allowNull: true, defaultValue: null},
-        whatsapp: { type: DataType.INTEGER, allowNull: true, defaultValue: null},
-        province: { type: DataType.STRING, allowNull: true, defaultValue: null},
-        localidad: { type: DataType.STRING, allowNull: true, defaultValue: null},
-        direction: { type: DataType.STRING, allowNull: true, defaultValue: null},
-        deleted: { type: DataType.BOOLEAN, defaultValue: false },
-    },
-    {
-        tableName: 'clients',
-        sequelize
-    }    
-)

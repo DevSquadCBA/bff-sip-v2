@@ -10,7 +10,7 @@ const data = functionsNames.reduce((json,lambda)=>{
             "HOST": "192.168.1.32",
             "USER": "root",
             "PASS": "1234",
-            "DB":"provimat",
+            "DB":"piatti",
             "DEBUG": "true"
         }
     }
