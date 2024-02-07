@@ -13,10 +13,12 @@ const domain = async (event:Event): Promise<{body:IBudget[], statusCode:number}>
     const offset = parseInt(event.queryStringParameters.offset);
     const limit = parseInt(event.queryStringParameters.limit);
 
+    const budgets = await Budget.findAll({ offset, limit }) as IBudget[];
+
     return {
-        body: await Budget.findAll({ offset, limit }) as IBudget[],
+        body: budgets,
         statusCode: 200
-    }
+    }    
 }
 
 export const Handler = (event:ApiGatewayParsedEvent)=>LambdaResolver(event, domain, [Validators.OFFSET_AND_LIMITS])
