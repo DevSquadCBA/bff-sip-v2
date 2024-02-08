@@ -10,8 +10,11 @@ interface Event extends ApiGatewayParsedEvent {
 }
 
 const domain = async (event:Event): Promise<{body:IProduct[], statusCode:number}> => {
+    const offset = parseInt(event.queryStringParameters.offset);
+    const limit = parseInt(event.queryStringParameters.limit);
+    const  products = await Product.findAll({ offset, limit }) as IProduct[];
     return {
-        body: await Product.getAll(event.queryStringParameters.offset, event.queryStringParameters.limit) as IProduct[],
+        body: products,
         statusCode: 200
     }
 }

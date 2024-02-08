@@ -1,6 +1,5 @@
-import { InferAttributes, InferCreationAttributes} from'sequelize';
-import { Model, DataType } from 'sequelize-typescript';
-import sequelize from 'services/sequelize';
+import { Model, Column, Table, DataType, PrimaryKey, AutoIncrement } from 'sequelize-typescript';
+import { CreationOptional} from 'sequelize';
 
 export type IProduct = {
     id: number|null,
@@ -16,39 +15,45 @@ export type IProduct = {
     daysDelay: Date|number,
     deleted?: boolean,
 }
-export class Product extends Model<InferAttributes<Product>, InferCreationAttributes<Product>>{ 
-    declare id: number|null;
+@Table({
+    tableName: 'Product'
+})
+export class Product extends Model {
+    @PrimaryKey
+    @AutoIncrement
+    @Column(DataType.INTEGER)
+    declare id: CreationOptional<number>;
+    
+    @Column(DataType.INTEGER)
     declare code: number;
+
+    @Column(DataType.STRING)
     declare name: string;
+
+    @Column(DataType.DECIMAL)
     declare salePrice: number;
+
+    @Column(DataType.DECIMAL)
     declare purchasePrice: string;
+
+    @Column(DataType.STRING)
     declare provider: string;
+
+    @Column(DataType.INTEGER)
     declare stockeable: number;
+
+    @Column(DataType.INTEGER)
     declare negativeStock: number;
+
+    @Column(DataType.STRING)
     declare productType: string;
+
+    @Column(DataType.STRING)
     declare img: string;
+
+    @Column(DataType.DATE)
     declare daysDelay: Date|number;
-    declare deleted: boolean;
-}   
 
-Product.init(
-
-    {
-        id: { type: DataType.INTEGER, primaryKey: true, autoIncrement: true, allowNull: true },
-        code: { type: DataType.INTEGER, allowNull: false },
-        name: { type: DataType.STRING, allowNull: false },
-        salePrice: { type: DataType.FLOAT, allowNull: false },
-        purchasePrice: { type: DataType.STRING, allowNull: false },
-        provider: { type: DataType.STRING, allowNull: false },
-        stockeable: { type: DataType.INTEGER, allowNull: false },
-        negativeStock: { type: DataType.INTEGER, allowNull: false },
-        productType: { type: DataType.STRING, allowNull: false },
-        img: { type: DataType.STRING, allowNull: false },
-        daysDelay: { type: DataType.DATE, allowNull: false },
-        deleted: { type: DataType.BOOLEAN, defaultValue: false },
-    },
-    {
-        tableName: 'products',
-        sequelize,
-    }
-)
+    @Column(DataType.BOOLEAN)
+    declare deleted: CreationOptional<boolean>;
+}

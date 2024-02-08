@@ -1,6 +1,5 @@
-import { InferAttributes, InferCreationAttributes} from'sequelize';
-import { Model, DataType } from 'sequelize-typescript';
-import sequelize from 'services/sequelize';
+import { Model, Column, Table, DataType, PrimaryKey, AutoIncrement } from 'sequelize-typescript';
+import { CreationOptional} from 'sequelize';
 
 export type IProvider = {
     id: number|null,
@@ -16,38 +15,45 @@ export type IProvider = {
     daysDelays: Date|number,
     deleted?: boolean,
 }
-export class Provider extends Model<InferAttributes<Provider>, InferCreationAttributes<Provider>>{
-    declare id: number|null;
+@Table({
+    tableName:'providers'
+})
+export class Provider extends Model {
+    @PrimaryKey
+    @AutoIncrement
+    @Column(DataType.INTEGER)
+    declare id: CreationOptional<number>;
+
+    @Column(DataType.STRING)
     declare name: string;
+
+    @Column(DataType.STRING)
     declare fantasy_name: string;
+
+    @Column(DataType.INTEGER)
     declare cuit_cuil: number;
+
+    @Column(DataType.STRING)
     declare email: string;
+
+    @Column(DataType.STRING)
     declare province: string;
+
+    @Column(DataType.STRING)
     declare locality: string;
+
+    @Column(DataType.STRING)
     declare direction: string;
+
+    @Column(DataType.INTEGER)
     declare phone: number;
+
+    @Column(DataType.STRING)
     declare voucherType: string;
+
+    @Column(DataType.DATE)
     declare daysDelays: Date|number;
-    declare deleted: boolean;
-}
-Provider.init(
-    {
-        id: { type: DataType.INTEGER, primaryKey: true, autoIncrement: true, allowNull: true },
-        name: { type: DataType.STRING, allowNull: false },
-        fantasy_name: { type: DataType.STRING, allowNull: false },
-        cuit_cuil: { type: DataType.INTEGER, allowNull: false },
-        email: { type: DataType.STRING, allowNull: false },
-        province: { type: DataType.STRING, allowNull: false },
-        locality: { type: DataType.STRING, allowNull: false },
-        direction: { type: DataType.STRING, allowNull: false },
-        phone: { type: DataType.INTEGER, allowNull: false },
-        voucherType: { type: DataType.STRING, allowNull: false },
-        daysDelays: { type: DataType.DATE, allowNull: false },
-        deleted: { type: DataType.BOOLEAN, defaultValue: false },
-    },
-    {
-        tableName: 'providers',
-        sequelize,
-    }
-)
-    
+
+    @Column(DataType.BOOLEAN)
+    declare deleted: CreationOptional<boolean>;
+}  

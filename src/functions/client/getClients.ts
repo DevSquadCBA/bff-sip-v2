@@ -1,4 +1,4 @@
-import {Client, IClient } from 'models/Client';
+import { Client , IClient } from 'models/Client';
 import { ApiGatewayParsedEvent } from 'types/response-factory/proxies';
 import { Validators } from 'utils/Validator';
 import { LambdaResolver } from 'utils/lambdaResolver';
