@@ -1,13 +1,19 @@
-// import Budget, { IBudget } from 'models/Budget';
-// import { ApiGatewayParsedEvent } from 'types/response-factory/proxies';
-// //El validador deberia ser un nuevo budget?
-// import { LambdaResolver } from 'utils/lambdaResolver';
+import {Budget , IBudget } from 'models/Budget';
+import { ApiGatewayParsedEvent } from 'types/response-factory/proxies';
+import { Validators } from 'utils/Validator';
+import { LambdaResolver } from 'utils/lambdaResolver';
+interface Event extends ApiGatewayParsedEvent {
+    body: IBudget
+}
 
-// const domain = async (event:Event): Promise<{body:IBudget[], statusCode:number}> => {
-//     return {
-//         body: await Budget.createBudget(event.queryStringParameters.offset, event.queryStringParameters.limit) as IBudget[],
-//         statusCode: 200
-//     }
-// }
-//tratando de seguir la logica del GetBudgets,creo que deberia crear un getNew para traer los nuevos budgets.
-// export const Handler = (event:ApiGatewayParsedEvent)=>LambdaResolver(event, domain, [Validators.OFFSET_AND_LIMITS]) Los validadores deberian ser otros.
+const domain = async (event:Event): Promise<{body:number, statusCode:number}> => {
+    const parsedBody = JSON.parse(event.body as unknown as string);
+    console.log(parsedBody);
+    const budget = await Budget.create(parsedBody);
+    return {
+        body: budget.id,
+        statusCode: 200
+    }    
+}
+
+export const Handler = (event:ApiGatewayParsedEvent)=>LambdaResolver(event, domain, [Validators.OFFSET_AND_LIMITS])
