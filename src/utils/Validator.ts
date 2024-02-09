@@ -5,7 +5,8 @@ export enum Validators{
     OFFSET_AND_LIMITS = 'OffsetAndLimitValidator',
     ID_CLIENT = 'validateIdClient',
     ID_PROVIDER = 'validateIdProvider',
-    ID_PRODUCT = 'validateIdProduct'
+    ID_PRODUCT = 'validateIdProduct',
+    ID_BUDGET = 'validateIdBudget'
 }
 
 function offsetAndLimitValidator(queryStringParameters:{offset?:string, limit?: string}){
@@ -54,6 +55,16 @@ function validateIdProduct(pathParameters:{idProduct?:string}){
     return pathParameters;
 }
 
+function validateIdBudget(pathParameters:{idBudget?:string}){
+    if(!pathParameters.idBudget){
+        throw new BadRequestError('Es necesario enviar un idBudget');
+    }
+    if(!/^[0-9]+$/.test(pathParameters.idBudget)){
+        throw new BadRequestError('El idBudget debe ser un número');
+    }
+    return pathParameters;
+}
+
 export function validate(validations: Validators[], event:ApiGatewayParsedEvent):ApiGatewayParsedEvent{
     if(validations.includes(Validators.OFFSET_AND_LIMITS)){
         event.queryStringParameters = offsetAndLimitValidator(event.queryStringParameters)
@@ -63,6 +74,9 @@ export function validate(validations: Validators[], event:ApiGatewayParsedEvent)
         event.pathParameters = validateIdProvider(event.pathParameters);
     }else if(validations.includes(Validators.ID_PRODUCT)){
         event.pathParameters = validateIdProduct(event.pathParameters);
+    }
+    else if(validations.includes(Validators.ID_BUDGET)){
+        event.pathParameters = validateIdBudget(event.pathParameters);
     }
     return event;
 }
