@@ -252,7 +252,7 @@ Resources:
                 Sourcemap: true
                 MainFields: "module,main"
         Properties:
-            FunctionName: !Sub '${Environment}-Create-Budget'
+            FunctionName: !Sub '${Environment}-CreateBudget'
             Handler: createBudgets.Handler
             CodeUri: ./src/functions/budget
             Events:
@@ -271,7 +271,7 @@ Resources:
                 Sourcemap: true
                 MainFields: "module,main"
         Properties:
-            FunctionName: !Sub '${Environment}-Get-Budget'
+            FunctionName: !Sub '${Environment}-GetBudget'
             Handler: getBudgets.Handler
             CodeUri: ./src/functions/budgets
             Events:
@@ -290,7 +290,7 @@ Resources:
                 Sourcemap: true
                 MainFields: "module,main"
         Properties:
-            FunctionName: !Sub '${Environment}-Get-BudgetById'
+            FunctionName: !Sub '${Environment}-GetBudgetById'
             Handler: getBudgetById.Handler
             CodeUri: ./src/functions/budget
             Events:
@@ -347,7 +347,7 @@ Resources:
 #                 Sourcemap: true
 #                 MainFields: "module,main"
 #         Properties:
-#             FunctionName: !Sub '${Environment}-Get-Client-Budgets'
+#             FunctionName: !Sub '${Environment}-GetClient-Budgets'
 #             Handler: getClientBudgets.Handler
 #             CodeUri: ./src/functions/budget
 #             Events:
@@ -377,63 +377,63 @@ Resources:
 #                         Method: POST
 #                         ApiId: !Ref ProvimatRestApi
 # # Products
-#     CreateProductFunction:
-#         Type: AWS::Serverless::Function
-#         Metadata:
-#             BuildMethod: esbuild
-#             BuildProperties:
-#                 Minify: true
-#                 Sourcemap: true
-#                 MainFields: "module,main"
-#         Properties:
-#             FunctionName: !Sub '${Environment}-create-Product'
-#             Handler: createProduct.Handler
-#             CodeUri: ./src/functions/product
-#             Events:
-#                 HttpEvent:
-#                     Type: HttpApi
-#                     Properties:
-#                         Path: /product
-#                         Method: POST
-#                         ApiId: !Ref ProvimatRestApi
-    # GetProductFunction:
-    #     Type: AWS::Serverless::Function
-    #     Metadata:
-    #         BuildMethod: esbuild
-    #         BuildProperties:
-    #             Minify: true
-    #             Sourcemap: true
-    #             MainFields: "module,main"
-    #     Properties:
-    #         FunctionName: !Sub '${Environment}-get-Product'
-    #         Handler: getProducts.Handler
-    #         CodeUri: ./src/functions/product
-    #         Events:
-    #             HttpEvent:
-    #                 Type: HttpApi
-    #                 Properties:
-    #                     Path: /product
-    #                     Method: GET
-    #                     ApiId: !Ref ProvimatRestApi
-    # GetProductByIdFunction:
-    #     Type: AWS::Serverless::Function
-    #     Metadata:
-    #         BuildMethod: esbuild
-    #         BuildProperties:
-    #             Minify: true
-    #             Sourcemap: true
-    #             MainFields: "module,main"
-    #     Properties:
-    #         FunctionName: !Sub '${Environment}-Get-ProductById'
-    #         Handler: getProductById.Handler
-    #         CodeUri: ./src/functions/product
-    #         Events:
-    #             HttpEvent:
-    #                 Type: HttpApi
-    #                 Properties:
-    #                     Path: /product/{idProduct}
-    #                     Method: GET
-    #                     ApiId: !Ref ProvimatRestApi
+    CreateProductFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-CreateProduct'
+            Handler: createProduct.Handler
+            CodeUri: ./src/functions/product
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /product
+                        Method: POST
+                        ApiId: !Ref ProvimatRestApi
+    GetProductFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-GetProduct'
+            Handler: getProducts.Handler
+            CodeUri: ./src/functions/product
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /product
+                        Method: GET
+                        ApiId: !Ref ProvimatRestApi
+    GetProductByIdFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-GetProductById'
+            Handler: getProductById.Handler
+            CodeUri: ./src/functions/product
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /product/{idProduct}
+                        Method: GET
+                        ApiId: !Ref ProvimatRestApi
 #     GetProductWithProvider:
 #         Type: AWS::Serverless::Function
 #         Metadata:
@@ -493,82 +493,82 @@ Resources:
 #                         ApiId: !Ref ProvimatRestApi
 
 # Providers
-    # CreateProviderFunction:
-    #     Type: AWS::Serverless::Function
-    #     Metadata:
-    #         BuildMethod: esbuild
-    #         BuildProperties:
-    #             Minify: true
-    #             Sourcemap: true
-    #             # MainFields: "module,main"
-    #     Properties:
-    #         FunctionName: !Sub '${Environment}-Create-Provider'
-    #         Handler: createProvider.Handler
-    #         CodeUri: ./src/functions/provider
-    #         Events:
-    #             HttpEvent:
-    #                 Type: HttpApi
-    #                 Properties:
-    #                     Path: /provider
-    #                     Method: POST
-    #                     ApiId: !Ref ProvimatRestApi
-    # GetProviderFunction:
-    #     Type: AWS::Serverless::Function
-    #     Metadata:
-    #         BuildMethod: esbuild
-    #         BuildProperties:
-    #             Minify: true
-    #             Sourcemap: true
-    #             # MainFields: "module,main"
-    #     Properties:
-    #         FunctionName: !Sub '${Environment}-Get-Provider'
-    #         Handler: getProviders.Handler
-    #         CodeUri: ./src/functions/provider
-    #         Events:
-    #             HttpEvent:
-    #                 Type: HttpApi
-    #                 Properties:
-    #                     Path: /provider
-    #                     Method: GET
-    #                     ApiId: !Ref ProvimatRestApi
-#     DeleteProviderFunction:
-#         Type: AWS::Serverless::Function
-#         Metadata:
-#             BuildMethod: esbuild
-#             BuildProperties:
-#                 Minify: true
-#                 Sourcemap: true
-#                 MainFields: "module,main"
-#         Properties:
-#             FunctionName: !Sub '${Environment}-Delete-Provider'
-#             Handler: deleteProvider.Handler
-#             CodeUri: ./src/functions/provider
-#             Events:
-#                 HttpEvent:
-#                     Type: HttpApi
-#                     Properties:
-#                         Path: /provider/{idProvider}
-#                         Method: DELETE
-#                         ApiId: !Ref ProvimatRestApi
-#     GetProviderByIdFunction:
-#         Type: AWS::Serverless::Function
-#         Metadata:
-#             BuildMethod: esbuild
-#             BuildProperties:
-#                 Minify: true
-#                 Sourcemap: true
-#                 MainFields: "module,main"
-#         Properties:
-#             FunctionName: !Sub '${Environment}-Get-Provider-ById'
-#             Handler: getProviderById.Handler
-#             CodeUri: ./src/functions/provider
-#             Events:
-#                 HttpEvent:
-#                     Type: HttpApi
-#                     Properties:
-#                         Path: /provider/{idProvider}
-#                         Method: GET
-#                         ApiId: !Ref ProvimatRestApi
+    CreateProviderFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                # MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-Create-Provider'
+            Handler: createProvider.Handler
+            CodeUri: ./src/functions/provider
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /provider
+                        Method: POST
+                        ApiId: !Ref ProvimatRestApi
+    GetProviderFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                # MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-GetProvider'
+            Handler: getProviders.Handler
+            CodeUri: ./src/functions/provider
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /provider
+                        Method: GET
+                        ApiId: !Ref ProvimatRestApi
+    DeleteProviderFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-Delete-Provider'
+            Handler: deleteProvider.Handler
+            CodeUri: ./src/functions/provider
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /provider/{idProvider}
+                        Method: DELETE
+                        ApiId: !Ref ProvimatRestApi
+    GetProviderByIdFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-GetProvider-ById'
+            Handler: getProviderById.Handler
+            CodeUri: ./src/functions/provider
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /provider/{idProvider}
+                        Method: GET
+                        ApiId: !Ref ProvimatRestApi
 #     UpdateProviderFunction:
 #         Type: AWS::Serverless::Function
 #         Metadata:

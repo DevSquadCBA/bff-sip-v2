@@ -1,4 +1,4 @@
-import { Budget } from 'models/Budget';
+import { Product } from 'models/Product';
 import { ApiGatewayParsedEvent } from 'types/response-factory/proxies';
 import { Validators } from 'utils/Validator';
 import { LambdaResolver } from 'utils/lambdaResolver';
@@ -13,7 +13,7 @@ const domain = async (event: Event): Promise<{ body: string; statusCode: number 
     const { id } = event.pathParameters;
 
     try {
-        await Budget.destroy({
+        await Product.destroy({
             where: {
                 id: parseInt(id, 10),
             },
@@ -26,7 +26,7 @@ const domain = async (event: Event): Promise<{ body: string; statusCode: number 
     } catch (error) {
         console.error(error);
         return {
-            body: 'Error deleting the budget',
+            body: 'Error deleting the product',
             statusCode: 500,
         };
     }
