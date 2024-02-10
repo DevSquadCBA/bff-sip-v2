@@ -210,163 +210,43 @@ paths:
           content:
             application/json:
               schema: {}
-  /budget:
-    post:
-      tags:
-        - Presupuestos
-      summary: Crea un nuevo Presupuesto
-      description: Crea un nuevo Presupuesto
-      operationId: CreateBudget
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Budget"
-      responses:
-        200:
-          description: Devuelve el id del presupuesto creado
-          content: {}
-          headers:
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-        500:
-          description: Error
-          content:
-            application/json:
-              schema: {}
-    get:
-      tags:
-        - Presupuestos
-      summary: Obtiene todos los presupuestos
-      description: Obtiene un listado de todos los presupuestos
-      operationId: GetBudgets
-      parameters: []
-      responses:
-        200:
-          description: estos son todos los presupuestos
-          content: {}
-          headers:
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-        500:
-          description: Error
-          content:
-            application/json:
-              schema: {}
   /budget/{idBudget}:
-    get:
-      tags:
-        - Presupuestos
-      summary: Obtiene un presupuesto
-      description: Obtiene un presupuesto basandose en el id
-      operationId: DeleteBudget
-      parameters:
-        - name: idBudget
-          in: path
-          description: el id del presupuesto
-          schema: {}
-          required: true
-      responses:
-        200:
-          description: un presupuesto
-          content: {}
-          headers:
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-        500:
-          description: Error
-          content:
-            application/json:
-              schema: {}
-    put:
-      tags:
-        - Presupuestos
-      summary: Actualiza un Presupuesto
-      description: Actualiza un presupuesto
-      operationId: UpdateBudget
-      parameters:
-        - name: idBudget
-          in: path
-          description: el id del presupuesto
-          schema: {}
-          required: true
-      requestBody:
+  get:
+    tags:
+      - Presupuestos
+    summary: Obtiene un presupuesto
+    description: Obtiene un presupuesto basándose en el ID
+    operationId: GetBudgetById
+    parameters:
+      - name: idBudget
+        in: path
+        description: El ID del presupuesto
+        schema: {}
+        required: true
+    responses:
+      200:
+        description: Un Presupuesto
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Budget"
-      responses:
-        200:
-          description: resultado
-          content: {}
-          headers:
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-        500:
-          description: Error
-          content:
-            application/json:
-              schema: {}
-    delete:
-      tags:
-        - Presupuestos
-      summary: Da de baja un Presupuesto
-      description: Da de baja logica un presupuesto que estaba en estado pendiente
-      operationId: DeleteBudget
-      parameters:
-        - name: idBudget
-          in: path
-          description: el id del presupuesto
-          schema: {}
-          required: true
-      responses:
-        200:
-          description: listado de clientes
-          content: {}
-          headers:
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-        500:
-          description: Error
-          content:
-            application/json:
-              schema: {}
-  /budgets/{idClient}:
+              $ref: '#/components/schemas/Budget'
+        headers:
+          Access-Control-Allow-Origin:
+            schema:
+              type: string
+          Access-Control-Allow-Methods:
+            schema:
+              type: string
+          Access-Control-Allow-Headers:
+            schema:
+              type: string
+      500:
+        description: Error
+        content:
+          application/json:
+            schema: {}
+
+/budgets/{idClient}:
     # /budgetS/0?idBudget=1&status=pending
     get:
       tags:
@@ -412,7 +292,7 @@ paths:
           content:
             application/json:
               schema: {}
-  /budget/{idBudget}/addProducts:
+    /budget/{idBudget}/addProducts:
     post:
       tags:
         - agrega productos
@@ -449,7 +329,7 @@ paths:
           content:
             application/json:
               schema: {}
-  /product:
+      /product: 
     post:
       tags:
         - Productos
@@ -480,7 +360,7 @@ paths:
           content:
             application/json:
               schema: {}
-    get:
+get:
       tags:
         - Productos
       summary: Te devuelve todos los productos
@@ -506,7 +386,7 @@ paths:
           content:
             application/json:
               schema: {}
-  /product/{idProduct}:
+      /product/{idProduct}:
     get:
       tags:
         - Productos
@@ -542,7 +422,7 @@ paths:
           content:
             application/json:
               schema: {}
-    delete:
+delete:
       tags:
         - Productos
       summary: Da de baja un producto

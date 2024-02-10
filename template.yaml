@@ -242,26 +242,26 @@ Resources:
 #                         Method: DELETE
 #                         ApiId: !Ref ProvimatRestApi
 
-# # Budgets
-#     CreateBudgetFunction:
-#         Type: AWS::Serverless::Function
-#         Metadata:
-#             BuildMethod: esbuild
-#             BuildProperties:
-#                 Minify: true
-#                 Sourcemap: true
-#                 MainFields: "module,main"
-#         Properties:
-#             FunctionName: !Sub '${Environment}-Create-Budget'
-#             Handler: createBudgets.Handler
-#             CodeUri: ./src/functions/budget
-#             Events:
-#                 HttpEvent:
-#                     Type: HttpApi
-#                     Properties:
-#                         Path: /budget
-#                         Method: POST
-#                         ApiId: !Ref ProvimatRestApi
+# Budgets
+    CreateBudgetFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-Create-Budget'
+            Handler: createBudgets.Handler
+            CodeUri: ./src/functions/budget
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /budget
+                        Method: POST
+                        ApiId: !Ref ProvimatRestApi
     GetBudgetFunction:
         Type: AWS::Serverless::Function
         Metadata:
@@ -281,63 +281,63 @@ Resources:
                         Path: /budget
                         Method: GET
                         ApiId: !Ref ProvimatRestApi
-#     GetBudgetByIdFunction:
-#         Type: AWS::Serverless::Function
-#         Metadata:
-#             BuildMethod: esbuild
-#             BuildProperties:
-#                 Minify: true
-#                 Sourcemap: true
-#                 MainFields: "module,main"
-#         Properties:
-#             FunctionName: !Sub '${Environment}-Get-BudgetById'
-#             Handler: getBudgetById.Handler
-#             CodeUri: ./src/functions/budget
-#             Events:
-#                 HttpEvent:
-#                     Type: HttpApi
-#                     Properties:
-#                         Path: /budget/{idBudget}
-#                         Method: GET
-#                         ApiId: !Ref ProvimatRestApi
-#     UpdateBudgetFunction:
-#         Type: AWS::Serverless::Function
-#         Metadata:
-#             BuildMethod: esbuild
-#             BuildProperties:
-#                 Minify: true
-#                 Sourcemap: true
-#                 MainFields: "module,main"
-#         Properties:
-#             FunctionName: !Sub '${Environment}-Update-Budget'
-#             Handler: updateBudgets.Handler
-#             CodeUri: ./src/functions/budget
-#             Events:
-#                 HttpEvent:
-#                     Type: HttpApi
-#                     Properties:
-#                         Path: /budget/{idBudget}
-#                         Method: PUT
-#                         ApiId: !Ref ProvimatRestApi
-#     DeleteBudgetFunction:
-#         Type: AWS::Serverless::Function
-#         Metadata:
-#             BuildMethod: esbuild
-#             BuildProperties:
-#                 Minify: true
-#                 Sourcemap: true
-#                 MainFields: "module,main"
-#         Properties:
-#             FunctionName: !Sub '${Environment}-Delete-Budget'
-#             Handler: deleteBudget.Handler
-#             CodeUri: ./src/functions/budget
-#             Events:
-#                 HttpEvent:
-#                     Type: HttpApi
-#                     Properties:
-#                         Path: /budget/{idBudget}
-#                         Method: DELETE
-#                         ApiId: !Ref ProvimatRestApi
+    GetBudgetByIdFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-Get-BudgetById'
+            Handler: getBudgetById.Handler
+            CodeUri: ./src/functions/budget
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /budget/{idBudget}
+                        Method: GET
+                        ApiId: !Ref ProvimatRestApi
+    UpdateBudgetFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-Update-Budget'
+            Handler: updateBudgets.Handler
+            CodeUri: ./src/functions/budget
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /budget/{idBudget}
+                        Method: PUT
+                        ApiId: !Ref ProvimatRestApi
+    DeleteBudgetFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-Delete-Budget'
+            Handler: deleteBudget.Handler
+            CodeUri: ./src/functions/budget
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /budget/{idBudget}
+                        Method: DELETE
+                        ApiId: !Ref ProvimatRestApi
 #     GetClientBudgetFunction:
 #         Type: AWS::Serverless::Function
 #         Metadata:

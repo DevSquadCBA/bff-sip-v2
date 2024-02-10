@@ -1,5 +1,7 @@
 
+import { Budget } from 'models/Budget';
 import { Client } from 'models/Client';
+import { Product } from 'models/Product';
 import { Sequelize } from 'sequelize-typescript';
 import { InternalServerError } from 'types/errors';
 
@@ -19,6 +21,6 @@ const sequelize = new Sequelize({
 });
 console.log(sequelize.config.database);
 
-sequelize.addModels([Client])
+sequelize.addModels([Client , Budget , Product])
 
 export default sequelize;

@@ -1,12 +1,10 @@
-import { InferAttributes, InferCreationAttributes} from'sequelize';
-import { Model, DataType } from 'sequelize-typescript';
-import sequelize from 'services/sequelize';
-import { States, StatesValues } from './Enums';
+import { Model, Column, Table, DataType, PrimaryKey, AutoIncrement } from 'sequelize-typescript';
+import { CreationOptional} from 'sequelize';
 
 export type IBudget = {
     id: number,
     clientId: number,
-    state: States,
+    state: States, // donde deberia crear el states?//
     creationDate: Date|string,
     updateDate: Date|string,
     deleted: boolean,
@@ -18,38 +16,45 @@ export type IBudget = {
     billing: string,
 }
 
-export class Budget extends Model<InferAttributes<Budget>, InferCreationAttributes<Budget>>{
-    declare id: number;
+@Table({
+    tableName: 'budgets'
+})
+export class Budget extends Model {
+    @PrimaryKey
+    @AutoIncrement
+    @Column(DataType.INTEGER)
+    declare id: CreationOptional<number>;
+
+    @Column(DataType.INTEGER)
     declare clientId: number;
+
+    @Column(DataType.STRING)
     declare state: States;
-    declare creationDate: Date|string;
-    declare updateDate: Date|string;
+
+    @Column(DataType.DATE)
+    declare creationDate: Date;
+
+    @Column(DataType.DATE)
+    declare updateDate: Date;
+
+    @Column(DataType.BOOLEAN)
     declare deleted: boolean;
+
+    @Column(DataType.DECIMAL)
     declare total: number;
+
+    @Column(DataType.STRING)
     declare budgetDetails: string;
+
+    @Column(DataType.STRING)
     declare paid: string;
+    
+    @Column(DataType.STRING)
     declare dispatch: 'without'|'with';
+
+    @Column(DataType.STRING)
     declare seller: string;
+
+    @Column(DataType.STRING)
     declare billing: string;
 }
-
-Budget.init(
-    {
-        id: { type: DataType.INTEGER, primaryKey: true, autoIncrement: true, allowNull: true },
-        clientId: { type: DataType.INTEGER, allowNull: false },
-        state: { type: DataType.ENUM(...StatesValues), allowNull: false },
-        creationDate: { type: DataType.DATE, allowNull: false },
-        updateDate: { type: DataType.DATE, allowNull: false },
-        deleted: { type: DataType.BOOLEAN, defaultValue: false },
-        total: { type: DataType.FLOAT, allowNull: false },
-        budgetDetails: { type: DataType.TEXT },
-        paid: { type: DataType.STRING },
-        dispatch: { type: DataType.ENUM('without', 'with'), allowNull: false },
-        seller: { type: DataType.STRING },
-        billing: { type: DataType.STRING },
-    },
-    {
-        tableName: 'budgets',
-        sequelize,
-    }
-);
