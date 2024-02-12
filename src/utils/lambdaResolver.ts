@@ -28,7 +28,7 @@ function responseFactory({body, statusCode}: {body:unknown, statusCode: number})
 
 
 export async function LambdaResolver(event:ApiGatewayParsedEvent, domain:any, validators?:Validators[]):Promise<lambdaResponse>{
-    await sequelize.sync({ alter: true});
+    await sequelize.sync();
     try{
         let finalEvent = event;
         getEntity(event.headers)
