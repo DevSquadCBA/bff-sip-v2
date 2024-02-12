@@ -1,9 +1,11 @@
-export enum States {
-    'initiated',
-    'waiting_delivery',
-    'waiting_customer',
-    'in_transit',
-    'finished',
+export enum SaleStates {
+    'presupuesto',      // cuando se crea
+    'proforma',         // pago parcial o cuando hace un pago
+    'comprobante',      // cuando define las caracteristicas
+    'in_order',         // cuando le avisa al proveedor
+    'in_provider',      // cuando el proveedor acepta el pedido, aca se disparan los estados del producto
+    'delayed_provider', // cuando está todo listo, pero el proveedor tiene demora
+    'finished',     
     'canceled'
 }
-export const StatesValues = ['initiated','waiting_delivery','waiting_customer','in_transit','finished','canceled']
+export const StatesValues = ['presupuesto', 'proforma', 'comprobante', 'in_order', 'in_provider', 'delayed_provider', 'finished', 'canceled']

@@ -4,7 +4,6 @@ import { Client } from 'models/Client';
 import { Product } from 'models/Product';
 import { Sequelize } from 'sequelize-typescript';
 import { InternalServerError } from 'types/errors';
-
 const { HOST, USER, PASS, DB } = process.env;
 
 if (!HOST || !USER || !PASS || !DB) {
