@@ -12,7 +12,6 @@ export type IClient = {
     province?: string,
     localidad?: string,
     direction?: string,
-    creationDate: Date|number,
     deleted?: boolean,
 }
 @Table({
