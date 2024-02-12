@@ -1,5 +1,6 @@
 import { Model, Column, Table, DataType, PrimaryKey, AutoIncrement } from 'sequelize-typescript';
 import { CreationOptional} from 'sequelize';
+import { States } from './Enums';
 
 export type IBudget = {
     id: number,
