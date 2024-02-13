@@ -6,8 +6,6 @@ export type IBudget = {
     id: number,
     clientId: number,
     state: SaleStates,
-    creationDate: Date | string,
-    updateDate: Date | string,
     deleted: boolean,
     total: number,
     budgetDetails: string,
@@ -31,12 +29,6 @@ export class Budget extends Model {
 
     @Column(DataType.STRING)
     declare state: SaleStates;
-
-    @Column(DataType.DATE)
-    declare creationDate: Date;
-
-    @Column(DataType.DATE)
-    declare updateDate: Date;
 
     @Column(DataType.BOOLEAN)
     declare deleted: boolean;
