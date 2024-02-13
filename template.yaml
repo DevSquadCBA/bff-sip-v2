@@ -146,25 +146,25 @@ Resources:
                         Path: /client
                         Method: GET
                         ApiId: !Ref ProvimatRestApi
-#     GetClientsListFunction:
-#         Type: AWS::Serverless::Function
-#         Metadata:
-#             BuildMethod: esbuild
-#             BuildProperties:
-#                 MainFields: "module,main"
-#                 Minify: true
-#                 Sourcemap: true
-#         Properties:
-#             FunctionName: !Sub '${Environment}-GetClients-List'
-#             Handler: getClientsList.Handler
-#             CodeUri: ./src/functions/client
-#             Events:
-#                 HttpEvent:
-#                     Type: HttpApi
-#                     Properties:
-#                         Path: /clients
-#                         Method: GET
-#                         ApiId: !Ref ProvimatRestApi
+    GetClientsListFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                MainFields: "module,main"
+                Minify: true
+                Sourcemap: true
+        Properties:
+            FunctionName: !Sub '${Environment}-GetClients-List'
+            Handler: getClientsList.Handler
+            CodeUri: ./src/functions/client
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /clientsList
+                        Method: GET
+                        ApiId: !Ref ProvimatRestApi
     GetClientByIdFunction:
         Type: AWS::Serverless::Function
         Metadata:
@@ -254,7 +254,7 @@ Resources:
         Properties:
             FunctionName: !Sub '${Environment}-CreateBudget'
             Handler: createBudgets.Handler
-            CodeUri: ./src/functions/budget
+            CodeUri: ./src/functions/budgets
             Events:
                 HttpEvent:
                     Type: HttpApi
@@ -292,7 +292,7 @@ Resources:
         Properties:
             FunctionName: !Sub '${Environment}-GetBudgetById'
             Handler: getBudgetById.Handler
-            CodeUri: ./src/functions/budget
+            CodeUri: ./src/functions/budgets
             Events:
                 HttpEvent:
                     Type: HttpApi
@@ -300,25 +300,25 @@ Resources:
                         Path: /budget/{idBudget}
                         Method: GET
                         ApiId: !Ref ProvimatRestApi
-    UpdateBudgetFunction:
-        Type: AWS::Serverless::Function
-        Metadata:
-            BuildMethod: esbuild
-            BuildProperties:
-                Minify: true
-                Sourcemap: true
-                MainFields: "module,main"
-        Properties:
-            FunctionName: !Sub '${Environment}-Update-Budget'
-            Handler: updateBudgets.Handler
-            CodeUri: ./src/functions/budget
-            Events:
-                HttpEvent:
-                    Type: HttpApi
-                    Properties:
-                        Path: /budget/{idBudget}
-                        Method: PUT
-                        ApiId: !Ref ProvimatRestApi
+    # UpdateBudgetFunction:
+    #     Type: AWS::Serverless::Function
+    #     Metadata:
+    #         BuildMethod: esbuild
+    #         BuildProperties:
+    #             Minify: true
+    #             Sourcemap: true
+    #             MainFields: "module,main"
+    #     Properties:
+    #         FunctionName: !Sub '${Environment}-Update-Budget'
+    #         Handler: updateBudgets.Handler
+    #         CodeUri: ./src/functions/budgets
+    #         Events:
+    #             HttpEvent:
+    #                 Type: HttpApi
+    #                 Properties:
+    #                     Path: /budget/{idBudget}
+    #                     Method: PUT
+    #                     ApiId: !Ref ProvimatRestApi
     DeleteBudgetFunction:
         Type: AWS::Serverless::Function
         Metadata:
@@ -330,7 +330,7 @@ Resources:
         Properties:
             FunctionName: !Sub '${Environment}-Delete-Budget'
             Handler: deleteBudget.Handler
-            CodeUri: ./src/functions/budget
+            CodeUri: ./src/functions/budgets
             Events:
                 HttpEvent:
                     Type: HttpApi
@@ -349,7 +349,7 @@ Resources:
 #         Properties:
 #             FunctionName: !Sub '${Environment}-GetClient-Budgets'
 #             Handler: getClientBudgets.Handler
-#             CodeUri: ./src/functions/budget
+#             CodeUri: ./src/functions/budgets
 #             Events:
 #                 HttpEvent:
 #                     Type: HttpApi
@@ -368,7 +368,7 @@ Resources:
 #         Properties:
 #             FunctionName: !Sub '${Environment}-addOrRemoveProducts'
 #             Handler: addOrRemoveProducts.Handler
-#             CodeUri: ./src/functions/budget
+#             CodeUri: ./src/functions/budgets
 #             Events:
 #                 HttpEvent:
 #                     Type: HttpApi
@@ -620,7 +620,7 @@ Resources:
 #         Properties:
 #             FunctionName: !Sub '${Environment}-Search-Budget'
 #             Handler: searchBudget.Handler
-#             CodeUri: ./src/functions/budget
+#             CodeUri: ./src/functions/budgets
 #             Events:
 #                 HttpEvent:
 #                     Type: HttpApi

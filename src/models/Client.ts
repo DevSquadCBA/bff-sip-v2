@@ -1,5 +1,6 @@
 import { Model, Column, Table, DataType, PrimaryKey, AutoIncrement } from 'sequelize-typescript';
-import { CreationOptional} from 'sequelize';
+import { CreationOptional,QueryTypes} from 'sequelize';
+import sequelize from 'services/sequelize';
 
 export type IClient = {
     name: string,
@@ -12,7 +13,6 @@ export type IClient = {
     province?: string,
     localidad?: string,
     direction?: string,
-    creationDate: Date|number,
     deleted?: boolean,
 }
 @Table({
@@ -56,5 +56,17 @@ export class Client extends Model {
 
     @Column({ type: DataType.BOOLEAN, defaultValue: false })
     declare deleted: CreationOptional<boolean>;
+
+
+    static async getClientsWithBudgetInfo(offset=0, limit=100) {
+        if(!Client.sequelize){
+            return []
+        }
+        const [results] = await Client.sequelize.query('CALL spGetAllClientsWithBucketInfo(:offset, :limit)', {
+            replacements: { offset, limit },
+            type: QueryTypes.SELECT
+        })
+        return results;
+    }
 }
 

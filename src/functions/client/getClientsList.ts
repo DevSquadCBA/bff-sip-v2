@@ -1,4 +1,4 @@
-import {Product, IProduct } from 'models/Product';
+import { Client , IClient } from 'models/Client';
 import { ApiGatewayParsedEvent } from 'types/response-factory/proxies';
 import { Validators } from 'utils/Validator';
 import { LambdaResolver } from 'utils/lambdaResolver';
@@ -9,13 +9,14 @@ interface Event extends ApiGatewayParsedEvent {
     }
 }
 
-const domain = async (event:Event): Promise<{body:IProduct[], statusCode:number}> => {
+const domain = async (event:Event): Promise<{body:IClient[], statusCode:number}> => {
     const offset = parseInt(event.queryStringParameters.offset);
     const limit = parseInt(event.queryStringParameters.limit);
 
-    const products = await Product.findAll({offset, limit}) as IProduct[];
+    const clients = await Client.getClientsWithBudgetInfo( offset, limit) as IClient[];
+
     return {
-        body: products,
+        body: clients,
         statusCode: 200
     }    
 }
