@@ -6,7 +6,7 @@ export enum Validators{
     ID_CLIENT = 'validateIdClient',
     ID_PROVIDER = 'validateIdProvider',
     ID_PRODUCT = 'validateIdProduct',
-    ID_BUDGET = 'validateIdBudget'
+    ID_BUDGET = 'validateIdSale'
 }
 
 function offsetAndLimitValidator(queryStringParameters:{offset?:string, limit?: string}){
@@ -55,12 +55,12 @@ function validateIdProduct(pathParameters:{idProduct?:string}){
     return pathParameters;
 }
 
-function validateIdBudget(pathParameters:{idBudget?:string}){
-    if(!pathParameters.idBudget){
-        throw new BadRequestError('Es necesario enviar un idBudget');
+function validateIdSale(pathParameters:{idSale?:string}){
+    if(!pathParameters.idSale){
+        throw new BadRequestError('Es necesario enviar un idSale');
     }
-    if(!/^[0-9]+$/.test(pathParameters.idBudget)){
-        throw new BadRequestError('El idBudget debe ser un número');
+    if(!/^[0-9]+$/.test(pathParameters.idSale)){
+        throw new BadRequestError('El idSale debe ser un número');
     }
     return pathParameters;
 }
@@ -76,7 +76,7 @@ export function validate(validations: Validators[], event:ApiGatewayParsedEvent)
         event.pathParameters = validateIdProduct(event.pathParameters);
     }
     else if(validations.includes(Validators.ID_BUDGET)){
-        event.pathParameters = validateIdBudget(event.pathParameters);
+        event.pathParameters = validateIdSale(event.pathParameters);
     }
     return event;
 }

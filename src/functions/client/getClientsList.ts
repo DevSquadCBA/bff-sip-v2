@@ -13,7 +13,7 @@ const domain = async (event:Event): Promise<{body:IClient[], statusCode:number}>
     const offset = parseInt(event.queryStringParameters.offset);
     const limit = parseInt(event.queryStringParameters.limit);
 
-    const clients = await Client.getClientsWithBudgetInfo( offset, limit) as IClient[];
+    const clients = await Client.getClientsWithSaleInfo( offset, limit) as IClient[];
 
     return {
         body: clients,

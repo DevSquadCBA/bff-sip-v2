@@ -17,12 +17,12 @@ Base URLs:
 <br>
 
 ### budgets
-<a href="#CreateBudget">POST /budget</a><br>
-<a href="#GetBudgets">GET /budget</a><br>
-<a href="#DeleteBudget">DELETE /budget/{idBudget}</a><br>
-<a href="#UpdateBudget">PUT /budget/{idBudget}</a><br>
-<a href="#GetClientBudget">GET /budgets/{idClient}</a><br>
-<a href="#agregar productos">POST /budget/{idBudget}/addProduct</a><br>
+<a href="#CreateSale">POST /budget</a><br>
+<a href="#GetSales">GET /budget</a><br>
+<a href="#DeleteSale">DELETE /budget/{idSale}</a><br>
+<a href="#UpdateSale">PUT /budget/{idSale}</a><br>
+<a href="#GetClientSale">GET /budgets/{idClient}</a><br>
+<a href="#agregar productos">POST /budget/{idSale}/addProduct</a><br>
 <br>
 
 ### products
@@ -40,12 +40,12 @@ Base URLs:
 <a href="#DeleteProvider">DELETE /provider/{idProvider}</a><br>
 <a href="#GetProviderById">GET /provider/{idProvider}</a><br>
 <a href="#UpdateProvider">PUT /provider/{idProvider}</a><br>
-<a href="#updateProductPricesFromBudget">POST /provider/{idProvider}</a><br>
+<a href="#updateProductPricesFromSale">POST /provider/{idProvider}</a><br>
 <br>
 
 ### search
 <a href="#SearchClient">POST /search/client</a><br>
-<a href="#SearchBudget">POST /search/budget</a><br>
+<a href="#SearchSale">POST /search/budget</a><br>
 <a href="#SearchProduct">POST /search/product</a><br>
 <a href="#SearchProvider">POST /search/provider</a><br>
 
@@ -339,9 +339,9 @@ This operation does not require authentication
 <h1 id="sistema-integral-provimat-presupuestos">Presupuestos</h1>
 
 
-## CreateBudget
+## CreateSale
 
-<a id="opIdCreateBudget"></a>
+<a id="opIdCreateSale"></a>
 
 `POST /budget`
 
@@ -370,7 +370,7 @@ Crea un nuevo Presupuesto
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|body|body|[NewBudget](#schemanewbudget)|false|none|
+|body|body|[NewSale](#schemanewbudget)|false|none|
 
 > Example responses
 
@@ -402,9 +402,9 @@ This operation does not require authentication
 </aside>
 
 
-## GetBudgets
+## GetSales
 
-<a id="opIdGetBudgets"></a>
+<a id="opIdGetSales"></a>
 
 `GET /budget`
 
@@ -442,11 +442,11 @@ This operation does not require authentication
 </aside>
 
 
-## DeleteBudget
+## DeleteSale
 
-<a id="opIdDeleteBudget"></a>
+<a id="opIdDeleteSale"></a>
 
-`DELETE /budget/{idBudget}`
+`DELETE /budget/{idSale}`
 
 *Da de baja un Presupuesto*
 
@@ -456,7 +456,7 @@ Da de baja logica un presupuesto que estaba en estado pendiente
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|idBudget|path|any|true|el id del presupuesto|
+|idSale|path|any|true|el id del presupuesto|
 
 > Example responses
 
@@ -488,11 +488,11 @@ This operation does not require authentication
 </aside>
 
 
-## UpdateBudget
+## UpdateSale
 
-<a id="opIdUpdateBudget"></a>
+<a id="opIdUpdateSale"></a>
 
-`PUT /budget/{idBudget}`
+`PUT /budget/{idSale}`
 
 *Actualiza un Presupuesto*
 
@@ -514,8 +514,8 @@ Actualiza un presupuesto
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|idBudget|path|any|true|el id del presupuesto|
-|body|body|[Budget](#schemabudget)|false|none|
+|idSale|path|any|true|el id del presupuesto|
+|body|body|[Sale](#schemabudget)|false|none|
 
 > Example responses
 
@@ -547,9 +547,9 @@ This operation does not require authentication
 </aside>
 
 
-## GetClientBudget
+## GetClientSale
 
-<a id="opIdGetClientBudget"></a>
+<a id="opIdGetClientSale"></a>
 
 `GET /budgets/{idClient}`
 
@@ -562,7 +562,7 @@ Obtiene los presupuestos de un cliente en concreto
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
 |idClient|path|any|true|el id del cliente|
-|idBudget|query|integer(int64)|false|el id del presupuesto en particular|
+|idSale|query|integer(int64)|false|el id del presupuesto en particular|
 |status|query|string|false|el estatus|
 
 > Example responses
@@ -601,7 +601,7 @@ This operation does not require authentication
 
 <a id="opIdagregar productos"></a>
 
-`POST /budget/{idBudget}/addProducts`
+`POST /budget/{idSale}/addProducts`
 
 *agrega,quita,actualiza productos de un presupuesto*
 
@@ -622,7 +622,7 @@ agrega,quita,actualiza productos de un presupuesto
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
-|idBudget|path|any|true|el id del presupuesto|
+|idSale|path|any|true|el id del presupuesto|
 |body|body|[addProducts](#schemaaddproducts)|false|none|
 
 > Example responses
@@ -1197,9 +1197,9 @@ This operation does not require authentication
 </aside>
 
 
-## updateProductPricesFromBudget
+## updateProductPricesFromSale
 
-<a id="opIdupdateProductPricesFromBudget"></a>
+<a id="opIdupdateProductPricesFromSale"></a>
 
 `POST /provider/{idProvider}`
 
@@ -1308,9 +1308,9 @@ This operation does not require authentication
 </aside>
 
 
-## SearchBudget
+## SearchSale
 
-<a id="opIdSearchBudget"></a>
+<a id="opIdSearchSale"></a>
 
 `POST /search/budget`
 
@@ -1521,10 +1521,10 @@ This operation does not require authentication
 |whatsapp|integer|true|none|none|
 |direction|string|false|none|none|
 
-<h2 id="tocS_Budget">Budget</h2>
+<h2 id="tocS_Sale">Sale</h2>
 <!-- backwards compatibility -->
 <a id="schemabudget"></a>
-<a id="schema_Budget"></a>
+<a id="schema_Sale"></a>
 <a id="tocSbudget"></a>
 <a id="tocsbudget"></a>
 
@@ -1616,10 +1616,10 @@ This operation does not require authentication
 |name|string|false|none|none|
 |daysDelay|integer|false|none|none|
 
-<h2 id="tocS_NewBudget">NewBudget</h2>
+<h2 id="tocS_NewSale">NewSale</h2>
 <!-- backwards compatibility -->
 <a id="schemanewbudget"></a>
-<a id="schema_NewBudget"></a>
+<a id="schema_NewSale"></a>
 <a id="tocSnewbudget"></a>
 <a id="tocsnewbudget"></a>
 

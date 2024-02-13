@@ -1,31 +1,38 @@
-import { Model, Column, Table, DataType, PrimaryKey, AutoIncrement } from 'sequelize-typescript';
+import { Model, Column, Table, DataType, PrimaryKey, AutoIncrement, ForeignKey, BelongsTo } from 'sequelize-typescript';
 import { CreationOptional, Op } from 'sequelize';
 import { SaleStates } from './Enums';
+import { Client } from './Client';
+import { Product } from './Product';
+import { SaleProduct } from './SaleProduct';
 
-export type IBudget = {
+export type ISale = {
     id: number,
     clientId: number,
     state: SaleStates,
     deleted: boolean,
     total: number,
+    paid: number,
     budgetDetails: string,
-    paid: string,
     dispatch: 'without' | 'with',
     seller: string,
     billing: string,
 }
 
 @Table({
-    tableName: 'budgets'
+    tableName: 'sales'
 })
-export class Budget extends Model {
+export class Sale extends Model {
     @PrimaryKey
     @AutoIncrement
     @Column(DataType.INTEGER)
     declare id: CreationOptional<number>;
 
+    @ForeignKey(() => Client)
     @Column(DataType.INTEGER)
     declare clientId: number;
+
+    @BelongsTo(() => Client)
+    declare client: Client;
 
     @Column(DataType.STRING)
     declare state: SaleStates;
@@ -39,8 +46,8 @@ export class Budget extends Model {
     @Column(DataType.STRING)
     declare budgetDetails: string;
 
-    @Column(DataType.STRING)
-    declare paid: string;
+    @Column(DataType.DECIMAL)
+    declare paid: number;
 
     @Column(DataType.STRING)
     declare dispatch: 'without' | 'with';
@@ -52,10 +59,10 @@ export class Budget extends Model {
     declare billing: string;
 
 
-    static async getActiveBudgets(idClient:number){
+    static async getActiveSales(idClient:number){
         // reference query
         // (select COUNT(*) from ${process.env.BUDGET} b1 where b1.state !='finished' and b1.clientId = c.id and b1.deleted = 0) as 'active'
-        return await Budget.findAll(
+        return await Sale.findAll(
             {
                 where:{
                     state: {
@@ -66,9 +73,9 @@ export class Budget extends Model {
                 }
             })
     }
-    static async getTotalBudgets(idClient:number){
+    static async getTotalSales(idClient:number){
         //(select COUNT(*) from ${process.env.BUDGET} b2 where b2.clientId = c.id and b2.deleted = 0) as 'total',
-        return await Budget.findAll(
+        return await Sale.findAll(
             {
                 where:{
                     deleted: false,
@@ -77,9 +84,9 @@ export class Budget extends Model {
             }
         )
     }
-    static async getDateFromUpdatestBudget(idClient:number){
+    static async getDateFromUpdatestSale(idClient:number){
         // (select updateDate from ${process.env.BUDGET} b3 where b3.clientId = c.id and b3.deleted = 0 order by b3.updateDate DESC,b3.creationDate DESC limit 1) as 'lastModification'
-        return await Budget.findAll(
+        return await Sale.findAll(
             {
                 where:{
                     clientId: idClient,
@@ -94,3 +101,5 @@ export class Budget extends Model {
         )
     }
 }
+
+Sale.belongsToMany(Product, { through: SaleProduct });

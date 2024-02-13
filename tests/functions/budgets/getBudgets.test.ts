@@ -1,7 +1,7 @@
-import { Handler as getBudgets } from "functions/budgets/getBudgets";
+import { Handler as getSales } from "functions/sale/getSales";
 import { mockEvent } from "types/response-factory/mocks";
 
-describe('Test suit for getBudget',()=>{
+describe('Test suit for getSale',()=>{
     const event ={
         ...mockEvent,
         headers:{
@@ -9,7 +9,7 @@ describe('Test suit for getBudget',()=>{
         }
     }
     it ('should return statusCode 200', async()=>{
-        const response = await getBudgets(event)
+        const response = await getSales(event)
         expect(response.statusCode).toBe(200);
     })
 })

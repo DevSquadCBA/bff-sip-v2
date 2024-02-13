@@ -1,4 +1,5 @@
 import { Client } from 'models/Client';
+import { Sale } from 'models/Sale';
 import { ApiGatewayParsedEvent } from 'types/response-factory/proxies';
 import { Validators } from 'utils/Validator';
 import { LambdaResolver } from 'utils/lambdaResolver';
@@ -9,7 +10,7 @@ interface Event extends ApiGatewayParsedEvent {
 }
 
 const domain = async (event:Event): Promise<{body:Client|null, statusCode:number}> => {
-    const client = await Client.findByPk(event.pathParameters.idClient)
+    const client = await Client.findByPk(event.pathParameters.idClient, {include: Sale})
     return {
         body: client,
         statusCode: 200

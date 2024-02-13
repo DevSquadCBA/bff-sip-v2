@@ -2,8 +2,6 @@ import { HTTPError } from "types/errors";
 import { ApiGatewayParsedEvent } from "types/response-factory/proxies";
 import { getEntity } from "./utils";
 import { Validators, validate } from "./Validator";
-import sequelize from "../services/sequelize";
-import { createStores } from "services/generateStoreProcedures";
 
 type lambdaResponse = {
     statusCode: number,
@@ -29,8 +27,6 @@ function responseFactory({body, statusCode}: {body:unknown, statusCode: number})
 
 
 export async function LambdaResolver(event:ApiGatewayParsedEvent, domain:any, validators?:Validators[]):Promise<lambdaResponse>{
-    await sequelize.sync()
-    await createStores(sequelize);
     try{
         let finalEvent = event;
         getEntity(event.headers)

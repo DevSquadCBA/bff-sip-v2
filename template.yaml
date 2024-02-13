@@ -76,8 +76,7 @@ Resources:
             Path: '/'
             ManagedPolicyArns:
                 - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
-            RoleName:
-                Fn::Join: ['-', [Ref: Environment, GetParametersRole]]
+            RoleName: !Sub '${Environment}-GetParametersRole'
             Policies:
                 - PolicyName: ReadSsmParameters
                   PolicyDocument:
@@ -111,7 +110,7 @@ Resources:
         Condition: CreateDomainName
         Properties:
             BasePath: 'api'
-            DomainName: !FindInMap [Stage, !Ref Environment, DomainName]
+            DomainName: !Sub '${Stage.${Environment}.DomainName}'
             RestApiId: !Ref ProvimatRestApi
             Stage: !Ref ProvimatRestApi.Stage    
 
@@ -124,6 +123,28 @@ Resources:
             ContentUri: ./src/layers/nodejs
             CompatibleRuntimes:
                 - nodejs16.x
+
+# Admin
+    SyncDbFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-SyncDb'
+            Handler: syncDb.Handler
+            CodeUri: ./src/functions/admin
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /admin/syncDb
+                        Method: GET
+                        ApiId: !Ref ProvimatRestApi
+
 
 
 # Clients
@@ -242,8 +263,8 @@ Resources:
 #                         Method: DELETE
 #                         ApiId: !Ref ProvimatRestApi
 
-# Budgets
-    CreateBudgetFunction:
+# Sale
+    CreateSaleFunction:
         Type: AWS::Serverless::Function
         Metadata:
             BuildMethod: esbuild
@@ -252,17 +273,17 @@ Resources:
                 Sourcemap: true
                 MainFields: "module,main"
         Properties:
-            FunctionName: !Sub '${Environment}-CreateBudget'
-            Handler: createBudgets.Handler
-            CodeUri: ./src/functions/budgets
+            FunctionName: !Sub '${Environment}-CreateSale'
+            Handler: createSale.Handler
+            CodeUri: ./src/functions/sale
             Events:
                 HttpEvent:
                     Type: HttpApi
                     Properties:
-                        Path: /budget
+                        Path: /sale
                         Method: POST
                         ApiId: !Ref ProvimatRestApi
-    GetBudgetFunction:
+    GetSaleFunction:
         Type: AWS::Serverless::Function
         Metadata:
             BuildMethod: esbuild
@@ -271,17 +292,17 @@ Resources:
                 Sourcemap: true
                 MainFields: "module,main"
         Properties:
-            FunctionName: !Sub '${Environment}-GetBudget'
-            Handler: getBudgets.Handler
-            CodeUri: ./src/functions/budgets
+            FunctionName: !Sub '${Environment}-GetSale'
+            Handler: getSales.Handler
+            CodeUri: ./src/functions/sale
             Events:
                 HttpEvent:
                     Type: HttpApi
                     Properties:
-                        Path: /budget
+                        Path: /sale
                         Method: GET
                         ApiId: !Ref ProvimatRestApi
-    GetBudgetByIdFunction:
+    GetSaleByIdFunction:
         Type: AWS::Serverless::Function
         Metadata:
             BuildMethod: esbuild
@@ -290,17 +311,17 @@ Resources:
                 Sourcemap: true
                 MainFields: "module,main"
         Properties:
-            FunctionName: !Sub '${Environment}-GetBudgetById'
-            Handler: getBudgetById.Handler
-            CodeUri: ./src/functions/budgets
+            FunctionName: !Sub '${Environment}-GetSaleById'
+            Handler: getSaleById.Handler
+            CodeUri: ./src/functions/sale
             Events:
                 HttpEvent:
                     Type: HttpApi
                     Properties:
-                        Path: /budget/{idBudget}
+                        Path: /sale/{idSale}
                         Method: GET
                         ApiId: !Ref ProvimatRestApi
-    # UpdateBudgetFunction:
+    # UpdateSaleFunction:
     #     Type: AWS::Serverless::Function
     #     Metadata:
     #         BuildMethod: esbuild
@@ -309,17 +330,17 @@ Resources:
     #             Sourcemap: true
     #             MainFields: "module,main"
     #     Properties:
-    #         FunctionName: !Sub '${Environment}-Update-Budget'
-    #         Handler: updateBudgets.Handler
-    #         CodeUri: ./src/functions/budgets
+    #         FunctionName: !Sub '${Environment}-Update-Sale'
+    #         Handler: updateSale.Handler
+    #         CodeUri: ./src/functions/sale
     #         Events:
     #             HttpEvent:
     #                 Type: HttpApi
     #                 Properties:
-    #                     Path: /budget/{idBudget}
+    #                     Path: /sale/{idSale}
     #                     Method: PUT
     #                     ApiId: !Ref ProvimatRestApi
-    DeleteBudgetFunction:
+    DeleteSaleFunction:
         Type: AWS::Serverless::Function
         Metadata:
             BuildMethod: esbuild
@@ -328,17 +349,17 @@ Resources:
                 Sourcemap: true
                 MainFields: "module,main"
         Properties:
-            FunctionName: !Sub '${Environment}-Delete-Budget'
-            Handler: deleteBudget.Handler
-            CodeUri: ./src/functions/budgets
+            FunctionName: !Sub '${Environment}-Delete-Sale'
+            Handler: deleteSale.Handler
+            CodeUri: ./src/functions/sale
             Events:
                 HttpEvent:
                     Type: HttpApi
                     Properties:
-                        Path: /budget/{idBudget}
+                        Path: /sale/{idSale}
                         Method: DELETE
                         ApiId: !Ref ProvimatRestApi
-#     GetClientBudgetFunction:
+#     GetClientSaleFunction:
 #         Type: AWS::Serverless::Function
 #         Metadata:
 #             BuildMethod: esbuild
@@ -347,14 +368,14 @@ Resources:
 #                 Sourcemap: true
 #                 MainFields: "module,main"
 #         Properties:
-#             FunctionName: !Sub '${Environment}-GetClient-Budgets'
-#             Handler: getClientBudgets.Handler
-#             CodeUri: ./src/functions/budgets
+#             FunctionName: !Sub '${Environment}-GetClient-Sale'
+#             Handler: getClientSale.Handler
+#             CodeUri: ./src/functions/sale
 #             Events:
 #                 HttpEvent:
 #                     Type: HttpApi
 #                     Properties:
-#                         Path: /budgets/{idClient}
+#                         Path: /Sale/{idClient}
 #                         Method: GET 
 #                         ApiId: !Ref ProvimatRestApi
 #     addOrRemoveProducts:
@@ -368,12 +389,12 @@ Resources:
 #         Properties:
 #             FunctionName: !Sub '${Environment}-addOrRemoveProducts'
 #             Handler: addOrRemoveProducts.Handler
-#             CodeUri: ./src/functions/budgets
+#             CodeUri: ./src/functions/sale
 #             Events:
 #                 HttpEvent:
 #                     Type: HttpApi
 #                     Properties:
-#                         Path: /budget/{idBudget}/addProducts
+#                         Path: /sale/{idSale}/addProducts
 #                         Method: POST
 #                         ApiId: !Ref ProvimatRestApi
 # # Products
@@ -609,7 +630,7 @@ Resources:
 #                         Path: /search/client
 #                         Method: POST
 #                         ApiId: !Ref ProvimatRestApi
-#     SearchBudgetFunction:
+#     SearchSaleFunction:
 #         Type: AWS::Serverless::Function
 #         Metadata:
 #             BuildMethod: esbuild
@@ -618,14 +639,14 @@ Resources:
 #                 Sourcemap: true
 #                 MainFields: "module,main"
 #         Properties:
-#             FunctionName: !Sub '${Environment}-Search-Budget'
-#             Handler: searchBudget.Handler
-#             CodeUri: ./src/functions/budgets
+#             FunctionName: !Sub '${Environment}-Search-Sale'
+#             Handler: searchSale.Handler
+#             CodeUri: ./src/functions/sale
 #             Events:
 #                 HttpEvent:
 #                     Type: HttpApi
 #                     Properties:
-#                         Path: /search/budget
+#                         Path: /search/sale
 #                         Method: POST
 #                         ApiId: !Ref ProvimatRestApi
 #     SearchProductFunction:

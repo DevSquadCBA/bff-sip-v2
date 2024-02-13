@@ -1,6 +1,7 @@
-import { Model, Column, Table, DataType, PrimaryKey, AutoIncrement } from 'sequelize-typescript';
+import { Model, Column, Table, DataType, PrimaryKey, AutoIncrement, HasMany } from 'sequelize-typescript';
 import { CreationOptional,QueryTypes} from 'sequelize';
 import sequelize from 'services/sequelize';
+import { Sale } from './Sale';
 
 export type IClient = {
     name: string,
@@ -57,12 +58,14 @@ export class Client extends Model {
     @Column({ type: DataType.BOOLEAN, defaultValue: false })
     declare deleted: CreationOptional<boolean>;
 
+    @HasMany(() => Sale)
+    declare sales: Sale[];
 
-    static async getClientsWithBudgetInfo(offset=0, limit=100) {
+    static async getClientsWithSaleInfo(offset=0, limit=100) {
         if(!Client.sequelize){
             return []
         }
-        const [results] = await Client.sequelize.query('CALL spGetAllClientsWithBucketInfo(:offset, :limit)', {
+        const [results] = await Client.sequelize.query('CALL spGetAllClientsWithSalesInfo(:offset, :limit)', {
             replacements: { offset, limit },
             type: QueryTypes.SELECT
         })

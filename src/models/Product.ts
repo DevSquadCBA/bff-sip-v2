@@ -1,5 +1,7 @@
 import { Model, Column, Table, DataType, PrimaryKey, AutoIncrement } from 'sequelize-typescript';
 import { CreationOptional} from 'sequelize';
+import { Sale } from './Sale';
+import { SaleProduct } from './SaleProduct';
 
 export type IProduct = {
     id: number|null,
@@ -16,7 +18,7 @@ export type IProduct = {
     deleted?: boolean,
 }
 @Table({
-    tableName: 'Product'
+    tableName: 'products'
 })
 export class Product extends Model {
     @PrimaryKey
@@ -57,3 +59,5 @@ export class Product extends Model {
     @Column(DataType.BOOLEAN)
     declare deleted: CreationOptional<boolean>;
 }
+
+Product.belongsToMany(Sale, { through: SaleProduct });

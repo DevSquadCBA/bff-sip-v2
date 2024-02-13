@@ -1,4 +1,4 @@
-import {Budget,  IBudget } from 'models/Budget';
+import {Sale,  ISale } from 'models/Sale';
 import { ApiGatewayParsedEvent } from 'types/response-factory/proxies';
 import { Validators } from 'utils/Validator';
 import { LambdaResolver } from 'utils/lambdaResolver';
@@ -9,11 +9,11 @@ interface Event extends ApiGatewayParsedEvent {
     }
 }
 
-const domain = async (event:Event): Promise<{body:IBudget[], statusCode:number}> => {
+const domain = async (event:Event): Promise<{body:ISale[], statusCode:number}> => {
     const offset = parseInt(event.queryStringParameters.offset);
     const limit = parseInt(event.queryStringParameters.limit);
 
-    const budgets = await Budget.findAll({ offset, limit }) as IBudget[];
+    const budgets = await Sale.findAll({ offset, limit }) as ISale[];
 
     return {
         body: budgets,

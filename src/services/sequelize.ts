@@ -1,9 +1,10 @@
 
-import { Budget } from 'models/Budget';
+import { Sale } from 'models/Sale';
 import { Client } from 'models/Client';
 import { Product } from 'models/Product';
 import { Sequelize } from 'sequelize-typescript';
 import { InternalServerError } from 'types/errors';
+import { Provider } from 'models/Provider';
 const { HOST, USER, PASS, DB } = process.env;
 
 if (!HOST || !USER || !PASS || !DB) {
@@ -20,6 +21,6 @@ const sequelize = new Sequelize({
 });
 console.log(sequelize.config.database);
 
-sequelize.addModels([Client , Budget , Product])
+sequelize.addModels([Client , Sale , Product, Provider])
 
 export default sequelize;

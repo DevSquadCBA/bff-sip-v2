@@ -2,7 +2,7 @@ import { Model, Column, Table, DataType, PrimaryKey, AutoIncrement } from 'seque
 import { CreationOptional} from 'sequelize';
 
 export type IProvider = {
-    id: number|null,
+    id: number,
     name: string,
     fantasy_name: string,
     cuit_cuil: number,

@@ -1,4 +1,4 @@
-import { Budget } from 'models/Budget';
+import { Sale } from 'models/Sale';
 import { ApiGatewayParsedEvent } from 'types/response-factory/proxies';
 import { Validators } from 'utils/Validator';
 import { LambdaResolver } from 'utils/lambdaResolver';
@@ -13,7 +13,7 @@ const domain = async (event: Event): Promise<{ body: string; statusCode: number 
     const { id } = event.pathParameters;
 
     try {
-        await Budget.destroy({
+        await Sale.destroy({
             where: {
                 id: parseInt(id, 10),
             },

@@ -210,15 +210,15 @@ paths:
           content:
             application/json:
               schema: {}
-  /budget/{idBudget}:
+  /budget/{idSale}:
     get:
       tags:
         - Presupuestos
       summary: Obtiene un presupuesto
       description: Obtiene un presupuesto basándose en el ID
-      operationId: GetBudgetById
+      operationId: GetSaleById
       parameters:
-        - name: idBudget
+        - name: idSale
           in: path
           description: El ID del presupuesto
           schema: {}
@@ -229,7 +229,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Budget'
+                $ref: '#/components/schemas/Sale'
           headers:
             Access-Control-Allow-Origin:
               schema:
@@ -252,14 +252,14 @@ paths:
         - Presupuestos
       summary: Obtiene todos los presupuestos de un cliente
       description: Obtiene los presupuestos de un cliente en concreto
-      operationId: GetClientBudget
+      operationId: GetClientSale
       parameters:
         - name: idClient
           in: path
           description: el id del cliente
           schema: {}
           required: true
-        - name: idBudget
+        - name: idSale
           in: query
           description: el id del presupuesto en particular
           schema:
@@ -292,7 +292,7 @@ paths:
             application/json:
               schema: {}
 
-  /budget/{idBudget}/addProducts:
+  /budget/{idSale}/addProducts:
     post:
       tags:
         - agrega productos
@@ -300,7 +300,7 @@ paths:
       description: agrega, quita, actualiza productos de un presupuesto
       operationId: agregar productos
       parameters:
-        - name: idBudget
+        - name: idSale
           in: path
           description: el id del presupuesto
           schema: {}
@@ -686,7 +686,7 @@ paths:
         - Proveedores
       summary: Actualiza precios basado en un porcentaje
       description: El porcentaje de actualización de los precios de un proveedor
-      operationId: updateProductPricesFromBudget
+      operationId: updateProductPricesFromSale
       parameters:
         - name: idProvider
           in: path
@@ -756,7 +756,7 @@ paths:
         - Search
       summary: Busca el Presupuesto
       description: Te devuelve el presupuesto que coincidan con la consulta
-      operationId: SearchBudget
+      operationId: SearchSale
       requestBody:
         content:
           application/json:
@@ -845,7 +845,28 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}            
+              schema: {}
+  /admin/syncDB:
+    get:
+      tags: 
+        - Admin
+      summary: Sincroniza la base de datos
+      description: Sincroniza la base de datos
+      operationId: SyncDB
+      responses:
+        200:
+          description: 'ok'            
+          content:
+            application/json:
+              schema:
+                type: string
+        401:
+          description: NotAuthorized
+          content:
+            application/json:
+              schema:
+                type: string
+
 components:
   schemas:
     Search:
@@ -874,7 +895,7 @@ components:
           type: integer
         direction:
           type: string
-    Budget:
+    Sale:
       type: object
       properties:
         id:
@@ -915,7 +936,7 @@ components:
           type: string
         daysDelay:
           type: integer
-    NewBudget:
+    NewSale:
       type: object
       properties:
         creationDate:
