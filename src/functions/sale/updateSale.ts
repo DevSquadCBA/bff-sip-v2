@@ -9,9 +9,9 @@ interface Event extends ApiGatewayParsedEvent {
 const domain = async (event:Event): Promise<{body:number, statusCode:number}> => {
     const parsedBody = JSON.parse(event.body as unknown as string);
     console.log(parsedBody);
-    const budget = await Sale.update(parsedBody, {where: {id: parsedBody.id}});
+    const sale = await Sale.update(parsedBody, {where: {id: parsedBody.id}});
     return {
-        body: budget[0],
+        body: sale[0],
         statusCode: 200
     }
 
