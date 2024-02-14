@@ -210,7 +210,7 @@ paths:
           content:
             application/json:
               schema: {}
-  /budget/{idSale}:
+  /sale/{idSale}:
     get:
       tags:
         - Presupuestos
@@ -246,7 +246,7 @@ paths:
             application/json:
               schema: {}
 
-  /budgets/{idClient}:
+  /sales/{idClient}:
     get:
       tags:
         - Presupuestos
@@ -292,7 +292,7 @@ paths:
             application/json:
               schema: {}
 
-  /budget/{idSale}/addProducts:
+  /sale/{idSale}/addProducts:
     post:
       tags:
         - agrega productos
@@ -750,7 +750,7 @@ paths:
           content:
             application/json:
               schema: {}
-  /search/budget:
+  /search/sale:
     post:
       tags:
         - Search
