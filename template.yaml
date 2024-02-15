@@ -205,7 +205,7 @@ Resources:
                         Path: /client/{idClient}
                         Method: GET
                         ApiId: !Ref ProvimatRestApi
-    CreateClientsFunction:
+    CreateClientFunction:
         Type: AWS::Serverless::Function
         Metadata:
             BuildMethod: esbuild
@@ -378,7 +378,7 @@ Resources:
 #                         Path: /Sale/{idClient}
 #                         Method: GET 
 #                         ApiId: !Ref ProvimatRestApi
-#     addOrRemoveProducts:
+#     AddOrRemoveProductsFunction:
 #         Type: AWS::Serverless::Function
 #         Metadata:
 #             BuildMethod: esbuild
@@ -417,7 +417,7 @@ Resources:
                         Path: /product
                         Method: POST
                         ApiId: !Ref ProvimatRestApi
-    GetProductFunction:
+    GetProductsFunction:
         Type: AWS::Serverless::Function
         Metadata:
             BuildMethod: esbuild
@@ -426,7 +426,7 @@ Resources:
                 Sourcemap: true
                 MainFields: "module,main"
         Properties:
-            FunctionName: !Sub '${Environment}-GetProduct'
+            FunctionName: !Sub '${Environment}-GetProducts'
             Handler: getProducts.Handler
             CodeUri: ./src/functions/product
             Events:
@@ -533,7 +533,7 @@ Resources:
                         Path: /provider
                         Method: POST
                         ApiId: !Ref ProvimatRestApi
-    GetProviderFunction:
+    GetProvidersFunction:
         Type: AWS::Serverless::Function
         Metadata:
             BuildMethod: esbuild
@@ -542,7 +542,7 @@ Resources:
                 Sourcemap: true
                 # MainFields: "module,main"
         Properties:
-            FunctionName: !Sub '${Environment}-GetProvider'
+            FunctionName: !Sub '${Environment}-GetProviders'
             Handler: getProviders.Handler
             CodeUri: ./src/functions/provider
             Events:

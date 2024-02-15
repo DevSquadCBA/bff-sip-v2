@@ -298,7 +298,7 @@ paths:
         - agrega productos
       summary: agrega, quita, actualiza productos de un presupuesto
       description: agrega, quita, actualiza productos de un presupuesto
-      operationId: agregar productos
+      operationId: AddOrRemoveProducts
       parameters:
         - name: idSale
           in: path
@@ -686,7 +686,7 @@ paths:
         - Proveedores
       summary: Actualiza precios basado en un porcentaje
       description: El porcentaje de actualización de los precios de un proveedor
-      operationId: updateProductPricesFromSale
+      operationId: UpdateProductPrices
       parameters:
         - name: idProvider
           in: path
