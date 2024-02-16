@@ -224,25 +224,25 @@ Resources:
                         Path: /client
                         Method: POST
                         ApiId: !Ref ProvimatRestApi
-#     UpdateClientsFunction:
-#         Type: AWS::Serverless::Function
-#         Metadata:
-#             BuildMethod: esbuild
-#             BuildProperties:
-#                 Minify: true
-#                 Sourcemap: true
-#                 MainFields: "module,main"
-#         Properties:
-#             FunctionName: !Sub '${Environment}-UpdateClients'
-#             Handler: updateClient.Handler
-#             CodeUri: ./src/functions/client
-#             Events:
-#                 HttpEvent:
-#                     Type: HttpApi
-#                     Properties:
-#                         Path: /client/{idClient}
-#                         Method: PUT
-#                         ApiId: !Ref ProvimatRestApi                       
+    UpdateClientsFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-UpdateClients'
+            Handler: updateClient.Handler
+            CodeUri: ./src/functions/client
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /client/{idClient}
+                        Method: PUT
+                        ApiId: !Ref ProvimatRestApi
 #     DeleteClientsFunction:
 #         Type: AWS::Serverless::Function
 #         Metadata:
@@ -590,25 +590,25 @@ Resources:
                         Path: /provider/{idProvider}
                         Method: GET
                         ApiId: !Ref ProvimatRestApi
-#     UpdateProviderFunction:
-#         Type: AWS::Serverless::Function
-#         Metadata:
-#             BuildMethod: esbuild
-#             BuildProperties:
-#                 Minify: true
-#                 Sourcemap: true
-#                 MainFields: "module,main"
-#         Properties:
-#             FunctionName: !Sub '${Environment}-Update-Provider'
-#             Handler: updateProvider.Handler
-#             CodeUri: ./src/functions/provider
-#             Events:
-#                 HttpEvent:
-#                     Type: HttpApi
-#                     Properties:
-#                         Path: /provider/{idProvider}
-#                         Method: PUT
-#                         ApiId: !Ref ProvimatRestApi
+    UpdateProviderFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-Update-Provider'
+            Handler: updateProvider.Handler
+            CodeUri: ./src/functions/provider
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /provider/{idProvider}
+                        Method: PUT
+                        ApiId: !Ref ProvimatRestApi
 
 # ## Funciones de búsqueda
 #     SearchClientFunction:
