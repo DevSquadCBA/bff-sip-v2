@@ -13,20 +13,20 @@ const domain = async (event: Event): Promise<{ body: string; statusCode: number 
     const { id } = event.pathParameters;
 
     try {
-        await Sale.destroy({
+        await Sale.update({ deleted: true }, {
             where: {
                 id: parseInt(id, 10),
             },
         });
 
         return {
-            body: 'Deleted successfully',
+            body: 'Borrado correctamente',
             statusCode: 200,
         };
     } catch (error) {
         console.error(error);
         return {
-            body: 'Error deleting the budget',
+            body: 'Error borrando la venta',
             statusCode: 500,
         };
     }
