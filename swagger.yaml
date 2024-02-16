@@ -210,7 +210,65 @@ paths:
           content:
             application/json:
               schema: {}
-  /budget/{idSale}:
+  /sales:
+    get:
+      tags:
+        - Presupuestos
+      summary: Obtiene todos los presupuestos
+      description: Obtiene un listado de todos los presupuestos
+      operationId: GetSales
+      parameters: []
+      responses:
+        200:
+          description: estos son todos los presupuestos
+          content: {}
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: {}
+  /sale:
+    post:
+      tags:
+        - Presupuestos
+      summary: Crea un nuevo Presupuesto
+      description: Crea un nuevo Presupuesto
+      operationId: Createsale
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Newsale"
+      responses:
+        200:
+          description: Devuelve el id del presupuesto creado
+          content: {}
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: {}
+  /sale/{idSale}:
     get:
       tags:
         - Presupuestos
@@ -246,7 +304,7 @@ paths:
             application/json:
               schema: {}
 
-  /budgets/{idClient}:
+  /sales/{idClient}:
     get:
       tags:
         - Presupuestos
@@ -292,7 +350,7 @@ paths:
             application/json:
               schema: {}
 
-  /budget/{idSale}/addProducts:
+  /sale/{idSale}/addProducts:
     post:
       tags:
         - agrega productos
@@ -750,7 +808,7 @@ paths:
           content:
             application/json:
               schema: {}
-  /search/budget:
+  /search/sale:
     post:
       tags:
         - Search
