@@ -5,10 +5,11 @@ import { Product } from 'models/Product';
 import { Sequelize } from 'sequelize-typescript';
 import { InternalServerError } from 'types/errors';
 import { Provider } from 'models/Provider';
+import { SaleProduct } from 'models/SaleProduct';
 const { HOST, USER, PASS, DB } = process.env;
 
 if (!HOST || !USER || !PASS || !DB) {
-    throw new InternalServerError('Missing environment variables');
+    throw new InternalServerError('Missing environment variables' + JSON.stringify({HOST,USER,PASS,DB}));
 }
 
 const sequelize = new Sequelize({
@@ -19,8 +20,12 @@ const sequelize = new Sequelize({
     dialect: 'mysql',
     dialectModule: require('mysql2'),
 });
-console.log(sequelize.config.database);
 
-sequelize.addModels([Client , Sale , Product, Provider])
+sequelize.addModels([Client , Sale , Product, Provider, SaleProduct])
+
+
+Sale.belongsToMany(Product, { through: SaleProduct , foreignKey: 'saleId' });
+Product.belongsToMany(Sale, { through: SaleProduct , foreignKey: 'productId' });
+
 
 export default sequelize;
