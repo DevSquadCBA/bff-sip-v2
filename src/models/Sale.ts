@@ -1,9 +1,7 @@
 import { Model, Column, Table, DataType, PrimaryKey, AutoIncrement, ForeignKey, BelongsTo } from 'sequelize-typescript';
 import { CreationOptional, Op } from 'sequelize';
-import { SaleStates } from './Enums';
+import { SaleStates, SalesStatesValues} from './Enums';
 import { Client } from './Client';
-import { Product } from './Product';
-import { SaleProduct } from './SaleProduct';
 
 export type ISale = {
     id: number,
@@ -34,11 +32,8 @@ export class Sale extends Model {
     @BelongsTo(() => Client)
     declare client: Client;
 
-    @Column(DataType.STRING)
+    @Column({type:DataType.ENUM(...SalesStatesValues), defaultValue: SaleStates.presupuesto})
     declare state: SaleStates;
-
-    @Column(DataType.BOOLEAN)
-    declare deleted: boolean;
 
     @Column(DataType.DECIMAL)
     declare total: number;
@@ -46,7 +41,7 @@ export class Sale extends Model {
     @Column(DataType.STRING)
     declare budgetDetails: string;
 
-    @Column(DataType.DECIMAL)
+    @Column({type:DataType.DECIMAL, defaultValue: 0})
     declare paid: number;
 
     @Column(DataType.STRING)
@@ -58,7 +53,7 @@ export class Sale extends Model {
     @Column(DataType.STRING)
     declare billing: string;
 
-
+    
     static async getActiveSales(idClient:number){
         // reference query
         // (select COUNT(*) from ${process.env.BUDGET} b1 where b1.state !='finished' and b1.clientId = c.id and b1.deleted = 0) as 'active'
@@ -101,5 +96,3 @@ export class Sale extends Model {
         )
     }
 }
-
-Sale.belongsToMany(Product, { through: SaleProduct });
