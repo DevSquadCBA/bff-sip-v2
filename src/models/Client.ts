@@ -1,6 +1,5 @@
 import { Model, Column, Table, DataType, PrimaryKey, AutoIncrement, HasMany } from 'sequelize-typescript';
 import { CreationOptional,QueryTypes} from 'sequelize';
-import sequelize from 'services/sequelize';
 import { Sale } from './Sale';
 
 export type IClient = {

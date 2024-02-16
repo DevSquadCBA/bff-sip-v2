@@ -1,23 +1,22 @@
-import { Column, ForeignKey, Model, Table } from "sequelize-typescript";
+import { Column, DataType,  ForeignKey, Model, Table } from "sequelize-typescript";
 import { Sale } from "./Sale";
 import { Product } from "./Product";
-import { StateProduct } from "./Enums";
+import { StateProduct, StateProductValues } from "./Enums";
 
-@Table
+@Table({ tableName: 'sale_product' })
 export class SaleProduct extends Model {
     @ForeignKey(() => Sale)
-    @Column
+    @Column(DataType.INTEGER)
     declare saleId: number;
 
     @ForeignKey(() => Product)
-    @Column
+    @Column(DataType.INTEGER)
     declare productId: number;
-
     
-    @Column
+    @Column({type: DataType.INTEGER, defaultValue: 1})
     declare quantity: number;
     
-    @Column
+    @Column({type: DataType.ENUM(...StateProductValues),defaultValue: StateProduct.uninitiated})
     declare state: StateProduct;
 
     // @Column
