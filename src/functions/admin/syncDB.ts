@@ -1,6 +1,6 @@
-import { ApiGatewayParsedEvent } from 'types/response-factory/proxies';
+import { ApiGatewayParsedEvent } from  'types/response-factory/proxies';
 import { LambdaResolver } from 'utils/lambdaResolver';
-import sequelize from "../../services/sequelize";
+import sequelize from "services/sequelize";
 import { createStores } from "services/generateStoreProcedures";
 
 interface Event extends ApiGatewayParsedEvent {
@@ -18,7 +18,7 @@ const domain = async (event:Event): Promise<{body:string, statusCode:number}> =>
             statusCode: 401
         }
     }
-    await sequelize.sync({alter:true})
+    await sequelize.sync({alter:true, force:true})
     await createStores(sequelize);
     return {
         body: 'ok',
