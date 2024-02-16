@@ -283,7 +283,7 @@ Resources:
                         Path: /sale
                         Method: POST
                         ApiId: !Ref ProvimatRestApi
-    GetSaleFunction:
+    GetSalesFunction:
         Type: AWS::Serverless::Function
         Metadata:
             BuildMethod: esbuild
@@ -299,7 +299,7 @@ Resources:
                 HttpEvent:
                     Type: HttpApi
                     Properties:
-                        Path: /sale
+                        Path: /sales
                         Method: GET
                         ApiId: !Ref ProvimatRestApi
     GetSaleByIdFunction:
