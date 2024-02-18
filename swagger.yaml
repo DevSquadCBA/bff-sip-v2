@@ -924,7 +924,27 @@ paths:
             application/json:
               schema:
                 type: string
-
+  /admin/fakeData:
+    get:
+      tags: 
+        - Admin
+      summary: Sincroniza la base de datos
+      description: Sincroniza la base de datos
+      operationId: SyncDB
+      responses:
+        200:
+          description: 'ok'            
+          content:
+            application/json:
+              schema:
+                type: string
+        401:
+          description: NotAuthorized
+          content:
+            application/json:
+              schema:
+                type: string
+  
 components:
   schemas:
     Search:

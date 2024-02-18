@@ -8,7 +8,7 @@ interface Event extends ApiGatewayParsedEvent {
 
 const domain = async (event:Event): Promise<{body:number, statusCode:number}> => {
     const parsedBody = JSON.parse(event.body as unknown as string);
-    console.log(parsedBody);
+    if(parsedBody.deleted) delete parsedBody.deleted 
     const sale = await Sale.update(parsedBody, {where: {id: parsedBody.id}});
     return {
         body: sale[0],

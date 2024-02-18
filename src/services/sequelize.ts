@@ -19,13 +19,16 @@ const sequelize = new Sequelize({
     host: HOST,
     dialect: 'mysql',
     dialectModule: require('mysql2'),
+    logging: (msg) => console.dir(msg),
 });
 
 sequelize.addModels([Client , Sale , Product, Provider, SaleProduct])
 
-
 Sale.belongsToMany(Product, { through: SaleProduct , foreignKey: 'saleId' });
 Product.belongsToMany(Sale, { through: SaleProduct , foreignKey: 'productId' });
+
+Product.belongsTo(Provider, { foreignKey: 'provider' });
+Sale.belongsTo(Client, { foreignKey: 'clientId' });
 
 
 export default sequelize;

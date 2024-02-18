@@ -8,7 +8,16 @@ export enum SaleStates {
     finished = 'finished',         // cuando el cliente ya tiene completo esta venta
     canceled = 'canceled'          // cuando el cliente cancela el pedido por algun motivo
 }
-export const SalesStatesValues = ['presupuesto', 'proforma', 'comprobante', 'in_order', 'in_provider', 'delayed_provider', 'finished', 'canceled'];
+export const SalesStatesValues:SaleStates[] = [
+    SaleStates.presupuesto,
+    SaleStates.proforma,
+    SaleStates.comprobante,
+    SaleStates.in_order,
+    SaleStates.in_provider,
+    SaleStates.delayed_provider,
+    SaleStates.finished,
+    SaleStates.canceled
+];
 
 export enum StateProduct{
     uninitiated = 'uninitiated',      // 0 - El producto esta en una venta con estado presupuesto o proforma
@@ -18,4 +27,10 @@ export enum StateProduct{
     on_deposit = 'on_deposit'        // 4 - El producto ya esta en depósito
 }
 
-export const StateProductValues = ['uninitiated', 'to_confirm', 'pending_shipping', 'shipping', 'on_deposit'];
+export const StateProductValues:StateProduct[] = [
+    StateProduct.uninitiated,
+    StateProduct.to_confirm,
+    StateProduct.pending_shipping,
+    StateProduct.shipping,
+    StateProduct.on_deposit
+];

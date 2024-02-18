@@ -144,6 +144,26 @@ Resources:
                         Path: /admin/syncDb
                         Method: GET
                         ApiId: !Ref ProvimatRestApi
+    FakeDataFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-FakeData'
+            Handler: fakeData.Handler
+            CodeUri: ./src/functions/admin
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /admin/fakeData
+                        Method: GET
+                        ApiId: !Ref ProvimatRestApi
+
 
 
 
@@ -243,25 +263,25 @@ Resources:
                         Path: /client/{idClient}
                         Method: PUT
                         ApiId: !Ref ProvimatRestApi
-#     DeleteClientsFunction:
-#         Type: AWS::Serverless::Function
-#         Metadata:
-#             BuildMethod: esbuild
-#             BuildProperties:
-#                 Minify: true
-#                 Sourcemap: true
-#                 MainFields: "module,main"
-#         Properties:
-#             FunctionName: !Sub '${Environment}-DeleteClients'
-#             Handler: deleteClient.Handler
-#             CodeUri: ./src/functions/client
-#             Events:
-#                 HttpEvent:
-#                     Type: HttpApi
-#                     Properties:
-#                         Path: /client/{idClient}
-#                         Method: DELETE
-#                         ApiId: !Ref ProvimatRestApi
+    DeleteClientsFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-DeleteClients'
+            Handler: deleteClient.Handler
+            CodeUri: ./src/functions/client
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /client/{idClient}
+                        Method: DELETE
+                        ApiId: !Ref ProvimatRestApi
 
 # Sale
     CreateSaleFunction:
@@ -321,25 +341,25 @@ Resources:
                         Path: /sale/{idSale}
                         Method: GET
                         ApiId: !Ref ProvimatRestApi
-    # UpdateSaleFunction:
-    #     Type: AWS::Serverless::Function
-    #     Metadata:
-    #         BuildMethod: esbuild
-    #         BuildProperties:
-    #             Minify: true
-    #             Sourcemap: true
-    #             MainFields: "module,main"
-    #     Properties:
-    #         FunctionName: !Sub '${Environment}-Update-Sale'
-    #         Handler: updateSale.Handler
-    #         CodeUri: ./src/functions/sale
-    #         Events:
-    #             HttpEvent:
-    #                 Type: HttpApi
-    #                 Properties:
-    #                     Path: /sale/{idSale}
-    #                     Method: PUT
-    #                     ApiId: !Ref ProvimatRestApi
+    UpdateSaleFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-Update-Sale'
+            Handler: updateSale.Handler
+            CodeUri: ./src/functions/sale
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /sale/{idSale}
+                        Method: PUT
+                        ApiId: !Ref ProvimatRestApi
     DeleteSaleFunction:
         Type: AWS::Serverless::Function
         Metadata:
@@ -359,25 +379,25 @@ Resources:
                         Path: /sale/{idSale}
                         Method: DELETE
                         ApiId: !Ref ProvimatRestApi
-#     GetClientSaleFunction:
-#         Type: AWS::Serverless::Function
-#         Metadata:
-#             BuildMethod: esbuild
-#             BuildProperties:
-#                 Minify: true
-#                 Sourcemap: true
-#                 MainFields: "module,main"
-#         Properties:
-#             FunctionName: !Sub '${Environment}-GetClient-Sale'
-#             Handler: getClientSale.Handler
-#             CodeUri: ./src/functions/sale
-#             Events:
-#                 HttpEvent:
-#                     Type: HttpApi
-#                     Properties:
-#                         Path: /Sale/{idClient}
-#                         Method: GET 
-#                         ApiId: !Ref ProvimatRestApi
+    GetClientSaleFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-GetClient-Sale'
+            Handler: getClientSales.Handler
+            CodeUri: ./src/functions/sale
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /Sales/{idClient}
+                        Method: GET 
+                        ApiId: !Ref ProvimatRestApi
 #     AddOrRemoveProductsFunction:
 #         Type: AWS::Serverless::Function
 #         Metadata:

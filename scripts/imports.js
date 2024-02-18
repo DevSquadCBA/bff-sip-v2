@@ -1,12 +1,12 @@
 export {Handler as syncDB} from '../src/functions/admin/syncDB';
 export {Handler as createClient} from '../src/functions/client/createClient';
-export {Handler as deletedClient} from '../src/functions/client/deletedClient';
+export {Handler as deletedClient} from '../src/functions/client/deleteClient';
 export {Handler as getClientById} from '../src/functions/client/getClientById';
 export {Handler as getClients} from '../src/functions/client/getClients';
 export {Handler as getClientsList} from '../src/functions/client/getClientsList';
 export {Handler as updateClient} from '../src/functions/client/updateClient';
 export {Handler as createProduct} from '../src/functions/product/createProduct';
-export {Handler as deletedProduct} from '../src/functions/product/deletedProduct';
+export {Handler as deletedProduct} from '../src/functions/product/deleteProduct';
 export {Handler as getProductById} from '../src/functions/product/getProductById';
 export {Handler as getProducts} from '../src/functions/product/getProducts';
 export {Handler as updateProduct} from '../src/functions/product/updateProduct';

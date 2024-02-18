@@ -1,12 +1,12 @@
-import { Model, Column, Table, DataType, PrimaryKey, AutoIncrement } from 'sequelize-typescript';
+import { Column, Table, DataType, PrimaryKey, AutoIncrement, Model } from 'sequelize-typescript';
 import { CreationOptional} from 'sequelize';
 export type IProduct = {
-    id: number|null,
+    id?: number,
     code: number,
     name: string,
     salePrice: number,
-    purchasePrice: string,
-    provider: string,
+    purchasePrice: number,
+    provider: number,
     stockeable: number,
     negativeStock: number,
     productType: string,
@@ -33,10 +33,10 @@ export class Product extends Model {
     declare salePrice: number;
 
     @Column(DataType.DECIMAL)
-    declare purchasePrice: string;
+    declare purchasePrice: number;
 
-    @Column(DataType.STRING)
-    declare provider: string;
+    @Column(DataType.INTEGER)
+    declare provider: number;
 
     @Column(DataType.INTEGER)
     declare stockeable: number;

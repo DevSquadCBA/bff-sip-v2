@@ -1,4 +1,5 @@
 import { Client } from 'models/Client';
+import { ErrorOnDelete } from 'types/errors';
 import { ApiGatewayParsedEvent } from 'types/response-factory/proxies';
 import { Validators } from 'utils/Validator';
 import { LambdaResolver } from 'utils/lambdaResolver';
@@ -13,22 +14,14 @@ const domain = async (event: Event): Promise<{ body: string; statusCode: number 
     const { id } = event.pathParameters;
 
     try {
-        await Client.destroy({
-            where: {
-                id: parseInt(id, 10), 
-            },
-        });
+        await Client.update({ deleted: true }, {where: {id: parseInt(id,10)},});
 
         return {
             body: 'Deleted successfully',
             statusCode: 200,
         };
     } catch (error) {
-        console.error(error);
-        return {
-            body: 'Error deleting the Client',
-            statusCode: 500,
-        };
+        throw new ErrorOnDelete('Error deleting the client');
     }
 };
 

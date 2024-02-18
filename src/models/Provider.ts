@@ -2,7 +2,7 @@ import { Model, Column, Table, DataType, PrimaryKey, AutoIncrement } from 'seque
 import { CreationOptional} from 'sequelize';
 
 export type IProvider = {
-    id: number,
+    id?: number,
     name: string,
     fantasy_name: string,
     cuit_cuil: number,
@@ -10,7 +10,7 @@ export type IProvider = {
     province: string,
     locality: string,
     direction: string,
-    phone: number,
+    phone: string,
     voucherType: string,
     daysDelays: Date|number,
     deleted?: boolean,
@@ -45,8 +45,8 @@ export class Provider extends Model {
     @Column(DataType.STRING)
     declare direction: string;
 
-    @Column(DataType.INTEGER)
-    declare phone: number;
+    @Column(DataType.STRING)
+    declare phone: string;
 
     @Column(DataType.STRING)
     declare voucherType: string;

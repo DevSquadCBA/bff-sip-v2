@@ -3,6 +3,13 @@ import { Sale } from "./Sale";
 import { Product } from "./Product";
 import { StateProduct, StateProductValues } from "./Enums";
 
+export type ISaleProduct = {
+    saleId: number,
+    productId: number,
+    quantity: number,
+    state: StateProduct
+}
+
 @Table({ tableName: 'sale_product' })
 export class SaleProduct extends Model {
     @ForeignKey(() => Sale)

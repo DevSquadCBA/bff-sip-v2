@@ -1,13 +1,13 @@
-import { Model, Column, Table, DataType, PrimaryKey, AutoIncrement, ForeignKey, BelongsTo } from 'sequelize-typescript';
+import {  Column, Table, DataType, PrimaryKey, AutoIncrement, ForeignKey, BelongsTo ,Model} from 'sequelize-typescript';
 import { CreationOptional, Op } from 'sequelize';
 import { SaleStates, SalesStatesValues} from './Enums';
 import { Client } from './Client';
 
 export type ISale = {
-    id: number,
+    id?: number,
     clientId: number,
     state: SaleStates,
-    deleted: boolean,
+    deleted?: boolean,
     total: number,
     paid: number,
     budgetDetails: string,

@@ -8,8 +8,8 @@ export type IClient = {
     fiscalCategory: string,
     dni: string,
     email?: string,
-    phone?: number,
-    whatsapp?: number,
+    phone?: string,
+    whatsapp?: string,
     province?: string,
     localidad?: string,
     direction?: string,
@@ -39,11 +39,11 @@ export class Client extends Model {
     @Column({ type: DataType.STRING, allowNull: true })
     declare email: CreationOptional<string>;
 
-    @Column({ type: DataType.INTEGER, allowNull: true })
-    declare phone: CreationOptional<number>;
+    @Column({ type: DataType.STRING, allowNull: true })
+    declare phone: CreationOptional<string>;
 
-    @Column({ type: DataType.INTEGER, allowNull: true })
-    declare whatsapp: CreationOptional<number>;
+    @Column({ type: DataType.STRING, allowNull: true })
+    declare whatsapp: CreationOptional<string>;
 
     @Column({ type: DataType.STRING, allowNull: true })
     declare province: CreationOptional<string>;
