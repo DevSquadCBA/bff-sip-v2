@@ -24,8 +24,11 @@ const sequelize = new Sequelize({
 
 sequelize.addModels([Client , Sale , Product, Provider, SaleProduct])
 
-Sale.belongsToMany(Product, { through: SaleProduct , foreignKey: 'saleId' });
-Product.belongsToMany(Sale, { through: SaleProduct , foreignKey: 'productId' });
+Sale.belongsToMany(Product, { through: SaleProduct , foreignKey: 'saleId', as:'products' });
+Product.belongsToMany(Sale, { through: SaleProduct , foreignKey: 'productId', as: 'sales' });
+
+SaleProduct.belongsTo(Sale, { foreignKey: 'saleId', as:'sale'});
+SaleProduct.belongsTo(Product, { foreignKey: 'productId', as: 'product'});
 
 Product.belongsTo(Provider, { foreignKey: 'providerId', as: 'provider'});
 Sale.belongsTo(Client, { foreignKey: 'clientId'});
