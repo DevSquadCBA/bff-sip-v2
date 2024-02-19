@@ -13,7 +13,7 @@ const domain = async (event: Event): Promise<{ body: string; statusCode: number 
     const { id } = event.pathParameters;
 
     try {
-        await Product.destroy({
+        await Product.update({ deleted: true }, {
             where: {
                 id: parseInt(id, 10),
             },

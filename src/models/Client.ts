@@ -4,7 +4,7 @@ import { Sale } from './Sale';
 
 export type IClient = {
     name: string,
-    fantasy_name?: string,
+    fantasyName?: string,
     fiscalCategory: string,
     dni: string,
     email?: string,
@@ -28,7 +28,7 @@ export class Client extends Model {
     declare name: string;
 
     @Column({ type: DataType.STRING, allowNull: true })
-    declare fantasy_name: CreationOptional<string>;
+    declare fantasyName: CreationOptional<string>;
 
     @Column(DataType.STRING)
     declare fiscalCategory: string;

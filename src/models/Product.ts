@@ -6,7 +6,7 @@ export type IProduct = {
     name: string,
     salePrice: number,
     purchasePrice: number,
-    provider: number,
+    providerId: number,
     stockeable: number,
     negativeStock: number,
     productType: string,
@@ -36,7 +36,7 @@ export class Product extends Model {
     declare purchasePrice: number;
 
     @Column(DataType.INTEGER)
-    declare provider: number;
+    declare providerId: number;
 
     @Column(DataType.INTEGER)
     declare stockeable: number;
