@@ -184,6 +184,51 @@ paths:
           content:
             application/json:
               schema: {}
+  /client/{idClient}/sales:
+    get:
+      tags:
+        - Presupuestos
+      summary: Obtiene todos los presupuestos de un cliente
+      description: Obtiene los presupuestos de un cliente en concreto
+      operationId: GetClientSale
+      parameters:
+        - name: idClient
+          in: path
+          description: el id del cliente
+          schema: {}
+          required: true
+        # - name: idSale
+        #   in: query
+        #   description: el id del presupuesto en particular
+        #   schema:
+        #     type: integer
+        #     format: int64
+        #   required: false
+        # - name: status
+        #   in: query
+        #   description: el estatus
+        #   schema:
+        #     type: string
+        #   required: false
+      responses:
+        200:
+          description: listado de ventas
+          content: {}
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: {}
   /clientsList:
     get:
       tags:
@@ -304,52 +349,7 @@ paths:
             application/json:
               schema: {}
 
-  /sales/{idClient}:
-    get:
-      tags:
-        - Presupuestos
-      summary: Obtiene todos los presupuestos de un cliente
-      description: Obtiene los presupuestos de un cliente en concreto
-      operationId: GetClientSale
-      parameters:
-        - name: idClient
-          in: path
-          description: el id del cliente
-          schema: {}
-          required: true
-        - name: idSale
-          in: query
-          description: el id del presupuesto en particular
-          schema:
-            type: integer
-            format: int64
-          required: false
-        - name: status
-          in: query
-          description: el estatus
-          schema:
-            type: string
-          required: false
-      responses:
-        200:
-          description: listado de clientes
-          content: {}
-          headers:
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-        500:
-          description: Error
-          content:
-            application/json:
-              schema: {}
-
+  
   /sale/{idSale}/addProducts:
     post:
       tags:

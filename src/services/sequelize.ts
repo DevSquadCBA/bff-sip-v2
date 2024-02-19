@@ -27,7 +27,7 @@ sequelize.addModels([Client , Sale , Product, Provider, SaleProduct])
 Sale.belongsToMany(Product, { through: SaleProduct , foreignKey: 'saleId' });
 Product.belongsToMany(Sale, { through: SaleProduct , foreignKey: 'productId' });
 
-Product.belongsTo(Provider, { foreignKey: 'provider', as: 'provider'});
+Product.belongsTo(Provider, { foreignKey: 'providerId', as: 'provider'});
 Sale.belongsTo(Client, { foreignKey: 'clientId'});
 
 

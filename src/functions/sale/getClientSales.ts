@@ -1,5 +1,5 @@
+import { Client } from 'models/Client';
 import { Sale,  ISale } from 'models/Sale';
-import { where } from 'sequelize';
 import { ApiGatewayParsedEvent } from 'types/response-factory/proxies';
 import { Validators } from 'utils/Validator';
 import { LambdaResolver } from 'utils/lambdaResolver';
@@ -20,11 +20,14 @@ const domain = async (event:Event): Promise<{body:ISale[], statusCode:number}> =
 
     const budgets = await Sale.findAll({
         offset, limit,
-        attributes:{exclude: ['deleted']}, 
         where:{
             clientId: idClient,
-            deleted: false,
         },
+        include:{
+            model: Client,
+            attributes:{ exclude: ['deleted']},
+            where:{ deleted: false}
+        }
         }) as ISale[];
 
     return {

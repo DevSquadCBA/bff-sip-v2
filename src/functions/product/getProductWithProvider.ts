@@ -5,7 +5,13 @@ import { LambdaResolver } from 'utils/lambdaResolver';
 interface Event extends ApiGatewayParsedEvent {}
 
 const domain = async (event:Event): Promise<{body:IProduct[], statusCode:number}> => {
-    const products = await Product.findAll({ include: { model: Provider}, attributes: { exclude: ['deleted'] }});
+    const products = await Product.findAll({
+        include: {
+            model: Provider,
+            as:'provider',
+            attributes: { exclude: ['deleted'] }
+        }, attributes: { exclude: ['deleted'] }
+    });
     return {
         body: products as IProduct[],
         statusCode: 200

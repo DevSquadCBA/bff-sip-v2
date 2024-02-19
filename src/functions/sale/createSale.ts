@@ -1,6 +1,6 @@
 import {Sale , ISale } from 'models/Sale';
 import { SaleProduct } from 'models/SaleProduct';
-import { BadRequestError, InvalidIdError } from 'types/errors';
+import { BadRequestError } from 'types/errors';
 import { ApiGatewayParsedEvent } from 'types/response-factory/proxies';
 import { Validators } from 'utils/Validator';
 import { LambdaResolver } from 'utils/lambdaResolver';
@@ -16,6 +16,8 @@ const domain = async (event:Event): Promise<{body:number, statusCode:number}> =>
         delete parsedBody.products;
         const sale = parsedBody as ISale;
         const budget = await Sale.create(sale);
+
+ 
         Log.info({message: `Se ha creado el presupuesto con el id ${budget.id}`});
         console.dir(budget);
         if(products.length === 0) return {

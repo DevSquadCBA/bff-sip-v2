@@ -13,7 +13,11 @@ const domain = async (event:Event): Promise<{body:ISale[], statusCode:number}> =
     const offset = parseInt(event.queryStringParameters.offset);
     const limit = parseInt(event.queryStringParameters.limit);
 
-    const budgets = await Sale.findAll({ offset, limit, attributes:{exclude: ['deleted']}}) as ISale[];
+    const budgets = await Sale.findAll({
+        offset,
+        limit,
+        attributes:{exclude: ['deleted']}
+    }) as ISale[];
 
     return {
         body: budgets,

@@ -12,7 +12,7 @@ export type IProvider = {
     direction: string,
     phone: string,
     voucherType: string,
-    daysDelays: Date|number,
+    daysDelays: number,
     deleted?: boolean,
 }
 @Table({
@@ -51,8 +51,8 @@ export class Provider extends Model {
     @Column(DataType.STRING)
     declare voucherType: string;
 
-    @Column(DataType.DATE)
-    declare daysDelays: Date|number;
+    @Column(DataType.INTEGER)
+    declare daysDelays: number;
 
     @Column(DataType.BOOLEAN)
     declare deleted: CreationOptional<boolean>;

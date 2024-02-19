@@ -11,7 +11,7 @@ export type IProduct = {
     negativeStock: number,
     productType: string,
     img: string,
-    daysDelay: Date|number,
+    daysDelay: number,
     deleted?: boolean,
 }
 @Table({
@@ -50,8 +50,8 @@ export class Product extends Model {
     @Column(DataType.STRING)
     declare img: string;
 
-    @Column(DataType.DATE)
-    declare daysDelay: Date|number;
+    @Column(DataType.INTEGER)
+    declare daysDelay: number;
 
     @Column(DataType.BOOLEAN)
     declare deleted: CreationOptional<boolean>;
