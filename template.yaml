@@ -627,83 +627,83 @@ Resources:
                         Method: PUT
                         ApiId: !Ref ProvimatRestApi
 
-# ## Funciones de búsqueda
-#     SearchClientFunction:
-#         Type: AWS::Serverless::Function
-#         Metadata:
-#             BuildMethod: esbuild
-#             BuildProperties:
-#                 Minify: true
-#                 Sourcemap: true
-#                 MainFields: "module,main"
-#         Properties:
-#             FunctionName: !Sub '${Environment}-Search-Client'
-#             Handler: searchClient.Handler
-#             CodeUri: ./src/functions/client
-#             Events:
-#                 HttpEvent:
-#                     Type: HttpApi
-#                     Properties:
-#                         Path: /search/client
-#                         Method: POST
-#                         ApiId: !Ref ProvimatRestApi
-#     SearchSaleFunction:
-#         Type: AWS::Serverless::Function
-#         Metadata:
-#             BuildMethod: esbuild
-#             BuildProperties:
-#                 Minify: true
-#                 Sourcemap: true
-#                 MainFields: "module,main"
-#         Properties:
-#             FunctionName: !Sub '${Environment}-Search-Sale'
-#             Handler: searchSale.Handler
-#             CodeUri: ./src/functions/sale
-#             Events:
-#                 HttpEvent:
-#                     Type: HttpApi
-#                     Properties:
-#                         Path: /search/sale
-#                         Method: POST
-#                         ApiId: !Ref ProvimatRestApi
-#     SearchProductFunction:
-#         Type: AWS::Serverless::Function
-#         Metadata:
-#             BuildMethod: esbuild
-#             BuildProperties:
-#                 Minify: true
-#                 Sourcemap: true
-#                 MainFields: "module,main"
-#         Properties:
-#             FunctionName: !Sub '${Environment}-Search-Product'
-#             Handler: searchProduct.Handler
-#             CodeUri: ./src/functions/product
-#             Events:
-#                 HttpEvent:
-#                     Type: HttpApi
-#                     Properties:
-#                         Path: /search/product
-#                         Method: POST
-#                         ApiId: !Ref ProvimatRestApi
-#     SearchProviderFunction:
-#         Type: AWS::Serverless::Function
-#         Metadata:
-#             BuildMethod: esbuild
-#             BuildProperties:
-#                 Minify: true
-#                 Sourcemap: true
-#                 MainFields: "module,main"
-#         Properties:
-#             FunctionName: !Sub '${Environment}-Search-Provider'
-#             Handler: searchProvider.Handler
-#             CodeUri: ./src/functions/provider
-#             Events:
-#                 HttpEvent:
-#                     Type: HttpApi
-#                     Properties:
-#                         Path: /search/provider
-#                         Method: POST
-#                         ApiId: !Ref ProvimatRestApi
+## Funciones de búsqueda
+    SearchClientFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-GetClients'
+            Handler: searchClient.Handler
+            CodeUri: ./src/functions/client
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /search/client
+                        Method: POST
+                        ApiId: !Ref ProvimatRestApi
+    SearchSaleFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-SearchSale'
+            Handler: searchSale.Handler
+            CodeUri: ./src/functions/sale
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /search/sale
+                        Method: POST
+                        ApiId: !Ref ProvimatRestApi
+    SearchProductFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-SearchProduct'
+            Handler: searchProduct.Handler
+            CodeUri: ./src/functions/product
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /search/product
+                        Method: POST
+                        ApiId: !Ref ProvimatRestApi
+    SearchProviderFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-SearchProvider'
+            Handler: searchProvider.Handler
+            CodeUri: ./src/functions/provider
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /search/provider
+                        Method: POST
+                        ApiId: !Ref ProvimatRestApi
 #     UpdateProductPricesFunction:
 #         Type: AWS::Serverless::Function
 #         Metadata:
