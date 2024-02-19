@@ -7,7 +7,8 @@ export enum Validators{
     ID_PROVIDER = 'validateIdProvider',
     ID_PRODUCT = 'validateIdProduct',
     ID_SALE = 'validateIdSale',
-    VALID_JSON = 'validateJSONBody'
+    VALID_JSON = 'validateJSONBody',
+    QUERY ='validateQuery'
 }
 
 function offsetAndLimitValidator(queryStringParameters:{offset?:string, limit?: string}){
@@ -66,9 +67,16 @@ function validateIdSale(pathParameters:{idSale?:string}){
     return pathParameters;
 }
 
+function validateQuery(queryStringParameters:{query?:string}){
+    if(!queryStringParameters.query){
+        throw new BadRequestError('Es necesario enviar un query');
+    }
+    return queryStringParameters;
+}
+
 export function validate(validations: Validators[], event:ApiGatewayParsedEvent):ApiGatewayParsedEvent{
     if(validations.includes(Validators.OFFSET_AND_LIMITS)){
-        event.queryStringParameters = offsetAndLimitValidator(event.queryStringParameters)
+        event.queryStringParameters = {...offsetAndLimitValidator(event.queryStringParameters)}
     }else if(validations.includes(Validators.ID_CLIENT)){
         event.pathParameters = validateIdClient(event.pathParameters);
     }else if(validations.includes(Validators.ID_PROVIDER)){
@@ -77,6 +85,8 @@ export function validate(validations: Validators[], event:ApiGatewayParsedEvent)
         event.pathParameters = validateIdProduct(event.pathParameters);
     }else if(validations.includes(Validators.ID_SALE)){
         event.pathParameters = validateIdSale(event.pathParameters);
+    } else if(validations.includes(Validators.QUERY)){
+        event.queryStringParameters = {...validateQuery(event.queryStringParameters)};
     }
 
     if(validations.includes(Validators.VALID_JSON)){

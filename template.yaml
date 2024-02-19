@@ -645,7 +645,7 @@ Resources:
                     Type: HttpApi
                     Properties:
                         Path: /search/client
-                        Method: POST
+                        Method: GET
                         ApiId: !Ref ProvimatRestApi
     SearchSaleFunction:
         Type: AWS::Serverless::Function
@@ -664,7 +664,7 @@ Resources:
                     Type: HttpApi
                     Properties:
                         Path: /search/sale
-                        Method: POST
+                        Method: GET
                         ApiId: !Ref ProvimatRestApi
     SearchProductFunction:
         Type: AWS::Serverless::Function
@@ -683,7 +683,7 @@ Resources:
                     Type: HttpApi
                     Properties:
                         Path: /search/product
-                        Method: POST
+                        Method: GET
                         ApiId: !Ref ProvimatRestApi
     SearchProviderFunction:
         Type: AWS::Serverless::Function
@@ -702,7 +702,7 @@ Resources:
                     Type: HttpApi
                     Properties:
                         Path: /search/provider
-                        Method: POST
+                        Method: GET
                         ApiId: !Ref ProvimatRestApi
 #     UpdateProductPricesFunction:
 #         Type: AWS::Serverless::Function

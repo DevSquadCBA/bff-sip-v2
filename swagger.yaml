@@ -777,7 +777,7 @@ paths:
               schema: {}
 
   /search/client:
-    post:
+    get:
       tags:
         - Search
       summary: Busca clientes
@@ -809,7 +809,7 @@ paths:
             application/json:
               schema: {}
   /search/sale:
-    post:
+    get:
       tags:
         - Search
       summary: Busca el Presupuesto
@@ -841,7 +841,7 @@ paths:
             application/json:
               schema: {}
   /search/product:
-    post:
+    get:
       tags:
         - Search
       summary: Busca productos
@@ -873,7 +873,7 @@ paths:
             application/json:
               schema: {}
   /search/provider:
-    post:
+    get:
       tags:
         - Search
       summary: Busca Provedores
