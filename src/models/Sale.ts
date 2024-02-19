@@ -15,6 +15,20 @@ export type ISale = {
     seller: string,
     billing: string,
 }
+export type ProductsInSale = {
+    id:number,
+    code: string,
+    name: string,
+    salePrice: number,
+    purchasePrice: number,
+    saleProducts?: { 
+        quantity: number,
+        state: string 
+    },
+    quantity?: number,
+    state?: string
+}
+export type SaleWithProduct = ISale & {products: ProductsInSale[]}
 
 @Table({
     tableName: 'sales'
@@ -56,7 +70,7 @@ export class Sale extends Model {
     
     static async getActiveSales(idClient:number){
         // reference query
-        // (select COUNT(*) from ${process.env.BUDGET} b1 where b1.state !='finished' and b1.clientId = c.id and b1.deleted = 0) as 'active'
+        // (select COUNT(*) from ${process.env.SALE} b1 where b1.state !='finished' and b1.clientId = c.id and b1.deleted = 0) as 'active'
         return await Sale.findAll(
             {
                 where:{
@@ -69,7 +83,7 @@ export class Sale extends Model {
             })
     }
     static async getTotalSales(idClient:number){
-        //(select COUNT(*) from ${process.env.BUDGET} b2 where b2.clientId = c.id and b2.deleted = 0) as 'total',
+        //(select COUNT(*) from ${process.env.SALE} b2 where b2.clientId = c.id and b2.deleted = 0) as 'total',
         return await Sale.findAll(
             {
                 where:{
@@ -80,7 +94,7 @@ export class Sale extends Model {
         )
     }
     static async getDateFromUpdatestSale(idClient:number){
-        // (select updateDate from ${process.env.BUDGET} b3 where b3.clientId = c.id and b3.deleted = 0 order by b3.updateDate DESC,b3.creationDate DESC limit 1) as 'lastModification'
+        // (select updateDate from ${process.env.SALE} b3 where b3.clientId = c.id and b3.deleted = 0 order by b3.updateDate DESC,b3.creationDate DESC limit 1) as 'lastModification'
         return await Sale.findAll(
             {
                 where:{

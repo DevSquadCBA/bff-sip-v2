@@ -1,5 +1,5 @@
 import { Product } from 'models/Product';
-import { Sale } from 'models/Sale';
+import { ProductsInSale, Sale, SaleWithProduct } from 'models/Sale';
 import { SaleProduct } from 'models/SaleProduct';
 import { ApiGatewayParsedEvent } from 'types/response-factory/proxies';
 import { Validators } from 'utils/Validator';
@@ -10,31 +10,31 @@ interface Event extends ApiGatewayParsedEvent {
         limit: string
     }
 }
-type ProductsInSale = {code: string, name: string, salePrice: number, purchasePrice: number, saleProducts?: { quantity: number, state: string },quantity?: number, state?: string}
-type SaleWithProduct = Sale & {products: ProductsInSale[]}
 
-const domain = async (event:Event): Promise<{body:Sale[], statusCode:number}> => {
+
+const domain = async (event:Event): Promise<{body:SaleWithProduct[], statusCode:number}> => {
     const offset = parseInt(event.queryStringParameters.offset);
     const limit = parseInt(event.queryStringParameters.limit);
 
-    let sales = await Sale.findAll({
+    const sales = await Sale.findAll({
         offset,
         limit,
-        include:{
+        include: {
             model: Product,
-            attributes: ['code','name', 'salePrice', 'purchasePrice'],
+            attributes: ['id', 'code', 'name', 'salePrice', 'purchasePrice'],
             as: 'products',
-            through:{
+            through: {
                 model: SaleProduct,
                 attributes: ['quantity', 'state'],
                 as: 'saleProducts'
             } as any
         }
-    }) as SaleWithProduct[];
-    sales = sales.map(saleRaw=>{
+    });
+    const salesWithProduct:SaleWithProduct[] = sales.map(saleRaw=>{
         const sale = saleRaw.get({ plain: true });
         sale.products = sale.products.map((product:ProductsInSale)=>{
             return {
+                id: product.id,
                 code: product.code,
                 name: product.name,
                 salePrice: product.salePrice,
@@ -48,7 +48,7 @@ const domain = async (event:Event): Promise<{body:Sale[], statusCode:number}> =>
     
 
     return {
-        body: sales,
+        body: salesWithProduct,
         statusCode: 200
     }    
 }

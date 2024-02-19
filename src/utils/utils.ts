@@ -12,7 +12,7 @@ export function getEntity(headers:APIGatewayProxyEventHeaders & {entity?:string,
     if(!(headers.entity in entityMapping)){
         throw new BadRequestError('La entidad definida no es válida')
     }
-    process.env.BUDGET= entityMapping[headers.entity];
+    process.env.SALE= entityMapping[headers.entity];
 }
 
 export class Log{

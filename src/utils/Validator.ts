@@ -1,4 +1,4 @@
-import { BadRequestError } from "types/errors"
+import { BadRequestError, JSONInvalid } from "types/errors"
 import { ApiGatewayParsedEvent } from "types/response-factory/proxies";
 
 export enum Validators{
@@ -6,7 +6,8 @@ export enum Validators{
     ID_CLIENT = 'validateIdClient',
     ID_PROVIDER = 'validateIdProvider',
     ID_PRODUCT = 'validateIdProduct',
-    ID_BUDGET = 'validateIdSale'
+    ID_SALE = 'validateIdSale',
+    VALID_JSON = 'validateJSONBody'
 }
 
 function offsetAndLimitValidator(queryStringParameters:{offset?:string, limit?: string}){
@@ -74,9 +75,16 @@ export function validate(validations: Validators[], event:ApiGatewayParsedEvent)
         event.pathParameters = validateIdProvider(event.pathParameters);
     }else if(validations.includes(Validators.ID_PRODUCT)){
         event.pathParameters = validateIdProduct(event.pathParameters);
-    }
-    else if(validations.includes(Validators.ID_BUDGET)){
+    }else if(validations.includes(Validators.ID_SALE)){
         event.pathParameters = validateIdSale(event.pathParameters);
+    }
+
+    if(validations.includes(Validators.VALID_JSON)){
+        try{
+            event.body = JSON.parse(event.body as string);
+        }catch(e){
+            throw new JSONInvalid();
+        }
     }
     return event;
 }

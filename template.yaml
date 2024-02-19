@@ -395,25 +395,25 @@ Resources:
                         Path: /client/{idClient}/sales
                         Method: GET 
                         ApiId: !Ref ProvimatRestApi
-    # AddOrRemoveProductsFunction:
-    #     Type: AWS::Serverless::Function
-    #     Metadata:
-    #         BuildMethod: esbuild
-    #         BuildProperties:
-    #             Minify: true
-    #             Sourcemap: true
-    #             MainFields: "module,main"
-    #     Properties:
-    #         FunctionName: !Sub '${Environment}-addOrRemoveProducts'
-    #         Handler: addOrRemoveProducts.Handler
-    #         CodeUri: ./src/functions/sale
-    #         Events:
-    #             HttpEvent:
-    #                 Type: HttpApi
-    #                 Properties:
-    #                     Path: /sale/{idSale}/addProducts
-    #                     Method: POST
-    #                     ApiId: !Ref ProvimatRestApi
+    AddOrRemoveProductsFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-addOrRemoveProducts'
+            Handler: addOrRemoveProducts.Handler
+            CodeUri: ./src/functions/sale
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /sale/{idSale}/addProducts
+                        Method: POST
+                        ApiId: !Ref ProvimatRestApi
 # # Products
     CreateProductFunction:
         Type: AWS::Serverless::Function

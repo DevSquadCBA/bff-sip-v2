@@ -19,6 +19,8 @@ BEGIN
 END;`
 
 
+
+
 export async function createStores(sequelize: Sequelize) {
     await sequelize.query(spGetAllClientsWithSalesInfo).catch(err => console.info('El procedure spGetAllClientsWithSalesInfo ya existía o no se pudo crear',err));
 }

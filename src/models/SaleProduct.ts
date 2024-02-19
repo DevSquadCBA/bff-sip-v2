@@ -10,6 +10,13 @@ export type ISaleProduct = {
     state: StateProduct
 }
 
+
+export type IProductToAdd = {
+    id: number,
+    quantity: number
+}
+
+
 @Table({ tableName: 'sale_product' })
 export class SaleProduct extends Model {
     @ForeignKey(() => Sale)
@@ -28,4 +35,13 @@ export class SaleProduct extends Model {
 
     // @Column
     // declare discountPercent: number;
+
+    static async bulkUpdate(productToUpdate: Partial<ISaleProduct>[]){
+        await this.sequelize?.query(`
+            UPDATE sale_product ('productId','quantity') 
+            VALUES ${productToUpdate.map(e=>`(${e.productId},${e.quantity})`)}
+            where saleId = ${productToUpdate[0].saleId}
+            On DUPLICATE KEY UPDATE quantity VALUES(quantity)
+        `)
+    }
 }

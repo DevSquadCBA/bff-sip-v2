@@ -18,4 +18,4 @@ const domain = async (event:Event): Promise<{body:ISale, statusCode:number}> => 
     }
 }
 
-export const Handler = (event:ApiGatewayParsedEvent)=>LambdaResolver(event, domain, [Validators.ID_BUDGET])
+export const Handler = (event:ApiGatewayParsedEvent)=>LambdaResolver(event, domain, [Validators.ID_SALE])
