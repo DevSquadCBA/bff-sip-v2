@@ -34,3 +34,12 @@ export const StateProductValues:StateProduct[] = [
     StateProduct.shipping,
     StateProduct.on_deposit
 ];
+
+export enum EntityList{
+    muebles = 'muebles',
+    instalaciones = 'instalaciones',
+    puertas = 'puertas'
+}
+export const EntityListValues:EntityList[] = [
+    EntityList.muebles, EntityList.instalaciones, EntityList.puertas
+]

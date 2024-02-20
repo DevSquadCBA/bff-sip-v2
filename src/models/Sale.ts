@@ -1,6 +1,6 @@
 import {  Column, Table, DataType, PrimaryKey, AutoIncrement, ForeignKey, BelongsTo ,Model} from 'sequelize-typescript';
 import { CreationOptional, Op } from 'sequelize';
-import { SaleStates, SalesStatesValues} from './Enums';
+import { EntityList, EntityListValues, SaleStates, SalesStatesValues} from './Enums';
 import { Client } from './Client';
 
 export type ISale = {
@@ -26,7 +26,8 @@ export type ProductsInSale = {
         state: string 
     },
     quantity?: number,
-    state?: string
+    state?: string,
+    entity: EntityList
 }
 export type SaleWithProduct = ISale & {products: ProductsInSale[]}
 
@@ -67,6 +68,11 @@ export class Sale extends Model {
     @Column(DataType.STRING)
     declare billing: string;
 
+    @Column(DataType.BOOLEAN)
+    declare deleted: CreationOptional<boolean>;
+
+    @Column(DataType.ENUM(...EntityListValues))
+    declare entity: EntityList;
     
     static async getActiveSales(idClient:number){
         // reference query
