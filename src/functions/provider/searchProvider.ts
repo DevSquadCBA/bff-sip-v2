@@ -1,14 +1,24 @@
 import {Provider, IProvider } from 'models/Provider';
+import { Op } from 'sequelize';
 import { ApiGatewayParsedEvent } from 'types/response-factory/proxies';
 import { Validators } from 'utils/Validator';
 import { LambdaResolver } from 'utils/lambdaResolver';
 
-interface Event extends ApiGatewayParsedEvent {}
+interface Event extends ApiGatewayParsedEvent {
+    queryStringParameters: {
+        query:string
+    }
+}
 
 const domain = async (event:Event): Promise<{body:IProvider[], statusCode:number}> => {
+    const query = event.queryStringParameters.query;
     const providers = await Provider.findAll({ 
         where: {
-            name: event.queryStringParameters
+            [Op.or]:{
+                name: {[Op.like]: '%'+query+'%'},
+                fantasyName: {[Op.like]: '%'+query+'%'},
+                cuit_cuil: {[Op.like]: '%'+query+'%'}
+            }
         },
         attributes: { exclude: ['deleted'] }
     });
@@ -18,4 +28,4 @@ const domain = async (event:Event): Promise<{body:IProvider[], statusCode:number
     }
 }
 
-export const Handler = (event:ApiGatewayParsedEvent)=>LambdaResolver(event, domain, [Validators.OFFSET_AND_LIMITS])
+export const Handler = (event:ApiGatewayParsedEvent)=>LambdaResolver(event, domain, [Validators.QUERY])

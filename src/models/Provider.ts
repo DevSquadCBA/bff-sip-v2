@@ -4,7 +4,7 @@ import { CreationOptional} from 'sequelize';
 export type IProvider = {
     id?: number,
     name: string,
-    fantasy_name: string,
+    fantasyName: string,
     cuit_cuil: number,
     email: string,
     province: string,
@@ -28,7 +28,7 @@ export class Provider extends Model {
     declare name: string;
 
     @Column(DataType.STRING)
-    declare fantasy_name: string;
+    declare fantasyName: string;
 
     @Column(DataType.INTEGER)
     declare cuit_cuil: number;

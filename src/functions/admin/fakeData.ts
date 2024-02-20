@@ -39,7 +39,7 @@ function fakeClient():IClient{
 function fakeProvider():IProvider{
     return {
         name: faker.company.name(),
-        fantasy_name: faker.company.name(),
+        fantasyName: faker.company.name(),
         cuit_cuil: faker.number.int({min: 10000000, max: 99999999}),
         email: faker.internet.email(),
         province: faker.location.state(),
@@ -97,9 +97,9 @@ function fakeSaleProduct():ISaleProduct{
 async function fakeData(){
     const clients:IClient[] = faker.helpers.multiple(fakeClient, {count: 20});
     const providers:IProvider[] = faker.helpers.multiple(fakeProvider,{count:20});
-    const products:IProduct[] = faker.helpers.multiple(fakeProducts, {count: 20});
+    const products:IProduct[] = faker.helpers.multiple(fakeProducts, {count: 200});
     const sale:ISale[] = faker.helpers.multiple(fakeSales, {count: 20});
-    const saleProduct:ISaleProduct[] = faker.helpers.multiple(fakeSaleProduct, {count: 40});
+    const saleProduct:ISaleProduct[] = faker.helpers.multiple(fakeSaleProduct, {count: 60});
 
     await Client.bulkCreate(clients);
     await Provider.bulkCreate(providers);

@@ -21,8 +21,8 @@ const domain = async (event:Event): Promise<{body:ISale[], statusCode:number}> =
         },
         where: {
             [Op.or]: [
-                {state: query},
-                {clientId : query},
+                {state: {[Op.like]: '%'+query+'%'}},
+                {clientId : [{[Op.like]: '%'+query+'%'}]},
                 literal(`client.name like '%${query}%'`)
             ]
         },
