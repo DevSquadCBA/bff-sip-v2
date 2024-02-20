@@ -229,7 +229,7 @@ paths:
           content:
             application/json:
               schema: {}
-  /clientsList:
+  /clients:
     get:
       tags:
         - Clientes

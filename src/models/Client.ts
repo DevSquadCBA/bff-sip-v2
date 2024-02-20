@@ -64,11 +64,12 @@ export class Client extends Model {
         if(!Client.sequelize){
             return []
         }
-        const [results] = await Client.sequelize.query('CALL spGetAllClientsWithSalesInfo(:offset, :limit)', {
+        let [results] = await Client.sequelize.query('CALL spGetAllClientsWithSalesInfo(:offset, :limit)', {
             replacements: { offset, limit },
             type: QueryTypes.SELECT
         })
-        return results;
+        return Object.keys(results).map((key:string) => results[key as keyof typeof results])
+        
     }
 }
 

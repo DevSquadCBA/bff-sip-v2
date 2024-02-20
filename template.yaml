@@ -200,7 +200,7 @@ Resources:
                 HttpEvent:
                     Type: HttpApi
                     Properties:
-                        Path: /clientsList
+                        Path: /clients
                         Method: GET
                         ApiId: !Ref ProvimatRestApi
     GetClientByIdFunction:
