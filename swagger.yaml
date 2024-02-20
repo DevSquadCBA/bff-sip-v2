@@ -930,7 +930,7 @@ paths:
         - Admin
       summary: Sincroniza la base de datos
       description: Sincroniza la base de datos
-      operationId: SyncDB
+      operationId: FakeData
       responses:
         200:
           description: 'ok'            

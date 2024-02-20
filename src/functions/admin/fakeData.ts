@@ -17,7 +17,8 @@ import { ISaleProduct, SaleProduct } from 'models/SaleProduct';
 interface Event extends ApiGatewayParsedEvent {
     headers:{
         Entity: string
-        Admin: string
+        admin?: string
+        Admin?: string
     }
 }
 
@@ -111,7 +112,8 @@ async function fakeData(){
 
 
 const domain = async (event:Event): Promise<{body:string, statusCode:number}> => {
-    const admin = event.headers.Admin;
+    const admin = event.headers.admin || event.headers['Admin'];
+    console.log(event)
     if('astrodev'!= admin){
         return {
             body: 'not authorized',
