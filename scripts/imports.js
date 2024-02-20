@@ -1,22 +1,62 @@
-export {Handler as syncDB} from '../src/functions/admin/syncDB';
-export {Handler as createClient} from '../src/functions/client/createClient';
-export {Handler as deletedClient} from '../src/functions/client/deleteClient';
-export {Handler as getClientById} from '../src/functions/client/getClientById';
-export {Handler as getClients} from '../src/functions/client/getClients';
-export {Handler as getClientsList} from '../src/functions/client/getClientsList';
-export {Handler as updateClient} from '../src/functions/client/updateClient';
-export {Handler as createProduct} from '../src/functions/product/createProduct';
-export {Handler as deletedProduct} from '../src/functions/product/deleteProduct';
-export {Handler as getProductById} from '../src/functions/product/getProductById';
-export {Handler as getProducts} from '../src/functions/product/getProducts';
-export {Handler as updateProduct} from '../src/functions/product/updateProduct';
-export {Handler as createProvider} from '../src/functions/provider/createProvider';
-export {Handler as deleteProvider} from '../src/functions/provider/deleteProvider';
-export {Handler as getProviderById} from '../src/functions/provider/getProviderById';
-export {Handler as getProviders} from '../src/functions/provider/getProviders';
-export {Handler as updateProvider} from '../src/functions/provider/updateProvider';
-export {Handler as createSale} from '../src/functions/sale/createSale';
-export {Handler as deleteSale} from '../src/functions/sale/deleteSale';
-export {Handler as getSaleById} from '../src/functions/sale/getSaleById';
-export {Handler as getSales} from '../src/functions/sale/getSales';
-export {Handler as updateSale} from '../src/functions/sale/updateSale';
+const {Handler:AddOrRemoveProductsFunction} = require('../.aws-sam/build/AddOrRemoveProductsFunction/addOrRemoveProducts.js');
+const {Handler:CreateClientFunction} = require('../.aws-sam/build/CreateClientFunction/createClient.js');
+const {Handler:CreateProductFunction} = require('../.aws-sam/build/CreateProductFunction/createProduct.js');
+const {Handler:CreateProviderFunction} = require('../.aws-sam/build/CreateProviderFunction/createProvider.js');
+const {Handler:CreateSaleFunction} = require('../.aws-sam/build/CreateSaleFunction/createSale.js');
+const {Handler:DeleteClientsFunction} = require('../.aws-sam/build/DeleteClientsFunction/deleteClient.js');
+const {Handler:DeleteProductFunction} = require('../.aws-sam/build/DeleteProductFunction/deleteProduct.js');
+const {Handler:DeleteProviderFunction} = require('../.aws-sam/build/DeleteProviderFunction/deleteProvider.js');
+const {Handler:DeleteSaleFunction} = require('../.aws-sam/build/DeleteSaleFunction/deleteSale.js');
+const {Handler:FakeDataFunction} = require('../.aws-sam/build/FakeDataFunction/fakeData.js');
+const {Handler:GetClientByIdFunction} = require('../.aws-sam/build/GetClientByIdFunction/getClientById.js');
+const {Handler:GetClientSaleFunction} = require('../.aws-sam/build/GetClientSaleFunction/getClientSales.js');
+const {Handler:GetClientsFunction} = require('../.aws-sam/build/GetClientsFunction/getClients.js');
+const {Handler:GetClientsListFunction} = require('../.aws-sam/build/GetClientsListFunction/getClientsList.js');
+const {Handler:GetProductByIdFunction} = require('../.aws-sam/build/GetProductByIdFunction/getProductById.js');
+const {Handler:GetProductsFunction} = require('../.aws-sam/build/GetProductsFunction/getProducts.js');
+const {Handler:GetProductWithProviderFunction} = require('../.aws-sam/build/GetProductWithProviderFunction/getProductWithProvider.js');
+const {Handler:GetProviderByIdFunction} = require('../.aws-sam/build/GetProviderByIdFunction/getProviderById.js');
+const {Handler:GetProvidersFunction} = require('../.aws-sam/build/GetProvidersFunction/getProviders.js');
+const {Handler:GetSaleByIdFunction} = require('../.aws-sam/build/GetSaleByIdFunction/getSaleById.js');
+const {Handler:GetSalesFunction} = require('../.aws-sam/build/GetSalesFunction/getSales.js');
+const {Handler:SearchClientFunction} = require('../.aws-sam/build/SearchClientFunction/searchClient.js');
+const {Handler:SearchProductFunction} = require('../.aws-sam/build/SearchProductFunction/searchProduct.js');
+const {Handler:SearchProviderFunction} = require('../.aws-sam/build/SearchProviderFunction/searchProvider.js');
+const {Handler:SearchSaleFunction} = require('../.aws-sam/build/SearchSaleFunction/searchSale.js');
+const {Handler:SyncDbFunction} = require('../.aws-sam/build/SyncDbFunction/syncDb.js');
+const {Handler:UpdateClientsFunction} = require('../.aws-sam/build/UpdateClientsFunction/updateClient.js');
+const {Handler:UpdateProductFunction} = require('../.aws-sam/build/UpdateProductFunction/updateProduct.js');
+const {Handler:UpdateProviderFunction} = require('../.aws-sam/build/UpdateProviderFunction/updateProvider.js');
+const {Handler:UpdateSaleFunction} = require('../.aws-sam/build/UpdateSaleFunction/updateSale.js');
+module.exports={
+    AddOrRemoveProductsFunction,
+    CreateClientFunction,
+    CreateProductFunction,
+    CreateProviderFunction,
+    CreateSaleFunction,
+    DeleteClientsFunction,
+    DeleteProductFunction,
+    DeleteProviderFunction,
+    DeleteSaleFunction,
+    FakeDataFunction,
+    GetClientByIdFunction,
+    GetClientSaleFunction,
+    GetClientsFunction,
+    GetClientsListFunction,
+    GetProductByIdFunction,
+    GetProductsFunction,
+    GetProductWithProviderFunction,
+    GetProviderByIdFunction,
+    GetProvidersFunction,
+    GetSaleByIdFunction,
+    GetSalesFunction,
+    SearchClientFunction,
+    SearchProductFunction,
+    SearchProviderFunction,
+    SearchSaleFunction,
+    SyncDbFunction,
+    UpdateClientsFunction,
+    UpdateProductFunction,
+    UpdateProviderFunction,
+    UpdateSaleFunction,
+}

@@ -29,7 +29,7 @@ function responseFactory({body, statusCode}: {body:unknown, statusCode: number})
 
 export async function LambdaResolver(event:ApiGatewayParsedEvent, domain:any, validators?:Validators[]):Promise<lambdaResponse>{
     try{
-        if(!sequelize.isDefined) return responseFactory({body: 'No se ha inicializado la base de datos', statusCode: 500})
+            if(!sequelize.isDefined) return responseFactory({body: 'No se ha inicializado la base de datos', statusCode: 500})
         let finalEvent = event;
         getEntity(event.headers)
         if(validators){

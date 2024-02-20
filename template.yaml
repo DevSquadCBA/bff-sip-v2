@@ -711,7 +711,6 @@ Resources:
 #             BuildProperties:
 #                 Minify: true
 #                 Sourcemap: true
- 
 #         Properties:
 #             FunctionName: !Sub '${Environment}-Update-Product-Prices'
 #             Handler: updateProductPricesFromProvider.Handler
