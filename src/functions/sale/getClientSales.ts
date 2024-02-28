@@ -17,11 +17,16 @@ const domain = async (event:Event): Promise<{body:ISale[], statusCode:number}> =
     const offset = parseInt(event.queryStringParameters.offset);
     const limit = parseInt(event.queryStringParameters.limit);
     const idClient = parseInt(event.pathParameters.idClient);
+    const entity = event.headers.entity;
 
     const budgets = await Sale.findAll({
         offset, limit,
         where:{
             clientId: idClient,
+            entity
+        },
+        attributes:{
+            exclude: ['deleted']
         },
         include:{
             model: Client,

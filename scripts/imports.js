@@ -1,4 +1,5 @@
 const {Handler:AddOrRemoveProductsFunction} = require('../.aws-sam/build/AddOrRemoveProductsFunction/addOrRemoveProducts.js');
+const {Handler:CountFunction} = require('../.aws-sam/build/CountFunction/count.js');
 const {Handler:CreateClientFunction} = require('../.aws-sam/build/CreateClientFunction/createClient.js');
 const {Handler:CreateProductFunction} = require('../.aws-sam/build/CreateProductFunction/createProduct.js');
 const {Handler:CreateProviderFunction} = require('../.aws-sam/build/CreateProviderFunction/createProvider.js');
@@ -30,6 +31,7 @@ const {Handler:UpdateProviderFunction} = require('../.aws-sam/build/UpdateProvid
 const {Handler:UpdateSaleFunction} = require('../.aws-sam/build/UpdateSaleFunction/updateSale.js');
 module.exports={
     AddOrRemoveProductsFunction,
+    CountFunction,
     CreateClientFunction,
     CreateProductFunction,
     CreateProviderFunction,

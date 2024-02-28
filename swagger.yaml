@@ -904,6 +904,35 @@ paths:
           content:
             application/json:
               schema: {}
+  /count:
+    get:
+      tags: 
+        - Utils
+      summary: Cuenta los diferentes registros
+      description: Cuenta los diferentes registros
+      operationId: Count
+      responses:
+        200:
+          description: 'ok'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sales:
+                    type: integer
+                  clients:
+                    type: integer
+                  products:
+                    type: integer
+                  providers:
+                    type: integer
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: {}
+              
   /admin/syncDB:
     get:
       tags: 

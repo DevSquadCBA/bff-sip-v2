@@ -7,6 +7,6 @@ export interface ApiGatewayParsedEvent extends Omit<APIGatewayProxyEvent, 'body'
     queryStringParameters: APIGatewayProxyEventQueryStringParameters;
     pathParameters: APIGatewayProxyEventPathParameters;
     headers:{
-        Entity: string
+        entity: string
     }
 }

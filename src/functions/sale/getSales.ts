@@ -19,6 +19,14 @@ const domain = async (event:Event): Promise<{body:SaleWithProduct[], statusCode:
     const sales = await Sale.findAll({
         offset,
         limit,
+        subQuery:false,
+        where:{
+            deleted: false,
+            entity: event.headers.entity
+        },
+        attributes:{
+            exclude: ['deleted']
+        },
         include: {
             model: Product,
             attributes: ['id', 'code', 'name', 'salePrice', 'purchasePrice'],

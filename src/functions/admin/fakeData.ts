@@ -11,12 +11,12 @@ import { IProduct, Product } from 'models/Product';
 import sequelize from 'services/sequelize';
 import { IProvider, Provider } from 'models/Provider';
 import { ISale, Sale } from 'models/Sale';
-import { SalesStatesValues, StateProductValues } from 'models/Enums';
+import { EntityListValues, SalesStatesValues, StateProductValues } from 'models/Enums';
 import { ISaleProduct, SaleProduct } from 'models/SaleProduct';
 
 interface Event extends ApiGatewayParsedEvent {
     headers:{
-        Entity: string
+        entity: string
         admin?: string
         Admin?: string
     }
@@ -80,7 +80,8 @@ function fakeSales():ISale{
         dispatch: 'without',
         seller: 'AstroDev',
         billing: 'AstroDev',
-        deleted: false
+        deleted: false,
+        entity: faker.helpers.arrayElement(EntityListValues)
     }
 }
 

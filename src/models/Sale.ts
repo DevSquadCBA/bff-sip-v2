@@ -14,6 +14,7 @@ export type ISale = {
     dispatch: 'without' | 'with',
     seller: string,
     billing: string,
+    entity: EntityList
 }
 export type ProductsInSale = {
     id:number,

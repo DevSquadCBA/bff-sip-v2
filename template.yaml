@@ -723,6 +723,27 @@ Resources:
 #                         Method: POST
 #                         ApiId: !Ref ProvimatRestApi
 
+# Utils
+    CountFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-Count'
+            Handler: count.Handler
+            CodeUri: ./src/functions/utils
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /count
+                        Method: GET
+                        ApiId: !Ref ProvimatRestApi
+
 # Esta url nunca cambia
 Outputs:
     ApiUrl:
