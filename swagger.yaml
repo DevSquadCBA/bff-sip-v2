@@ -1,6 +1,6 @@
 openapi: 3.0.1
 info:
-  title: Sistema integral provimat
+  title: Sistema integral piatti
   version: 1.0.0
 
 # security:

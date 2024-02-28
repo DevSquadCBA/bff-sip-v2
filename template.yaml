@@ -39,7 +39,7 @@ Globals:
 
 Conditions:
     IsProduction:
-        Fn::Equals: [Ref: Environment, prodblue]
+        Fn::Equals: [Ref: Environment, prod]
     DefinedDomainName:
         Fn::Not:
             - Fn::Equals:
@@ -53,7 +53,7 @@ Mappings:
     Stage:
         develop:
             DomainName: 'dev-sip.devsquadcba.com'
-        prodblue:
+        prod:
             DomainName: 'sip.devsquadcba.com'
     Static:
         Parameters:

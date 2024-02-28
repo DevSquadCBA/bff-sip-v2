@@ -1,6 +1,6 @@
-<h1 id="sistema-integral-provimat">Sistema integral piatti v2.0.0</h1>
+<h1 id="sistema-integral-piatti">Sistema integral piatti v2.0.0</h1>
 
-> Bff para el sistema integral provimat/piatti
+> Bff para el sistema integral piatti/piatti
 
 Base URLs:
 
@@ -50,7 +50,7 @@ Base URLs:
 <a href="#SearchProvider">POST /search/provider</a><br>
 
 
-<h1 id="sistema-integral-provimat-clientes">Clientes</h1>
+<h1 id="sistema-integral-piatti-clientes">Clientes</h1>
 
 ## CreateClient
 
@@ -336,7 +336,7 @@ null
 This operation does not require authentication
 </aside>
 
-<h1 id="sistema-integral-provimat-presupuestos">Presupuestos</h1>
+<h1 id="sistema-integral-piatti-presupuestos">Presupuestos</h1>
 
 
 ## CreateSale
@@ -594,7 +594,7 @@ null
 This operation does not require authentication
 </aside>
 
-<h1 id="sistema-integral-provimat-agrega-productos">agrega productos</h1>
+<h1 id="sistema-integral-piatti-agrega-productos">agrega productos</h1>
 
 
 ## agregar productos
@@ -654,7 +654,7 @@ null
 This operation does not require authentication
 </aside>
 
-<h1 id="sistema-integral-provimat-productos">Productos</h1>
+<h1 id="sistema-integral-piatti-productos">Productos</h1>
 
 
 ## CreateProduct
@@ -949,7 +949,7 @@ null
 This operation does not require authentication
 </aside>
 
-<h1 id="sistema-integral-provimat-proveedores">Proveedores</h1>
+<h1 id="sistema-integral-piatti-proveedores">Proveedores</h1>
 
 
 ## CreateProvider
@@ -1251,7 +1251,7 @@ null
 This operation does not require authentication
 </aside>
 
-<h1 id="sistema-integral-provimat-search">Search</h1>
+<h1 id="sistema-integral-piatti-search">Search</h1>
 
 
 ## SearchClient
