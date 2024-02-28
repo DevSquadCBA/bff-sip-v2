@@ -5,7 +5,7 @@ import { createStores } from "services/generateStoreProcedures";
 
 interface Event extends ApiGatewayParsedEvent {
     headers:{
-        Entity: string
+        entity: string
         Admin: string
     }
 }
