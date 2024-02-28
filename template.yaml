@@ -110,7 +110,10 @@ Resources:
         Condition: CreateDomainName
         Properties:
             BasePath: 'api'
-            DomainName: !Sub '${Stage.${Environment}.DomainName}'
+            DomainName: !FindInMap 
+                - Stage
+                - !Ref Environment
+                - DomainName
             RestApiId: !Ref ProvimatRestApi
             Stage: !Ref ProvimatRestApi.Stage    
 
@@ -123,7 +126,6 @@ Resources:
             ContentUri: ./src/layers/nodejs
             CompatibleRuntimes:
                 - nodejs16.x
-
 # Admin
     SyncDbFunction:
         Type: AWS::Serverless::Function
@@ -241,7 +243,7 @@ Resources:
                         Path: /client
                         Method: POST
                         ApiId: !Ref ProvimatRestApi
-    UpdateClientsFunction:
+    UpdateClientFunction:
         Type: AWS::Serverless::Function
         Metadata:
             BuildMethod: esbuild
@@ -250,7 +252,7 @@ Resources:
                 Sourcemap: true
                 MainFields: "module,main"
         Properties:
-            FunctionName: !Sub '${Environment}-UpdateClients'
+            FunctionName: !Sub '${Environment}-UpdateClient'
             Handler: updateClient.Handler
             CodeUri: ./src/functions/client
             Events:
@@ -260,7 +262,7 @@ Resources:
                         Path: /client/{idClient}
                         Method: PUT
                         ApiId: !Ref ProvimatRestApi
-    DeleteClientsFunction:
+    DeleteClientFunction:
         Type: AWS::Serverless::Function
         Metadata:
             BuildMethod: esbuild
@@ -269,7 +271,7 @@ Resources:
                 Sourcemap: true
                 MainFields: "module,main"
         Properties:
-            FunctionName: !Sub '${Environment}-DeleteClients'
+            FunctionName: !Sub '${Environment}-DeleteClient'
             Handler: deleteClient.Handler
             CodeUri: ./src/functions/client
             Events:
@@ -637,7 +639,7 @@ Resources:
                 Sourcemap: true
                 MainFields: "module,main"
         Properties:
-            FunctionName: !Sub '${Environment}-GetClients'
+            FunctionName: !Sub '${Environment}-SearchClients'
             Handler: searchClient.Handler
             CodeUri: ./src/functions/client
             Events:

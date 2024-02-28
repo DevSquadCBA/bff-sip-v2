@@ -46,7 +46,8 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
+              schema: 
+                $ref: '#/components/schemas/Error'
     #R
     get:
       tags:
@@ -73,7 +74,8 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
+              schema: 
+                $ref: '#/components/schemas/Error'
   /client/{idClient}:
     get:
       tags:
@@ -109,7 +111,8 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
+              schema: 
+                $ref: '#/components/schemas/Error'
     #U
     put:
       tags:
@@ -150,7 +153,8 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
+              schema: 
+                $ref: '#/components/schemas/Error'
     #D
     delete:
       tags:
@@ -183,7 +187,8 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
+              schema: 
+                $ref: '#/components/schemas/Error'
   /client/{idClient}/sales:
     get:
       tags:
@@ -228,7 +233,8 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
+              schema: 
+                $ref: '#/components/schemas/Error'
   /clients:
     get:
       tags:
@@ -254,7 +260,8 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
+              schema: 
+                $ref: '#/components/schemas/Error'
   /sales:
     get:
       tags:
@@ -281,7 +288,8 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
+              schema: 
+                $ref: '#/components/schemas/Error'
   /sale:
     post:
       tags:
@@ -293,7 +301,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Newsale"
+              $ref: "#/components/schemas/NewSale"
       responses:
         200:
           description: Devuelve el id del presupuesto creado
@@ -312,7 +320,8 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
+              schema: 
+                $ref: '#/components/schemas/Error'
   /sale/{idSale}:
     get:
       tags:
@@ -347,9 +356,78 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
-
-  
+              schema: 
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+        - Presupuestos
+      summary: Actualiza un presupuesto
+      description: Actualiza un presupuesto basándose en el ID
+      operationId: UpdateSale
+      parameters:
+        - name: idSale
+          in: path
+          description: El ID del presupuesto
+          schema: {}
+          required: true
+      responses:
+        200:
+          description: Un Presupuesto
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sale'
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - Presupuestos
+      summary: Borra logicamente un presupuesto
+      description: Borra logicamente un presupuesto basándose en el ID
+      operationId: DeleteSale
+      parameters:
+        - name: idSale
+          in: path
+          description: El ID del presupuesto
+          schema: {}
+          required: true
+      responses:
+        200:
+          description: Un Presupuesto
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sale'
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
   /sale/{idSale}/addProducts:
     post:
       tags:
@@ -386,7 +464,8 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
+              schema: 
+                $ref: '#/components/schemas/Error'
 
   /product:
     post:
@@ -418,7 +497,8 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
+              schema: 
+                $ref: '#/components/schemas/Error'
     get:
       tags:
         - Productos
@@ -444,8 +524,8 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
-
+              schema: 
+                $ref: '#/components/schemas/Error'
   /product/{idProduct}:
     get:
       tags:
@@ -481,8 +561,8 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
-
+              schema: 
+                $ref: '#/components/schemas/Error'
     delete:
       tags:
         - Productos
@@ -513,8 +593,8 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
-
+              schema: 
+                $ref: '#/components/schemas/Error'
     put:
       tags:
         - Productos
@@ -550,8 +630,8 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
-
+              schema: 
+                $ref: '#/components/schemas/Error'
   /products:
     get:
       tags:
@@ -577,8 +657,8 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
-
+              schema: 
+                $ref: '#/components/schemas/Error'
   /provider:
     post:
       tags:
@@ -609,8 +689,8 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
-
+              schema: 
+                $ref: '#/components/schemas/Error'
     get:
       tags:
         - Proveedores
@@ -635,8 +715,8 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
-
+              schema: 
+                $ref: '#/components/schemas/Error'
   /provider/{idProvider}:
     delete:
       tags:
@@ -671,7 +751,8 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
+              schema: 
+                $ref: '#/components/schemas/Error'
     get:
       tags:
         - Proveedores
@@ -702,7 +783,8 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
+              schema: 
+                $ref: '#/components/schemas/Error'
     put:
       tags:
         - Proveedores
@@ -738,44 +820,45 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
-    post:
-      tags:
-        - Proveedores
-      summary: Actualiza precios basado en un porcentaje
-      description: El porcentaje de actualización de los precios de un proveedor
-      operationId: UpdateProductPrices
-      parameters:
-        - name: idProvider
-          in: path
-          description: el id del proveedor
-          schema: {}
-          required: true
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/percentPrice"
-      responses:
-        200:
-          description: listado de productos actualizados
-          content: {}
-          headers:
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-        500:
-          description: Error
-          content:
-            application/json:
-              schema: {}
-
+              schema: 
+                $ref: '#/components/schemas/Error'
+    # post:
+    #   tags:
+    #     - Proveedores
+    #   summary: Actualiza precios basado en un porcentaje
+    #   description: El porcentaje de actualización de los precios de un proveedor
+    #   operationId: UpdateProductPrices
+    #   parameters:
+    #     - name: idProvider
+    #       in: path
+    #       description: el id del proveedor
+    #       schema: {}
+    #       required: true
+    #   requestBody:
+    #     content:
+    #       application/json:
+    #         schema:
+    #           $ref: "#/components/schemas/percentPrice"
+    #   responses:
+    #     200:
+    #       description: listado de productos actualizados
+    #       content: {}
+    #       headers:
+    #         Access-Control-Allow-Origin:
+    #           schema:
+    #             type: string
+    #         Access-Control-Allow-Methods:
+    #           schema:
+    #             type: string
+    #         Access-Control-Allow-Headers:
+    #           schema:
+    #             type: string
+    #     500:
+    #       description: Error
+    #       content:
+    #         application/json:
+    #           schema: 
+    #             $ref: '#/components/schemas/Error'
   /search/client:
     get:
       tags:
@@ -807,7 +890,8 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
+              schema: 
+                $ref: '#/components/schemas/Error'
   /search/sale:
     get:
       tags:
@@ -839,7 +923,8 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
+              schema: 
+                $ref: '#/components/schemas/Error'
   /search/product:
     get:
       tags:
@@ -871,7 +956,8 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
+              schema: 
+                $ref: '#/components/schemas/Error'
   /search/provider:
     get:
       tags:
@@ -903,7 +989,8 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
+              schema: 
+                $ref: '#/components/schemas/Error'
   /count:
     get:
       tags: 
@@ -931,9 +1018,9 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
-              
-  /admin/syncDB:
+              schema: 
+                $ref: '#/components/schemas/Error'
+  /admin/syncDb:
     get:
       tags: 
         - Admin
@@ -1082,4 +1169,12 @@ components:
         percent: 
           type: number
           example: 10
-          
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          example: error
+        status:
+          type: integer
+          example: 500    

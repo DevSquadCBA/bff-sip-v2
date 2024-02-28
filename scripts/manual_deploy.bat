@@ -23,4 +23,4 @@ echo "================== Create Bucket =================="
 aws s3api create-bucket --bucket %BUCKET%
 
 echo "================== Build =================="
-sam build -c -p --beta-features && sam deploy --no-confirm-changeset --s3-bucket %BUCKET% --region %REGION_1%--profile %PROFILE% --stack-name %STACK% --capabilities CAPABILITY_NAMED_IAM --parameter-overrides Environment=%ENVIRONMENT%
+sam build -c -p --beta-features && sam deploy --no-confirm-changeset --s3-bucket %BUCKET% --region %REGION_1% --profile %PROFILE% --stack-name %STACK% --capabilities CAPABILITY_NAMED_IAM --parameter-overrides Environment=%ENVIRONMENT%
