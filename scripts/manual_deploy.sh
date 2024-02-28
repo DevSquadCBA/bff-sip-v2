@@ -12,13 +12,13 @@ else
 fi
 CI_PROJECT_NAME=bff-sip-api
 STACK=$ENVIRONMENT-$CI_PROJECT_NAME
-BUCKET=$STACK-deploy
+BUCKET=$STACK-deploy-piatti
 REGION_1=us-east-1
 #PROFILE=924447079950_AZAWS-Architect
 PROFILE=default
 
 echo "================== Create Bucket =================="
-aws s3api create-bucket --bucket $BUCKET
+#aws s3api create-bucket --bucket $BUCKET
 
 echo "================== Build =================="
 sam build -c -p --beta-features 
