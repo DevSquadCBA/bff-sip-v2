@@ -3,7 +3,7 @@ run-name: ${{ github.actor }} sube los cambios al ambiente DEV
 on: 
   push:
     branches:
-      - "development"
+      - "dev"
 jobs:
   deploy:
     runs-on: ubuntu-latest
