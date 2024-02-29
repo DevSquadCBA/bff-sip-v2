@@ -3,7 +3,10 @@ interface ApiGatewayParsedBody {
     [name: string]: any;
 }
 export interface ApiGatewayParsedEvent extends Omit<APIGatewayProxyEvent, 'body'> {
-    body: ApiGatewayParsedBody;
+    body: ApiGatewayParsedBody |string;
     queryStringParameters: APIGatewayProxyEventQueryStringParameters;
     pathParameters: APIGatewayProxyEventPathParameters;
+    headers:{
+        entity: string
+    }
 }

@@ -1,6 +1,6 @@
 openapi: 3.0.1
 info:
-  title: Sistema integral provimat
+  title: Sistema integral piatti
   version: 1.0.0
 
 # security:
@@ -46,7 +46,8 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
+              schema: 
+                $ref: '#/components/schemas/Error'
     #R
     get:
       tags:
@@ -73,7 +74,8 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
+              schema: 
+                $ref: '#/components/schemas/Error'
   /client/{idClient}:
     get:
       tags:
@@ -109,7 +111,8 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
+              schema: 
+                $ref: '#/components/schemas/Error'
     #U
     put:
       tags:
@@ -150,7 +153,8 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
+              schema: 
+                $ref: '#/components/schemas/Error'
     #D
     delete:
       tags:
@@ -183,7 +187,54 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
+              schema: 
+                $ref: '#/components/schemas/Error'
+  /client/{idClient}/sales:
+    get:
+      tags:
+        - Presupuestos
+      summary: Obtiene todos los presupuestos de un cliente
+      description: Obtiene los presupuestos de un cliente en concreto
+      operationId: GetClientSale
+      parameters:
+        - name: idClient
+          in: path
+          description: el id del cliente
+          schema: {}
+          required: true
+        # - name: idSale
+        #   in: query
+        #   description: el id del presupuesto en particular
+        #   schema:
+        #     type: integer
+        #     format: int64
+        #   required: false
+        # - name: status
+        #   in: query
+        #   description: el estatus
+        #   schema:
+        #     type: string
+        #   required: false
+      responses:
+        200:
+          description: listado de ventas
+          content: {}
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
   /clients:
     get:
       tags:
@@ -209,44 +260,15 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
-  /budget:
-    post:
-      tags:
-        - Presupuestos
-      summary: Crea un nuevo Presupuesto
-      description: Crea un nuevo Presupuesto
-      operationId: CreateBudget
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Budget"
-      responses:
-        200:
-          description: Devuelve el id del presupuesto creado
-          content: {}
-          headers:
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-        500:
-          description: Error
-          content:
-            application/json:
-              schema: {}
+              schema: 
+                $ref: '#/components/schemas/Error'
+  /sales:
     get:
       tags:
         - Presupuestos
       summary: Obtiene todos los presupuestos
       description: Obtiene un listado de todos los presupuestos
-      operationId: GetBudgets
+      operationId: GetSales
       parameters: []
       responses:
         200:
@@ -266,59 +288,23 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
-  /budget/{idBudget}:
-    get:
+              schema: 
+                $ref: '#/components/schemas/Error'
+  /sale:
+    post:
       tags:
         - Presupuestos
-      summary: Obtiene un presupuesto
-      description: Obtiene un presupuesto basandose en el id
-      operationId: DeleteBudget
-      parameters:
-        - name: idBudget
-          in: path
-          description: el id del presupuesto
-          schema: {}
-          required: true
-      responses:
-        200:
-          description: un presupuesto
-          content: {}
-          headers:
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-        500:
-          description: Error
-          content:
-            application/json:
-              schema: {}
-    put:
-      tags:
-        - Presupuestos
-      summary: Actualiza un Presupuesto
-      description: Actualiza un presupuesto
-      operationId: UpdateBudget
-      parameters:
-        - name: idBudget
-          in: path
-          description: el id del presupuesto
-          schema: {}
-          required: true
+      summary: Crea un nuevo Presupuesto
+      description: Crea un nuevo Presupuesto
+      operationId: Createsale
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Budget"
+              $ref: "#/components/schemas/NewSale"
       responses:
         200:
-          description: resultado
+          description: Devuelve el id del presupuesto creado
           content: {}
           headers:
             Access-Control-Allow-Origin:
@@ -334,69 +320,28 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
-    delete:
-      tags:
-        - Presupuestos
-      summary: Da de baja un Presupuesto
-      description: Da de baja logica un presupuesto que estaba en estado pendiente
-      operationId: DeleteBudget
-      parameters:
-        - name: idBudget
-          in: path
-          description: el id del presupuesto
-          schema: {}
-          required: true
-      responses:
-        200:
-          description: listado de clientes
-          content: {}
-          headers:
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-        500:
-          description: Error
-          content:
-            application/json:
-              schema: {}
-  /budgets/{idClient}:
-    # /budgetS/0?idBudget=1&status=pending
+              schema: 
+                $ref: '#/components/schemas/Error'
+  /sale/{idSale}:
     get:
       tags:
         - Presupuestos
-      summary: Obtiene todos los presupuestos de un cliente
-      description: Obtiene los presupuestos de un cliente en concreto
-      operationId: GetClientBudget
+      summary: Obtiene un presupuesto
+      description: Obtiene un presupuesto basándose en el ID
+      operationId: GetSaleById
       parameters:
-        - name: idClient
+        - name: idSale
           in: path
-          description: el id del cliente
+          description: El ID del presupuesto
           schema: {}
           required: true
-        - name: idBudget
-          in: query
-          description: el id del presupuesto en particular
-          schema:
-            type: integer
-            format: int64
-          required: false
-        - name: status
-          in: query
-          description: el estatus
-          schema:
-            type: string
-          required: false
       responses:
         200:
-          description: listado de clientes
-          content: {}
+          description: Un Presupuesto
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sale'
           headers:
             Access-Control-Allow-Origin:
               schema:
@@ -411,16 +356,87 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
-  /budget/{idBudget}/addProducts:
+              schema: 
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+        - Presupuestos
+      summary: Actualiza un presupuesto
+      description: Actualiza un presupuesto basándose en el ID
+      operationId: UpdateSale
+      parameters:
+        - name: idSale
+          in: path
+          description: El ID del presupuesto
+          schema: {}
+          required: true
+      responses:
+        200:
+          description: Un Presupuesto
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sale'
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - Presupuestos
+      summary: Borra logicamente un presupuesto
+      description: Borra logicamente un presupuesto basándose en el ID
+      operationId: DeleteSale
+      parameters:
+        - name: idSale
+          in: path
+          description: El ID del presupuesto
+          schema: {}
+          required: true
+      responses:
+        200:
+          description: Un Presupuesto
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sale'
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
+  /sale/{idSale}/addProducts:
     post:
       tags:
         - agrega productos
-      summary: agrega,quita,actualiza productos de un presupuesto
-      description: agrega,quita,actualiza productos de un presupuesto
-      operationId: agregar productos
+      summary: agrega, quita, actualiza productos de un presupuesto
+      description: agrega, quita, actualiza productos de un presupuesto
+      operationId: AddOrRemoveProducts
       parameters:
-        - name: idBudget
+        - name: idSale
           in: path
           description: el id del presupuesto
           schema: {}
@@ -448,7 +464,9 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
+              schema: 
+                $ref: '#/components/schemas/Error'
+
   /product:
     post:
       tags:
@@ -479,7 +497,8 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
+              schema: 
+                $ref: '#/components/schemas/Error'
     get:
       tags:
         - Productos
@@ -505,7 +524,8 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
+              schema: 
+                $ref: '#/components/schemas/Error'
   /product/{idProduct}:
     get:
       tags:
@@ -517,13 +537,13 @@ paths:
         - name: idProduct
           in: path
           description: el id del producto
-          schema: 
+          schema:
             type: number
           required: true
       responses:
         200:
           description: Un producto
-          content: 
+          content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Product'
@@ -541,12 +561,13 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
+              schema: 
+                $ref: '#/components/schemas/Error'
     delete:
       tags:
         - Productos
       summary: Da de baja un producto
-      description: Da de baja logica un producto que estaba en estado pendiente
+      description: Da de baja lógica un producto que estaba en estado pendiente
       operationId: DeleteProduct
       parameters:
         - name: idProduct
@@ -572,7 +593,8 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
+              schema: 
+                $ref: '#/components/schemas/Error'
     put:
       tags:
         - Productos
@@ -608,12 +630,13 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
+              schema: 
+                $ref: '#/components/schemas/Error'
   /products:
     get:
       tags:
         - Productos
-      summary: Obtiene los productos con datos. 
+      summary: Obtiene los productos con datos.
       description: Obtiene los productos con sus respectivos proveedores.
       operationId: GetProductWithProvider
       responses:
@@ -634,7 +657,8 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
+              schema: 
+                $ref: '#/components/schemas/Error'
   /provider:
     post:
       tags:
@@ -665,7 +689,8 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
+              schema: 
+                $ref: '#/components/schemas/Error'
     get:
       tags:
         - Proveedores
@@ -690,13 +715,14 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
+              schema: 
+                $ref: '#/components/schemas/Error'
   /provider/{idProvider}:
     delete:
       tags:
         - Proveedores
       summary: Da de baja un Proveedor
-      description: Da de baja logica un Proveedor
+      description: Da de baja lógica un Proveedor
       operationId: DeleteProvider
       parameters:
         - name: idProvider
@@ -707,7 +733,7 @@ paths:
       responses:
         200:
           description: un proveedor
-          content: 
+          content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Provider'
@@ -725,7 +751,8 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
+              schema: 
+                $ref: '#/components/schemas/Error'
     get:
       tags:
         - Proveedores
@@ -756,7 +783,8 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
+              schema: 
+                $ref: '#/components/schemas/Error'
     put:
       tags:
         - Proveedores
@@ -792,45 +820,47 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
-    post:
-      tags:
-        - Proveedores
-      summary: Actualiza precios basado en un porcentaje
-      description: El porcentaje de actualización de los precios de un proveedor
-      operationId: updateProductPricesFromBudget
-      parameters:
-        - name: idProvider
-          in: path
-          description: el id del proveedor
-          schema: {}
-          required: true
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/percentPrice"
-      responses:
-        200:
-          description: listado de productos actualizados
-          content: {}
-          headers:
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-            Access-Control-Allow-Methods:
-              schema:
-                type: string
-            Access-Control-Allow-Headers:
-              schema:
-                type: string
-        500:
-          description: Error
-          content:
-            application/json:
-              schema: {}
+              schema: 
+                $ref: '#/components/schemas/Error'
+    # post:
+    #   tags:
+    #     - Proveedores
+    #   summary: Actualiza precios basado en un porcentaje
+    #   description: El porcentaje de actualización de los precios de un proveedor
+    #   operationId: UpdateProductPrices
+    #   parameters:
+    #     - name: idProvider
+    #       in: path
+    #       description: el id del proveedor
+    #       schema: {}
+    #       required: true
+    #   requestBody:
+    #     content:
+    #       application/json:
+    #         schema:
+    #           $ref: "#/components/schemas/percentPrice"
+    #   responses:
+    #     200:
+    #       description: listado de productos actualizados
+    #       content: {}
+    #       headers:
+    #         Access-Control-Allow-Origin:
+    #           schema:
+    #             type: string
+    #         Access-Control-Allow-Methods:
+    #           schema:
+    #             type: string
+    #         Access-Control-Allow-Headers:
+    #           schema:
+    #             type: string
+    #     500:
+    #       description: Error
+    #       content:
+    #         application/json:
+    #           schema: 
+    #             $ref: '#/components/schemas/Error'
   /search/client:
-    post:
+    get:
       tags:
         - Search
       summary: Busca clientes
@@ -860,14 +890,15 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
-  /search/budget:
-    post:
+              schema: 
+                $ref: '#/components/schemas/Error'
+  /search/sale:
+    get:
       tags:
         - Search
       summary: Busca el Presupuesto
       description: Te devuelve el presupuesto que coincidan con la consulta
-      operationId: SearchBudget
+      operationId: SearchSale
       requestBody:
         content:
           application/json:
@@ -892,9 +923,10 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
+              schema: 
+                $ref: '#/components/schemas/Error'
   /search/product:
-    post:
+    get:
       tags:
         - Search
       summary: Busca productos
@@ -924,9 +956,10 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}
+              schema: 
+                $ref: '#/components/schemas/Error'
   /search/provider:
-    post:
+    get:
       tags:
         - Search
       summary: Busca Provedores
@@ -956,7 +989,78 @@ paths:
           description: Error
           content:
             application/json:
-              schema: {}            
+              schema: 
+                $ref: '#/components/schemas/Error'
+  /count:
+    get:
+      tags: 
+        - Utils
+      summary: Cuenta los diferentes registros
+      description: Cuenta los diferentes registros
+      operationId: Count
+      responses:
+        200:
+          description: 'ok'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sales:
+                    type: integer
+                  clients:
+                    type: integer
+                  products:
+                    type: integer
+                  providers:
+                    type: integer
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
+  /admin/syncDb:
+    get:
+      tags: 
+        - Admin
+      summary: Sincroniza la base de datos
+      description: Sincroniza la base de datos
+      operationId: SyncDB
+      responses:
+        200:
+          description: 'ok'            
+          content:
+            application/json:
+              schema:
+                type: string
+        401:
+          description: NotAuthorized
+          content:
+            application/json:
+              schema:
+                type: string
+  /admin/fakeData:
+    get:
+      tags: 
+        - Admin
+      summary: Sincroniza la base de datos
+      description: Sincroniza la base de datos
+      operationId: FakeData
+      responses:
+        200:
+          description: 'ok'            
+          content:
+            application/json:
+              schema:
+                type: string
+        401:
+          description: NotAuthorized
+          content:
+            application/json:
+              schema:
+                type: string
+  
 components:
   schemas:
     Search:
@@ -985,7 +1089,7 @@ components:
           type: integer
         direction:
           type: string
-    Budget:
+    Sale:
       type: object
       properties:
         id:
@@ -1026,7 +1130,7 @@ components:
           type: string
         daysDelay:
           type: integer
-    NewBudget:
+    NewSale:
       type: object
       properties:
         creationDate:
@@ -1065,4 +1169,12 @@ components:
         percent: 
           type: number
           example: 10
-          
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          example: error
+        status:
+          type: integer
+          example: 500    

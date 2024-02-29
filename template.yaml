@@ -20,7 +20,7 @@ Parameters:
 
 Globals:
     Function:
-        Runtime: nodejs16.x
+        Runtime: nodejs18.x
         Timeout: 30
         MemorySize: 128
         Environment:
@@ -39,7 +39,7 @@ Globals:
 
 Conditions:
     IsProduction:
-        Fn::Equals: [Ref: Environment, prodblue]
+        Fn::Equals: [Ref: Environment, prod]
     DefinedDomainName:
         Fn::Not:
             - Fn::Equals:
@@ -53,11 +53,12 @@ Mappings:
     Stage:
         develop:
             DomainName: 'dev-sip.devsquadcba.com'
-        prodblue:
+        prod:
             DomainName: 'sip.devsquadcba.com'
     Static:
         Parameters:
             FilterPattern: '[event=REPORT* || event="*DATADOG_EVENT*"]'
+
 
 Resources:
     GetParametersRole:
@@ -75,8 +76,7 @@ Resources:
             Path: '/'
             ManagedPolicyArns:
                 - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
-            RoleName:
-                Fn::Join: ['-', [Ref: Environment, GetParametersRole]]
+            RoleName: !Sub '${Environment}-GetParametersRole'
             Policies:
                 - PolicyName: ReadSsmParameters
                   PolicyDocument:
@@ -110,9 +110,61 @@ Resources:
         Condition: CreateDomainName
         Properties:
             BasePath: 'api'
-            DomainName: !FindInMap [Stage, !Ref Environment, DomainName]
+            DomainName: !FindInMap 
+                - Stage
+                - !Ref Environment
+                - DomainName
             RestApiId: !Ref ProvimatRestApi
             Stage: !Ref ProvimatRestApi.Stage    
+
+# Layers
+    Mysql2Layer:
+        Type: AWS::Serverless::LayerVersion
+        Properties:
+            LayerName: !Sub '${Environment}-MysqlLayer'
+            Description: 'Layer que contiene mysql2'
+            ContentUri: ./src/layers/nodejs
+            CompatibleRuntimes:
+                - nodejs16.x
+# Admin
+    SyncDbFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-SyncDb'
+            Handler: syncDb.Handler
+            CodeUri: ./src/functions/admin
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /admin/syncDb
+                        Method: GET
+                        ApiId: !Ref ProvimatRestApi
+    FakeDataFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-FakeData'
+            Handler: fakeData.Handler
+            CodeUri: ./src/functions/admin
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /admin/fakeData
+                        Method: GET
+                        ApiId: !Ref ProvimatRestApi
 
 # Clients
     GetClientsFunction:
@@ -134,25 +186,25 @@ Resources:
                         Path: /client
                         Method: GET
                         ApiId: !Ref ProvimatRestApi
-#     GetClientsListFunction:
-#         Type: AWS::Serverless::Function
-#         Metadata:
-#             BuildMethod: esbuild
-#             BuildProperties:
-#                 MainFields: "module,main"
-#                 Minify: true
-#                 Sourcemap: true
-#         Properties:
-#             FunctionName: !Sub '${Environment}-GetClients-List'
-#             Handler: getClientsList.Handler
-#             CodeUri: ./src/functions/client
-#             Events:
-#                 HttpEvent:
-#                     Type: HttpApi
-#                     Properties:
-#                         Path: /clients
-#                         Method: GET
-#                         ApiId: !Ref ProvimatRestApi
+    GetClientsListFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                MainFields: "module,main"
+                Minify: true
+                Sourcemap: true
+        Properties:
+            FunctionName: !Sub '${Environment}-GetClients-List'
+            Handler: getClientsList.Handler
+            CodeUri: ./src/functions/client
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /clients
+                        Method: GET
+                        ApiId: !Ref ProvimatRestApi
     GetClientByIdFunction:
         Type: AWS::Serverless::Function
         Metadata:
@@ -172,85 +224,7 @@ Resources:
                         Path: /client/{idClient}
                         Method: GET
                         ApiId: !Ref ProvimatRestApi
-#     CreateClientsFunction:
-#         Type: AWS::Serverless::Function
-#         Metadata:
-#             BuildMethod: esbuild
-#             BuildProperties:
-#                 Minify: true
-#                 Sourcemap: true
-#                 MainFields: "module,main"
-#         Properties:
-#             FunctionName: !Sub '${Environment}-CreateClients'
-#             Handler: createClients.Handler
-#             CodeUri: ./src/functions/client
-#             Events:
-#                 HttpEvent:
-#                     Type: HttpApi
-#                     Properties:
-#                         Path: /client
-#                         Method: POST
-#                         ApiId: !Ref ProvimatRestApi
-#     UpdateClientsFunction:
-#         Type: AWS::Serverless::Function
-#         Metadata:
-#             BuildMethod: esbuild
-#             BuildProperties:
-#                 Minify: true
-#                 Sourcemap: true
-#                 MainFields: "module,main"
-#         Properties:
-#             FunctionName: !Sub '${Environment}-UpdateClients'
-#             Handler: updateClient.Handler
-#             CodeUri: ./src/functions/client
-#             Events:
-#                 HttpEvent:
-#                     Type: HttpApi
-#                     Properties:
-#                         Path: /client/{idClient}
-#                         Method: PUT
-#                         ApiId: !Ref ProvimatRestApi                       
-#     DeleteClientsFunction:
-#         Type: AWS::Serverless::Function
-#         Metadata:
-#             BuildMethod: esbuild
-#             BuildProperties:
-#                 Minify: true
-#                 Sourcemap: true
-#                 MainFields: "module,main"
-#         Properties:
-#             FunctionName: !Sub '${Environment}-DeleteClients'
-#             Handler: deleteClient.Handler
-#             CodeUri: ./src/functions/client
-#             Events:
-#                 HttpEvent:
-#                     Type: HttpApi
-#                     Properties:
-#                         Path: /client/{idClient}
-#                         Method: DELETE
-#                         ApiId: !Ref ProvimatRestApi
-
-# # Budgets
-#     CreateBudgetFunction:
-#         Type: AWS::Serverless::Function
-#         Metadata:
-#             BuildMethod: esbuild
-#             BuildProperties:
-#                 Minify: true
-#                 Sourcemap: true
-#                 MainFields: "module,main"
-#         Properties:
-#             FunctionName: !Sub '${Environment}-Create-Budget'
-#             Handler: createBudgets.Handler
-#             CodeUri: ./src/functions/budget
-#             Events:
-#                 HttpEvent:
-#                     Type: HttpApi
-#                     Properties:
-#                         Path: /budget
-#                         Method: POST
-#                         ApiId: !Ref ProvimatRestApi
-    GetBudgetFunction:
+    CreateClientFunction:
         Type: AWS::Serverless::Function
         Metadata:
             BuildMethod: esbuild
@@ -259,132 +233,17 @@ Resources:
                 Sourcemap: true
                 MainFields: "module,main"
         Properties:
-            FunctionName: !Sub '${Environment}-Get-Budget'
-            Handler: getBudgets.Handler
-            CodeUri: ./src/functions/budget
+            FunctionName: !Sub '${Environment}-CreateClient'
+            Handler: createClient.Handler
+            CodeUri: ./src/functions/client
             Events:
                 HttpEvent:
                     Type: HttpApi
                     Properties:
-                        Path: /budget
-                        Method: GET
+                        Path: /client
+                        Method: POST
                         ApiId: !Ref ProvimatRestApi
-#     GetBudgetByIdFunction:
-#         Type: AWS::Serverless::Function
-#         Metadata:
-#             BuildMethod: esbuild
-#             BuildProperties:
-#                 Minify: true
-#                 Sourcemap: true
-#                 MainFields: "module,main"
-#         Properties:
-#             FunctionName: !Sub '${Environment}-Get-BudgetById'
-#             Handler: getBudgetById.Handler
-#             CodeUri: ./src/functions/budget
-#             Events:
-#                 HttpEvent:
-#                     Type: HttpApi
-#                     Properties:
-#                         Path: /budget/{idBudget}
-#                         Method: GET
-#                         ApiId: !Ref ProvimatRestApi
-#     UpdateBudgetFunction:
-#         Type: AWS::Serverless::Function
-#         Metadata:
-#             BuildMethod: esbuild
-#             BuildProperties:
-#                 Minify: true
-#                 Sourcemap: true
-#                 MainFields: "module,main"
-#         Properties:
-#             FunctionName: !Sub '${Environment}-Update-Budget'
-#             Handler: updateBudgets.Handler
-#             CodeUri: ./src/functions/budget
-#             Events:
-#                 HttpEvent:
-#                     Type: HttpApi
-#                     Properties:
-#                         Path: /budget/{idBudget}
-#                         Method: PUT
-#                         ApiId: !Ref ProvimatRestApi
-#     DeleteBudgetFunction:
-#         Type: AWS::Serverless::Function
-#         Metadata:
-#             BuildMethod: esbuild
-#             BuildProperties:
-#                 Minify: true
-#                 Sourcemap: true
-#                 MainFields: "module,main"
-#         Properties:
-#             FunctionName: !Sub '${Environment}-Delete-Budget'
-#             Handler: deleteBudget.Handler
-#             CodeUri: ./src/functions/budget
-#             Events:
-#                 HttpEvent:
-#                     Type: HttpApi
-#                     Properties:
-#                         Path: /budget/{idBudget}
-#                         Method: DELETE
-#                         ApiId: !Ref ProvimatRestApi
-#     GetClientBudgetFunction:
-#         Type: AWS::Serverless::Function
-#         Metadata:
-#             BuildMethod: esbuild
-#             BuildProperties:
-#                 Minify: true
-#                 Sourcemap: true
-#                 MainFields: "module,main"
-#         Properties:
-#             FunctionName: !Sub '${Environment}-Get-Client-Budgets'
-#             Handler: getClientBudgets.Handler
-#             CodeUri: ./src/functions/budget
-#             Events:
-#                 HttpEvent:
-#                     Type: HttpApi
-#                     Properties:
-#                         Path: /budgets/{idClient}
-#                         Method: GET 
-#                         ApiId: !Ref ProvimatRestApi
-#     addOrRemoveProducts:
-#         Type: AWS::Serverless::Function
-#         Metadata:
-#             BuildMethod: esbuild
-#             BuildProperties:
-#                 Minify: true
-#                 Sourcemap: true
-#                 MainFields: "module,main"
-#         Properties:
-#             FunctionName: !Sub '${Environment}-addOrRemoveProducts'
-#             Handler: addOrRemoveProducts.Handler
-#             CodeUri: ./src/functions/budget
-#             Events:
-#                 HttpEvent:
-#                     Type: HttpApi
-#                     Properties:
-#                         Path: /budget/{idBudget}/addProducts
-#                         Method: POST
-#                         ApiId: !Ref ProvimatRestApi
-# # Products
-#     CreateProductFunction:
-#         Type: AWS::Serverless::Function
-#         Metadata:
-#             BuildMethod: esbuild
-#             BuildProperties:
-#                 Minify: true
-#                 Sourcemap: true
-#                 MainFields: "module,main"
-#         Properties:
-#             FunctionName: !Sub '${Environment}-create-Product'
-#             Handler: createProduct.Handler
-#             CodeUri: ./src/functions/product
-#             Events:
-#                 HttpEvent:
-#                     Type: HttpApi
-#                     Properties:
-#                         Path: /product
-#                         Method: POST
-#                         ApiId: !Ref ProvimatRestApi
-    GetProductFunction:
+    UpdateClientFunction:
         Type: AWS::Serverless::Function
         Metadata:
             BuildMethod: esbuild
@@ -393,7 +252,200 @@ Resources:
                 Sourcemap: true
                 MainFields: "module,main"
         Properties:
-            FunctionName: !Sub '${Environment}-get-Product'
+            FunctionName: !Sub '${Environment}-UpdateClient'
+            Handler: updateClient.Handler
+            CodeUri: ./src/functions/client
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /client/{idClient}
+                        Method: PUT
+                        ApiId: !Ref ProvimatRestApi
+    DeleteClientFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-DeleteClient'
+            Handler: deleteClient.Handler
+            CodeUri: ./src/functions/client
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /client/{idClient}
+                        Method: DELETE
+                        ApiId: !Ref ProvimatRestApi
+
+# Sale
+    CreateSaleFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-CreateSale'
+            Handler: createSale.Handler
+            CodeUri: ./src/functions/sale
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /sale
+                        Method: POST
+                        ApiId: !Ref ProvimatRestApi
+    GetSalesFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-GetSale'
+            Handler: getSales.Handler
+            CodeUri: ./src/functions/sale
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /sales
+                        Method: GET
+                        ApiId: !Ref ProvimatRestApi
+    GetSaleByIdFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-GetSaleById'
+            Handler: getSaleById.Handler
+            CodeUri: ./src/functions/sale
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /sale/{idSale}
+                        Method: GET
+                        ApiId: !Ref ProvimatRestApi
+    UpdateSaleFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-Update-Sale'
+            Handler: updateSale.Handler
+            CodeUri: ./src/functions/sale
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /sale/{idSale}
+                        Method: PUT
+                        ApiId: !Ref ProvimatRestApi
+    DeleteSaleFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-Delete-Sale'
+            Handler: deleteSale.Handler
+            CodeUri: ./src/functions/sale
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /sale/{idSale}
+                        Method: DELETE
+                        ApiId: !Ref ProvimatRestApi
+    GetClientSaleFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-GetClient-Sale'
+            Handler: getClientSales.Handler
+            CodeUri: ./src/functions/sale
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /client/{idClient}/sales
+                        Method: GET 
+                        ApiId: !Ref ProvimatRestApi
+    AddOrRemoveProductsFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-addOrRemoveProducts'
+            Handler: addOrRemoveProducts.Handler
+            CodeUri: ./src/functions/sale
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /sale/{idSale}/addProducts
+                        Method: POST
+                        ApiId: !Ref ProvimatRestApi
+# # Products
+    CreateProductFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-CreateProduct'
+            Handler: createProduct.Handler
+            CodeUri: ./src/functions/product
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /product
+                        Method: POST
+                        ApiId: !Ref ProvimatRestApi
+    GetProductsFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-GetProducts'
             Handler: getProducts.Handler
             CodeUri: ./src/functions/product
             Events:
@@ -412,7 +464,7 @@ Resources:
                 Sourcemap: true
                 MainFields: "module,main"
         Properties:
-            FunctionName: !Sub '${Environment}-Get-ProductById'
+            FunctionName: !Sub '${Environment}-GetProductById'
             Handler: getProductById.Handler
             CodeUri: ./src/functions/product
             Events:
@@ -422,85 +474,66 @@ Resources:
                         Path: /product/{idProduct}
                         Method: GET
                         ApiId: !Ref ProvimatRestApi
-#     GetProductWithProvider:
-#         Type: AWS::Serverless::Function
-#         Metadata:
-#             BuildMethod: esbuild
-#             BuildProperties:
-#                 Minify: true
-#                 Sourcemap: true
-#                 MainFields: "module,main"
-#         Properties:
-#             FunctionName: !Sub '${Environment}-GetProductWithProvider'
-#             Handler: getProductWithProvider.Handler
-#             CodeUri: ./src/functions/product
-#             Events:
-#                 HttpEvent:
-#                     Type: HttpApi
-#                     Properties:
-#                         Path: /products
-#                         Method: GET
-#                         ApiId: !Ref ProvimatRestApi
-#     DeleteProductFunction:
-#         Type: AWS::Serverless::Function
-#         Metadata:
-#             BuildMethod: esbuild
-#             BuildProperties:
-#                 Minify: true
-#                 Sourcemap: true
-#                 MainFields: "module,main"
-#         Properties:
-#             FunctionName: !Sub '${Environment}-delete-Product'
-#             Handler: deleteProduct.Handler
-#             CodeUri: ./src/functions/product
-#             Events:
-#                 HttpEvent:
-#                     Type: HttpApi
-#                     Properties:
-#                         Path: /product/{idProduct}
-#                         Method: DELETE
-#                         ApiId: !Ref ProvimatRestApi
-#     UpdateProductFunction:
-#         Type: AWS::Serverless::Function
-#         Metadata:
-#             BuildMethod: esbuild
-#             BuildProperties:
-#                 Minify: true
-#                 Sourcemap: true
-#                 MainFields: "module,main"
-#         Properties:
-#             FunctionName: !Sub '${Environment}-Update-Product'
-#             Handler: updateProduct.Handler
-#             CodeUri: ./src/functions/product
-#             Events:
-#                 HttpEvent:
-#                     Type: HttpApi
-#                     Properties:
-#                         Path: /product/{idProduct}
-#                         Method: PUT
-#                         ApiId: !Ref ProvimatRestApi
+    GetProductWithProviderFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-GetProductWithProvider'
+            Handler: getProductWithProvider.Handler
+            CodeUri: ./src/functions/product
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /products
+                        Method: GET
+                        ApiId: !Ref ProvimatRestApi
+    DeleteProductFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-delete-Product'
+            Handler: deleteProduct.Handler
+            CodeUri: ./src/functions/product
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /product/{idProduct}
+                        Method: DELETE
+                        ApiId: !Ref ProvimatRestApi
+    UpdateProductFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-Update-Product'
+            Handler: updateProduct.Handler
+            CodeUri: ./src/functions/product
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /product/{idProduct}
+                        Method: PUT
+                        ApiId: !Ref ProvimatRestApi
 
 # Providers
-    # CreateProviderFunction:
-    #     Type: AWS::Serverless::Function
-    #     Metadata:
-    #         BuildMethod: esbuild
-    #         BuildProperties:
-    #             Minify: true
-    #             Sourcemap: true
-    #             # MainFields: "module,main"
-    #     Properties:
-    #         FunctionName: !Sub '${Environment}-Create-Provider'
-    #         Handler: createProvider.Handler
-    #         CodeUri: ./src/functions/provider
-    #         Events:
-    #             HttpEvent:
-    #                 Type: HttpApi
-    #                 Properties:
-    #                     Path: /provider
-    #                     Method: POST
-    #                     ApiId: !Ref ProvimatRestApi
-    GetProviderFunction:
+    CreateProviderFunction:
         Type: AWS::Serverless::Function
         Metadata:
             BuildMethod: esbuild
@@ -509,7 +542,26 @@ Resources:
                 Sourcemap: true
                 # MainFields: "module,main"
         Properties:
-            FunctionName: !Sub '${Environment}-Get-Provider'
+            FunctionName: !Sub '${Environment}-Create-Provider'
+            Handler: createProvider.Handler
+            CodeUri: ./src/functions/provider
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /provider
+                        Method: POST
+                        ApiId: !Ref ProvimatRestApi
+    GetProvidersFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                # MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-GetProviders'
             Handler: getProviders.Handler
             CodeUri: ./src/functions/provider
             Events:
@@ -519,141 +571,141 @@ Resources:
                         Path: /provider
                         Method: GET
                         ApiId: !Ref ProvimatRestApi
-#     DeleteProviderFunction:
-#         Type: AWS::Serverless::Function
-#         Metadata:
-#             BuildMethod: esbuild
-#             BuildProperties:
-#                 Minify: true
-#                 Sourcemap: true
-#                 MainFields: "module,main"
-#         Properties:
-#             FunctionName: !Sub '${Environment}-Delete-Provider'
-#             Handler: deleteProvider.Handler
-#             CodeUri: ./src/functions/provider
-#             Events:
-#                 HttpEvent:
-#                     Type: HttpApi
-#                     Properties:
-#                         Path: /provider/{idProvider}
-#                         Method: DELETE
-#                         ApiId: !Ref ProvimatRestApi
-#     GetProviderByIdFunction:
-#         Type: AWS::Serverless::Function
-#         Metadata:
-#             BuildMethod: esbuild
-#             BuildProperties:
-#                 Minify: true
-#                 Sourcemap: true
-#                 MainFields: "module,main"
-#         Properties:
-#             FunctionName: !Sub '${Environment}-Get-Provider-ById'
-#             Handler: getProviderById.Handler
-#             CodeUri: ./src/functions/provider
-#             Events:
-#                 HttpEvent:
-#                     Type: HttpApi
-#                     Properties:
-#                         Path: /provider/{idProvider}
-#                         Method: GET
-#                         ApiId: !Ref ProvimatRestApi
-#     UpdateProviderFunction:
-#         Type: AWS::Serverless::Function
-#         Metadata:
-#             BuildMethod: esbuild
-#             BuildProperties:
-#                 Minify: true
-#                 Sourcemap: true
-#                 MainFields: "module,main"
-#         Properties:
-#             FunctionName: !Sub '${Environment}-Update-Provider'
-#             Handler: updateProvider.Handler
-#             CodeUri: ./src/functions/provider
-#             Events:
-#                 HttpEvent:
-#                     Type: HttpApi
-#                     Properties:
-#                         Path: /provider/{idProvider}
-#                         Method: PUT
-#                         ApiId: !Ref ProvimatRestApi
+    DeleteProviderFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-Delete-Provider'
+            Handler: deleteProvider.Handler
+            CodeUri: ./src/functions/provider
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /provider/{idProvider}
+                        Method: DELETE
+                        ApiId: !Ref ProvimatRestApi
+    GetProviderByIdFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-GetProvider-ById'
+            Handler: getProviderById.Handler
+            CodeUri: ./src/functions/provider
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /provider/{idProvider}
+                        Method: GET
+                        ApiId: !Ref ProvimatRestApi
+    UpdateProviderFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-Update-Provider'
+            Handler: updateProvider.Handler
+            CodeUri: ./src/functions/provider
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /provider/{idProvider}
+                        Method: PUT
+                        ApiId: !Ref ProvimatRestApi
 
-# ## Funciones de búsqueda
-#     SearchClientFunction:
-#         Type: AWS::Serverless::Function
-#         Metadata:
-#             BuildMethod: esbuild
-#             BuildProperties:
-#                 Minify: true
-#                 Sourcemap: true
-#                 MainFields: "module,main"
-#         Properties:
-#             FunctionName: !Sub '${Environment}-Search-Client'
-#             Handler: searchClient.Handler
-#             CodeUri: ./src/functions/client
-#             Events:
-#                 HttpEvent:
-#                     Type: HttpApi
-#                     Properties:
-#                         Path: /search/client
-#                         Method: POST
-#                         ApiId: !Ref ProvimatRestApi
-#     SearchBudgetFunction:
-#         Type: AWS::Serverless::Function
-#         Metadata:
-#             BuildMethod: esbuild
-#             BuildProperties:
-#                 Minify: true
-#                 Sourcemap: true
-#                 MainFields: "module,main"
-#         Properties:
-#             FunctionName: !Sub '${Environment}-Search-Budget'
-#             Handler: searchBudget.Handler
-#             CodeUri: ./src/functions/budget
-#             Events:
-#                 HttpEvent:
-#                     Type: HttpApi
-#                     Properties:
-#                         Path: /search/budget
-#                         Method: POST
-#                         ApiId: !Ref ProvimatRestApi
-#     SearchProductFunction:
-#         Type: AWS::Serverless::Function
-#         Metadata:
-#             BuildMethod: esbuild
-#             BuildProperties:
-#                 Minify: true
-#                 Sourcemap: true
-#                 MainFields: "module,main"
-#         Properties:
-#             FunctionName: !Sub '${Environment}-Search-Product'
-#             Handler: searchProduct.Handler
-#             CodeUri: ./src/functions/product
-#             Events:
-#                 HttpEvent:
-#                     Type: HttpApi
-#                     Properties:
-#                         Path: /search/product
-#                         Method: POST
-#                         ApiId: !Ref ProvimatRestApi
-#     SearchProviderFunction:
-#         Type: AWS::Serverless::Function
-#         Metadata:
-#             BuildMethod: esbuild
-#             BuildProperties:
-#                 Minify: true
-#                 Sourcemap: true
-#                 MainFields: "module,main"
-#         Properties:
-#             FunctionName: !Sub '${Environment}-Search-Provider'
-#             Handler: searchProvider.Handler
-#             CodeUri: ./src/functions/provider
-#             Events:
-#                 HttpEvent:
-#                     Type: HttpApi
-#                     Properties:
-#                         Path: /search/provider
-#                         Method: POST
-#                         ApiId: !Ref ProvimatRestApi
+## Funciones de búsqueda
+    SearchClientFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-SearchClients'
+            Handler: searchClient.Handler
+            CodeUri: ./src/functions/client
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /search/client
+                        Method: GET
+                        ApiId: !Ref ProvimatRestApi
+    SearchSaleFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-SearchSale'
+            Handler: searchSale.Handler
+            CodeUri: ./src/functions/sale
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /search/sale
+                        Method: GET
+                        ApiId: !Ref ProvimatRestApi
+    SearchProductFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-SearchProduct'
+            Handler: searchProduct.Handler
+            CodeUri: ./src/functions/product
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /search/product
+                        Method: GET
+                        ApiId: !Ref ProvimatRestApi
+    SearchProviderFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-SearchProvider'
+            Handler: searchProvider.Handler
+            CodeUri: ./src/functions/provider
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /search/provider
+                        Method: GET
+                        ApiId: !Ref ProvimatRestApi
 #     UpdateProductPricesFunction:
 #         Type: AWS::Serverless::Function
 #         Metadata:
@@ -661,7 +713,6 @@ Resources:
 #             BuildProperties:
 #                 Minify: true
 #                 Sourcemap: true
- 
 #         Properties:
 #             FunctionName: !Sub '${Environment}-Update-Product-Prices'
 #             Handler: updateProductPricesFromProvider.Handler
@@ -673,6 +724,27 @@ Resources:
 #                         Path: /provider/{idProvider}
 #                         Method: POST
 #                         ApiId: !Ref ProvimatRestApi
+
+# Utils
+    CountFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-Count'
+            Handler: count.Handler
+            CodeUri: ./src/functions/utils
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /count
+                        Method: GET
+                        ApiId: !Ref ProvimatRestApi
 
 # Esta url nunca cambia
 Outputs:

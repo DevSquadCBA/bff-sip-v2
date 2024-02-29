@@ -58,4 +58,21 @@ export class BadGatewayError extends HTTPError {
         super(message, {...options, statusCode: 502, code: 'BAD_GATEWAY'});
     };
 }
+
+export class InvalidIdError extends HTTPError {
+    constructor(message: string, options?: CustomHttpErrorOptions){
+        super(message, {...options, statusCode: 400, code: 'INVALID_ID'});
+    };
+}
+
+export class ErrorOnDelete extends HTTPError {
+    constructor(message: string, options?: CustomHttpErrorOptions){
+        super(message, {...options, statusCode: 400, code: 'ERROR_ON_DELETE'});
+    };
+}
+export class JSONInvalid extends BadRequestError {
+    constructor(message = 'El JSON enviado en el body, no es un JSON válido', options?: CustomHttpErrorOptions){
+        super(message, {...options,  code: 'JSON_INVALID'});
+    };
+}
 export {};

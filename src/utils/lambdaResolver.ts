@@ -2,6 +2,7 @@ import { HTTPError } from "types/errors";
 import { ApiGatewayParsedEvent } from "types/response-factory/proxies";
 import { getEntity } from "./utils";
 import { Validators, validate } from "./Validator";
+import sequelize from "services/sequelize";
 
 type lambdaResponse = {
     statusCode: number,
@@ -28,6 +29,7 @@ function responseFactory({body, statusCode}: {body:unknown, statusCode: number})
 
 export async function LambdaResolver(event:ApiGatewayParsedEvent, domain:any, validators?:Validators[]):Promise<lambdaResponse>{
     try{
+        if(!sequelize.isDefined) return responseFactory({body: 'No se ha inicializado la base de datos', statusCode: 500})
         let finalEvent = event;
         getEntity(event.headers)
         if(validators){

@@ -1,10 +1,14 @@
-import { BadRequestError } from "types/errors"
+import { BadRequestError, JSONInvalid } from "types/errors"
 import { ApiGatewayParsedEvent } from "types/response-factory/proxies";
 
 export enum Validators{
     OFFSET_AND_LIMITS = 'OffsetAndLimitValidator',
     ID_CLIENT = 'validateIdClient',
-    ID_PRODUCT = 'validateIdProduct'
+    ID_PROVIDER = 'validateIdProvider',
+    ID_PRODUCT = 'validateIdProduct',
+    ID_SALE = 'validateIdSale',
+    VALID_JSON = 'validateJSONBody',
+    QUERY ='validateQuery'
 }
 
 function offsetAndLimitValidator(queryStringParameters:{offset?:string, limit?: string}){
@@ -34,11 +38,63 @@ function validateIdClient(pathParameters:{idClient?:string}){
     return pathParameters;
 }
 
+function validateIdProvider(pathParameters:{idProvider?:string}){
+    if(!pathParameters.idProvider){
+        throw new BadRequestError('Es necesario enviar un idProvider');
+    }
+    if(!/^[0-9]+$/.test(pathParameters.idProvider)){
+        throw new BadRequestError('El idProvider debe ser un número');
+    }
+    return pathParameters;
+}
+function validateIdProduct(pathParameters:{idProduct?:string}){
+    if(!pathParameters.idProduct){
+        throw new BadRequestError('Es necesario enviar un idProduct');
+    }
+    if(!/^[0-9]+$/.test(pathParameters.idProduct)){
+        throw new BadRequestError('El idProduct debe ser un número');
+    }
+    return pathParameters;
+}
+
+function validateIdSale(pathParameters:{idSale?:string}){
+    if(!pathParameters.idSale){
+        throw new BadRequestError('Es necesario enviar un idSale');
+    }
+    if(!/^[0-9]+$/.test(pathParameters.idSale)){
+        throw new BadRequestError('El idSale debe ser un número');
+    }
+    return pathParameters;
+}
+
+function validateQuery(queryStringParameters:{query?:string}){
+    if(!queryStringParameters.query){
+        throw new BadRequestError('Es necesario enviar un query');
+    }
+    return queryStringParameters;
+}
+
 export function validate(validations: Validators[], event:ApiGatewayParsedEvent):ApiGatewayParsedEvent{
     if(validations.includes(Validators.OFFSET_AND_LIMITS)){
-        event.queryStringParameters = offsetAndLimitValidator(event.queryStringParameters)
+        event.queryStringParameters = {...offsetAndLimitValidator(event.queryStringParameters)}
     }else if(validations.includes(Validators.ID_CLIENT)){
         event.pathParameters = validateIdClient(event.pathParameters);
+    }else if(validations.includes(Validators.ID_PROVIDER)){
+        event.pathParameters = validateIdProvider(event.pathParameters);
+    }else if(validations.includes(Validators.ID_PRODUCT)){
+        event.pathParameters = validateIdProduct(event.pathParameters);
+    }else if(validations.includes(Validators.ID_SALE)){
+        event.pathParameters = validateIdSale(event.pathParameters);
+    } else if(validations.includes(Validators.QUERY)){
+        event.queryStringParameters = {...validateQuery(event.queryStringParameters)};
+    }
+
+    if(validations.includes(Validators.VALID_JSON)){
+        try{
+            event.body = JSON.parse(event.body as string);
+        }catch(e){
+            throw new JSONInvalid();
+        }
     }
     return event;
 }
