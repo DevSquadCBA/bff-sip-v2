@@ -114,11 +114,44 @@ async function fakeData(){
 
 const domain = async (event:Event): Promise<{body:string, statusCode:number}> => {
     const admin = event.headers.admin || event.headers['Admin'];
-    console.log(event)
     if('astrodev'!= admin){
         return {
             body: 'not authorized',
             statusCode: 401
+        }
+    }
+    if(event.queryStringParameters?.id && ['clients','products','providers','sales','saleProducts'].includes(event.queryStringParameters.id)){
+        let count = 0;
+        if(event.queryStringParameters?.count){
+            count = parseInt(event.queryStringParameters.count);
+        }
+        switch(event.queryStringParameters.id){
+            case 'clients':
+                const clients:IClient[] = faker.helpers.multiple(fakeClient, {count: count || 20});
+                await Client.bulkCreate(clients);
+                break;
+            case 'products':
+                const products:IProduct[] = faker.helpers.multiple(fakeProducts, {count: count || 200});
+                await Product.bulkCreate(products);
+                break;
+            case 'providers':
+                const providers:IProvider[] = faker.helpers.multiple(fakeProvider,{count: count||20});
+                await Provider.bulkCreate(providers);
+                break;
+            case 'sales':
+                const sale:ISale[] = faker.helpers.multiple(fakeSales, {count: count || 20});
+                await Sale.bulkCreate(sale);
+                break;
+            case 'saleProducts':
+                const saleProduct:ISaleProduct[] = faker.helpers.multiple(fakeSaleProduct, {count: count || 60});
+                await SaleProduct.bulkCreate(saleProduct,{ignoreDuplicates:true});
+                break;
+            default:
+                break;
+        }
+        return {
+            body: `generated ${count} ${event.queryStringParameters.id}`,
+            statusCode: 200
         }
     }
     try{
