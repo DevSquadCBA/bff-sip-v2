@@ -1,11 +1,17 @@
 import { Product, IProduct } from 'models/Product';
 import { Provider } from 'models/Provider';
 import { ApiGatewayParsedEvent } from 'types/response-factory/proxies';
+import { Validators } from 'utils/Validator';
 import { LambdaResolver } from 'utils/lambdaResolver';
-interface Event extends ApiGatewayParsedEvent {}
+interface Event extends ApiGatewayParsedEvent {
+    queryStringParameters: {limit: string, offset: string}
+}
 
 const domain = async (event:Event): Promise<{body:IProduct[], statusCode:number}> => {
+    const {limit, offset} = event.queryStringParameters;
     const products = await Product.findAll({
+        limit: parseInt(limit),
+        offset: parseInt(offset),
         include: {
             model: Provider,
             as:'provider',
@@ -18,4 +24,4 @@ const domain = async (event:Event): Promise<{body:IProduct[], statusCode:number}
     }
 }
 
-export const Handler = (event:ApiGatewayParsedEvent)=>LambdaResolver(event, domain, [])
+export const Handler = (event:ApiGatewayParsedEvent)=>LambdaResolver(event, domain, [Validators.OFFSET_AND_LIMITS])
