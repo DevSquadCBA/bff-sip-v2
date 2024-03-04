@@ -89,7 +89,7 @@ function fakeSaleProduct():ISaleProduct{
     const state = faker.helpers.arrayElement(StateProductValues)
     let details;
     if(state!== StateProduct.uninitiated){
-        details = faker.rawDefinitions.commerce?.product_description?.join(' ')
+        details = faker.lorem.lines({min: 1, max: 3})
     }
     return {
         saleId: faker.number.int({min: 1, max: 20}),
