@@ -90,8 +90,6 @@ function fakeSaleProduct():ISaleProduct{
     let details;
     if(state!== StateProduct.uninitiated){
         details = faker.rawDefinitions.commerce?.product_description?.join(' ')
-    }else if(Math.random()>0.7){
-        details = faker.rawDefinitions.commerce?.product_description?.join(' ')
     }
     return {
         saleId: faker.number.int({min: 1, max: 20}),
