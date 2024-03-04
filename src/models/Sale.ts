@@ -18,6 +18,7 @@ export type ISale = {
 }
 export type ProductsInSale = {
     id:number,
+    productId?:number,
     code: string,
     name: string,
     salePrice: number,

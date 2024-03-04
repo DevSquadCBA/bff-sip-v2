@@ -2,6 +2,7 @@ import { Column, DataType,  ForeignKey, Model, Table } from "sequelize-typescrip
 import { Sale } from "./Sale";
 import { Product } from "./Product";
 import { StateProduct, StateProductValues } from "./Enums";
+import { QueryTypes } from "sequelize";
 
 export type ISaleProduct = {
     saleId: number,
@@ -43,8 +44,8 @@ export class SaleProduct extends Model {
 
     static async bulkUpdate(saleId: number, productToUpdate: Partial<ISaleProduct>[]){
         await this.sequelize?.query(`
-            INSERT INTO sale_product (saleId,productId,quantity,createdAt, updatedAt) 
-            VALUES ${productToUpdate.map(e=>`(${saleId},${e.productId},${e.quantity},${e.state},${e.details}, NOW(), NOW()})`).join(', ')}
+            INSERT INTO sale_product (saleId,productId,quantity,state,details,createdAt, updatedAt) 
+            VALUES ${productToUpdate.map(e=>`(${saleId},${e.productId},${e.quantity},"${e.state}","${e.details}", NOW(), NOW())`).join(', ')}
             On DUPLICATE KEY UPDATE 
                 quantity = VALUES(quantity),
                 details = VALUES(details),

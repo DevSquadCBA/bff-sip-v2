@@ -32,7 +32,6 @@ export async function LambdaResolver(event:ApiGatewayParsedEvent, domain:any, va
         if(!sequelize.isDefined) return responseFactory({body: 'No se ha inicializado la base de datos', statusCode: 500})
         let finalEvent = event;
         getEntity(event.headers)
-        console.dir(event);
         if(validators){
             finalEvent = validate(validators, event);
         }
