@@ -1,6 +1,6 @@
 import {  Column, Table, DataType, PrimaryKey, AutoIncrement, ForeignKey, BelongsTo ,Model} from 'sequelize-typescript';
 import { CreationOptional, Op } from 'sequelize';
-import { EntityList, EntityListValues, SaleStates, SalesStatesValues} from './Enums';
+import { EntityList, EntityListValues, SaleStates, SalesStatesValues, StateProduct} from './Enums';
 import { Client } from './Client';
 
 export type ISale = {
@@ -24,11 +24,12 @@ export type ProductsInSale = {
     purchasePrice: number,
     saleProducts?: { 
         quantity: number,
-        state: string 
+        state: StateProduct, 
         details?: string
     },
     quantity?: number,
-    state?: string,
+    state?: StateProduct,
+    details?: string,
     entity: EntityList
 }
 export type SaleWithProduct = ISale & {products: ProductsInSale[]}

@@ -1,20 +1,41 @@
-import {Sale , ISale } from 'models/Sale';
+import { SaleStates } from 'models/Enums';
+import {Sale, ProductsInSale } from 'models/Sale';
+import { SaleProduct } from 'models/SaleProduct';
 import { ApiGatewayParsedEvent } from 'types/response-factory/proxies';
 import { Validators } from 'utils/Validator';
 import { LambdaResolver } from 'utils/lambdaResolver';
+type ISaleUpdateContract = {
+    state: SaleStates,
+    products: Omit<ProductsInSale,'saleProducts'>[]
+}
 interface Event extends ApiGatewayParsedEvent {
-    body: ISale
+    pathParameters: {
+        id: string
+    },
+    body: string
 }
 
-const domain = async (event:Event): Promise<{body:number, statusCode:number}> => {
-    const parsedBody = JSON.parse(event.body as unknown as string);
-    if(parsedBody.deleted) delete parsedBody.deleted 
-    const sale = await Sale.update(parsedBody, {where: {id: parsedBody.id}});
+const domain = async (event:Event): Promise<{body:string, statusCode:number}> => {
+    const id = parseInt(event.pathParameters.id)
+    const parsedBody = JSON.parse(event.body) as ISaleUpdateContract;
+    /** @TODO esto esta bueno, usarlo como un utils, para hacerlo envarios lados, limpiaría el body de keys invalidas */
+    const saleToUpdate = Object.keys(parsedBody).map(key=>{
+        if(key as keyof ISaleUpdateContract){
+            return parsedBody[key as keyof ISaleUpdateContract]
+        }
+    })as unknown as ISaleUpdateContract;
+    await SaleProduct.bulkUpdate(id, saleToUpdate.products);
+    let msg = 'Se han agregado detalles a los productos';
+    const allProductsHaveDetails = saleToUpdate.products.every(product=>product.details && product.details?.length>0)
+    if(allProductsHaveDetails && saleToUpdate.state !== SaleStates.proforma){
+        await Sale.update({state: saleToUpdate.state}, {where: {id: id}});
+        msg = 'Se ha actualizado el estado de la venta'
+    }
     return {
-        body: sale[0],
+        body: msg,
         statusCode: 200
     }
 
 }
-
-export const Handler = (event:ApiGatewayParsedEvent)=>LambdaResolver(event, domain, [Validators.OFFSET_AND_LIMITS])
+/** @TODO podrias validar que el json que ingresa, sea efectivamente del type que definís en ISaleUpdateContract */
+export const Handler = (event:ApiGatewayParsedEvent)=>LambdaResolver(event, domain, [Validators.ID_SALE, Validators.VALID_JSON])

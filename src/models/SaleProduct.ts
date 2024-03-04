@@ -41,12 +41,15 @@ export class SaleProduct extends Model {
     // @Column
     // declare discountPercent: number;
 
-    static async bulkUpdate(productToUpdate: Partial<ISaleProduct>[]){
+    static async bulkUpdate(saleId: number, productToUpdate: Partial<ISaleProduct>[]){
         await this.sequelize?.query(`
-            UPDATE sale_product ('productId','quantity') 
-            VALUES ${productToUpdate.map(e=>`(${e.productId},${e.quantity})`)}
-            where saleId = ${productToUpdate[0].saleId}
-            On DUPLICATE KEY UPDATE quantity VALUES(quantity)
+            INSERT INTO sale_product (saleId,productId,quantity,createdAt, updatedAt) 
+            VALUES ${productToUpdate.map(e=>`(${saleId},${e.productId},${e.quantity},${e.state},${e.details}, NOW(), NOW()})`).join(', ')}
+            On DUPLICATE KEY UPDATE 
+                quantity = VALUES(quantity),
+                details = VALUES(details),
+                state = VALUES(state),
+                updatedAt = NOW();
         `)
     }
 }
