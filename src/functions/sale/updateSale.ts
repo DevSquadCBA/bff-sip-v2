@@ -17,6 +17,7 @@ interface Event extends ApiGatewayParsedEvent {
 
 const domain = async (event:Event): Promise<{body:string, statusCode:number}> => {
     const id = parseInt(event.pathParameters.id)
+    console.log(event.body);
     const parsedBody = JSON.parse(event.body) as ISaleUpdateContract;
     /** @TODO esto esta bueno, usarlo como un utils, para hacerlo envarios lados, limpiaría el body de keys invalidas */
     const saleToUpdate = Object.keys(parsedBody).map(key=>{

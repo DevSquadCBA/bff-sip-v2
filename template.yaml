@@ -345,7 +345,7 @@ Resources:
         Metadata:
             BuildMethod: esbuild
             BuildProperties:
-                Minify: true
+                Minify: false
                 Sourcemap: true
                 MainFields: "module,main"
         Properties:

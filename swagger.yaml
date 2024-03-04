@@ -370,6 +370,10 @@ paths:
           description: El ID del presupuesto
           schema: {}
           required: true
+      requestBody:
+        content:
+          application/json:
+            schema: {}
       responses:
         200:
           description: Un Presupuesto
