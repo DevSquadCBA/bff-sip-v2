@@ -53,7 +53,8 @@ const domain = async (event:Event): Promise<{body:SaleWithProduct[], statusCode:
                 salePrice: product.salePrice,
                 purchasePrice: product.purchasePrice,
                 quantity: product.saleProducts?.quantity,
-                state: product.saleProducts?.state
+                state: product.saleProducts?.state,
+                details: product.saleProducts?.details || ''
             }
         });
         return sale;

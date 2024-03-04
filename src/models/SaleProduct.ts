@@ -8,12 +8,14 @@ export type ISaleProduct = {
     productId: number,
     quantity: number,
     state: StateProduct
+    details?: string|null
 }
 
 
 export type IProductToAdd = {
     id: number,
-    quantity: number
+    quantity: number,
+    details?: string|null
 }
 
 
@@ -32,6 +34,9 @@ export class SaleProduct extends Model {
     
     @Column({type: DataType.ENUM(...StateProductValues),defaultValue: StateProduct.uninitiated})
     declare state: StateProduct;
+
+    @Column({type: DataType.STRING, defaultValue: null})
+    declare details?: string;
 
     // @Column
     // declare discountPercent: number;

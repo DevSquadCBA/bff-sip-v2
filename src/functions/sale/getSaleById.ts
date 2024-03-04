@@ -24,7 +24,7 @@ const domain = async (event:Event): Promise<{body:ISale, statusCode:number}> => 
                 as: 'products',
                 through: {
                     model: SaleProduct,
-                    attributes: ['quantity', 'state'],
+                    attributes: ['quantity', 'state', 'details'],
                     as: 'saleProducts'
                 } as any
             }
@@ -42,7 +42,8 @@ const domain = async (event:Event): Promise<{body:ISale, statusCode:number}> => 
             salePrice: product.salePrice,
             purchasePrice: product.purchasePrice,
             quantity: product.saleProducts?.quantity,
-            state: product.saleProducts?.state
+            state: product.saleProducts?.state,
+            details: product.saleProducts?.details || ''
         }
     });
     

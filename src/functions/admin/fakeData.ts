@@ -90,7 +90,8 @@ function fakeSaleProduct():ISaleProduct{
         saleId: faker.number.int({min: 1, max: 20}),
         productId: faker.number.int({min: 1, max: 20}),
         quantity: faker.number.int({min: 1, max: 20}),
-        state: faker.helpers.arrayElement(StateProductValues)
+        state: faker.helpers.arrayElement(StateProductValues),
+        details: faker.rawDefinitions.commerce?.product_description?.join(' ')
     }
 }
 

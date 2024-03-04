@@ -91,7 +91,7 @@ const methodWithColor = (method)=>{
     }
 }
 
-const PORT = 3000;
+const PORT = 5000;
 
 app.use('/',router);
 console.log(`Server running at ` + `http://localhost:${PORT}`.blue);

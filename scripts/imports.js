@@ -4,7 +4,7 @@ const {Handler:CreateClientFunction} = require('../.aws-sam/build/CreateClientFu
 const {Handler:CreateProductFunction} = require('../.aws-sam/build/CreateProductFunction/createProduct.js');
 const {Handler:CreateProviderFunction} = require('../.aws-sam/build/CreateProviderFunction/createProvider.js');
 const {Handler:CreateSaleFunction} = require('../.aws-sam/build/CreateSaleFunction/createSale.js');
-const {Handler:DeleteClientsFunction} = require('../.aws-sam/build/DeleteClientsFunction/deleteClient.js');
+const {Handler:DeleteClientFunction} = require('../.aws-sam/build/DeleteClientFunction/deleteClient.js');
 const {Handler:DeleteProductFunction} = require('../.aws-sam/build/DeleteProductFunction/deleteProduct.js');
 const {Handler:DeleteProviderFunction} = require('../.aws-sam/build/DeleteProviderFunction/deleteProvider.js');
 const {Handler:DeleteSaleFunction} = require('../.aws-sam/build/DeleteSaleFunction/deleteSale.js');
@@ -25,7 +25,7 @@ const {Handler:SearchProductFunction} = require('../.aws-sam/build/SearchProduct
 const {Handler:SearchProviderFunction} = require('../.aws-sam/build/SearchProviderFunction/searchProvider.js');
 const {Handler:SearchSaleFunction} = require('../.aws-sam/build/SearchSaleFunction/searchSale.js');
 const {Handler:SyncDbFunction} = require('../.aws-sam/build/SyncDbFunction/syncDb.js');
-const {Handler:UpdateClientsFunction} = require('../.aws-sam/build/UpdateClientsFunction/updateClient.js');
+const {Handler:UpdateClientFunction} = require('../.aws-sam/build/UpdateClientFunction/updateClient.js');
 const {Handler:UpdateProductFunction} = require('../.aws-sam/build/UpdateProductFunction/updateProduct.js');
 const {Handler:UpdateProviderFunction} = require('../.aws-sam/build/UpdateProviderFunction/updateProvider.js');
 const {Handler:UpdateSaleFunction} = require('../.aws-sam/build/UpdateSaleFunction/updateSale.js');
@@ -36,7 +36,7 @@ module.exports={
     CreateProductFunction,
     CreateProviderFunction,
     CreateSaleFunction,
-    DeleteClientsFunction,
+    DeleteClientFunction,
     DeleteProductFunction,
     DeleteProviderFunction,
     DeleteSaleFunction,
@@ -57,7 +57,7 @@ module.exports={
     SearchProviderFunction,
     SearchSaleFunction,
     SyncDbFunction,
-    UpdateClientsFunction,
+    UpdateClientFunction,
     UpdateProductFunction,
     UpdateProviderFunction,
     UpdateSaleFunction,

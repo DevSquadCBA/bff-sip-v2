@@ -25,6 +25,7 @@ export type ProductsInSale = {
     saleProducts?: { 
         quantity: number,
         state: string 
+        details?: string
     },
     quantity?: number,
     state?: string,
