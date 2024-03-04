@@ -11,7 +11,7 @@ import { IProduct, Product } from 'models/Product';
 import sequelize from 'services/sequelize';
 import { IProvider, Provider } from 'models/Provider';
 import { ISale, Sale } from 'models/Sale';
-import { EntityListValues, SalesStatesValues, StateProductValues } from 'models/Enums';
+import { EntityListValues, SalesStatesValues, StateProduct, StateProductValues } from 'models/Enums';
 import { ISaleProduct, SaleProduct } from 'models/SaleProduct';
 
 interface Event extends ApiGatewayParsedEvent {
@@ -86,12 +86,19 @@ function fakeSales():ISale{
 }
 
 function fakeSaleProduct():ISaleProduct{
+    const state = faker.helpers.arrayElement(StateProductValues)
+    let details;
+    if(state!== StateProduct.uninitiated){
+        details = faker.rawDefinitions.commerce?.product_description?.join(' ')
+    }else if(Math.random()>0.7){
+        details = faker.rawDefinitions.commerce?.product_description?.join(' ')
+    }
     return {
         saleId: faker.number.int({min: 1, max: 20}),
         productId: faker.number.int({min: 1, max: 20}),
         quantity: faker.number.int({min: 1, max: 20}),
-        state: faker.helpers.arrayElement(StateProductValues),
-        details: faker.rawDefinitions.commerce?.product_description?.join(' ')
+        state,
+        details
     }
 }
 
