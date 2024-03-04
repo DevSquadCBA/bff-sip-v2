@@ -1,3 +1,4 @@
+import { Client } from 'models/Client';
 import { Product } from 'models/Product';
 import { ProductsInSale, Sale, SaleWithProduct } from 'models/Sale';
 import { SaleProduct } from 'models/SaleProduct';
@@ -27,7 +28,11 @@ const domain = async (event:Event): Promise<{body:SaleWithProduct[], statusCode:
         attributes:{
             exclude: ['deleted']
         },
-        include: {
+        include: [
+            {
+                model: Client,
+            },
+            {
             model: Product,
             attributes: ['id', 'code', 'name', 'salePrice', 'purchasePrice'],
             as: 'products',
@@ -36,7 +41,7 @@ const domain = async (event:Event): Promise<{body:SaleWithProduct[], statusCode:
                 attributes: ['quantity', 'state'],
                 as: 'saleProducts'
             } as any
-        }
+        }]
     });
     const salesWithProduct:SaleWithProduct[] = sales.map(saleRaw=>{
         const sale = saleRaw.get({ plain: true });
