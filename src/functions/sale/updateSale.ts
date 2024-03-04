@@ -35,7 +35,6 @@ const domain = async (event:Event): Promise<{body:string, statusCode:number}> =>
         body: msg,
         statusCode: 200
     }
-
 }
 /** @TODO podrias validar que el json que ingresa, sea efectivamente del type que definís en ISaleUpdateContract */
 export const Handler = (event:ApiGatewayParsedEvent)=>LambdaResolver(event, domain, [Validators.ID_SALE, Validators.VALID_JSON])
