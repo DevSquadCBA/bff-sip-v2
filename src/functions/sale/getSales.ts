@@ -34,7 +34,7 @@ const domain = async (event:Event): Promise<{body:SaleWithProduct[], statusCode:
             },
             {
             model: Product,
-            attributes: ['id', 'code', 'name', 'salePrice', 'purchasePrice'],
+            attributes: ['id', 'code', 'name', 'salePrice', 'purchasePrice', 'details'],
             as: 'products',
             through: {
                 model: SaleProduct,
