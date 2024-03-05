@@ -23,6 +23,7 @@ export enum StateProduct{
     uninitiated = 'uninitiated',            // 0 - El producto esta en una venta con estado presupuesto o proforma
     to_confirm = 'to_confirm',              // 1 - El producto esta en una venta con estado comprobante
     pending_shipping = 'pending_shipping',  // 2 - El producto esta en una venta con estado in_order
+    out_of_stock = 'out_of_stock',          // 3 - El producto esta en una venta con estado sin stock
     shipping = 'shipping',                  // 3 - Envio en proceso de parte del proveedor
     on_deposit = 'on_deposit'               // 4 - El producto ya esta en depósito
 }
@@ -31,6 +32,7 @@ export const StateProductValues:StateProduct[] = [
     StateProduct.uninitiated,
     StateProduct.to_confirm,
     StateProduct.pending_shipping,
+    StateProduct.out_of_stock,
     StateProduct.shipping,
     StateProduct.on_deposit
 ];
