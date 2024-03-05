@@ -22,8 +22,6 @@ const domain = async (event:Event): Promise<{body:string, statusCode:number}> =>
         throw new InvalidIdError('Invalid idSale');
     }
     const saleToUpdate = JSON.parse(event.body) as ISaleUpdateContract;
-    console.log("saleToUpdate");
-    console.log(saleToUpdate.products);
     const mappedProducts = saleToUpdate.products.map(e=>({productId: e.id || e.productId, quantity: e.quantity, state: e.state, details: e.details}))
     for(const product of mappedProducts){
         await SaleProduct.update(product, {where: {saleId: id, productId: product.productId}, logging:true})
