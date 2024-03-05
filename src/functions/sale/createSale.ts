@@ -5,6 +5,7 @@ import { ApiGatewayParsedEvent } from 'types/response-factory/proxies';
 import { Validators } from 'utils/Validator';
 import { LambdaResolver } from 'utils/lambdaResolver';
 import { Log } from 'utils/utils';
+import {getEntityList} from 'models/Enums';
 interface Event extends ApiGatewayParsedEvent {
     body: ISale
 }
@@ -15,9 +16,10 @@ const domain = async (event:Event): Promise<{body:number, statusCode:number}> =>
         const {products} = parsedBody;
         delete parsedBody.products;
         const sale = parsedBody as ISale;
+        sale.total = products.reduce((acc: number, product: { price: number; })=>acc + product.price, 0)
+        sale.entity = getEntityList(event.headers.entity);
         const budget = await Sale.create(sale);
 
- 
         Log.info({message: `Se ha creado el presupuesto con el id ${budget.id}`});
         console.dir(budget);
         if(products.length === 0) return {

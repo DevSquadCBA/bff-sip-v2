@@ -45,3 +45,10 @@ export enum EntityList{
 export const EntityListValues:EntityList[] = [
     EntityList.muebles, EntityList.instalaciones, EntityList.puertas
 ]
+
+export function getEntityList(entity:string):EntityList{
+    if(!Object.values(EntityList).includes(entity as EntityList)){
+        return EntityList.muebles;
+    }
+    return Object.entries(EntityList).find(([_, v]) => v === entity)?.[0] as EntityList | EntityList.muebles
+}
