@@ -89,7 +89,11 @@ function fakeSaleProduct():ISaleProduct{
     const state = faker.helpers.arrayElement(StateProductValues)
     let details;
     if(state!== StateProduct.uninitiated){
-        details = faker.lorem.lines({min: 1, max: 3})
+        if(Math.random()<0.5){
+            details = 'mensaje random'
+        }else{
+            details = '';
+        }
     }
     return {
         saleId: faker.number.int({min: 1, max: 20}),
