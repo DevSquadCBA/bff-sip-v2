@@ -55,5 +55,14 @@ export class Product extends Model {
 
     @Column(DataType.BOOLEAN)
     declare deleted: CreationOptional<boolean>;
+
+
+    static async getPricesFromIds(products:Partial<{id:number, quantity:number}>[]):Promise<{id:number, salePrice:number}[]>{
+        const productsWithPrices = await Product.findAll({where:{id:products.map(product=>product.id)}});
+        return productsWithPrices.map(product=>{
+            const quantity = products.find(e=>e.id == product.get({plain:true}).id)?.quantity || 1;
+            return {...product.get({plain:true}), salePrice: product.get({plain:true}).salePrice, quantity}
+        });
+    }
 }
 

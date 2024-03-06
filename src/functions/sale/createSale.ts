@@ -6,6 +6,7 @@ import { Validators } from 'utils/Validator';
 import { LambdaResolver } from 'utils/lambdaResolver';
 import { Log } from 'utils/utils';
 import {getEntityList} from 'models/Enums';
+import { Product } from 'models/Product';
 interface Event extends ApiGatewayParsedEvent {
     body: ISale
 }
@@ -16,12 +17,13 @@ const domain = async (event:Event): Promise<{body:number, statusCode:number}> =>
         const {products} = parsedBody;
         delete parsedBody.products;
         const sale = parsedBody as ISale;
-        sale.total = products.reduce((acc: number, product: { price: number; })=>acc + product.price, 0)
+        const productsWithPrice = await Product.getPricesFromIds(products);
+        sale.total = productsWithPrice.reduce((acc: number, product: any)=>acc + (parseFloat(product.salePrice) * product.quantity), 0)
         sale.entity = getEntityList(event.headers.entity);
         const budget = await Sale.create(sale);
 
         Log.info({message: `Se ha creado el presupuesto con el id ${budget.id}`});
-        console.dir(budget);
+        
         if(products.length === 0) return {
             body: budget.id,
             statusCode: 200
