@@ -14,6 +14,7 @@ export type ISale = {
     dispatch: 'without' | 'with',
     seller: string,
     billing: string,
+    estimatedDays: number,
     entity: EntityList
 }
 export type ProductsInSale = {
@@ -71,6 +72,9 @@ export class Sale extends Model {
 
     @Column(DataType.STRING)
     declare billing: string;
+
+    @Column({type: DataType.INTEGER, defaultValue: 60})
+    declare estimatedDays: number;
 
     @Column(DataType.BOOLEAN)
     declare deleted: CreationOptional<boolean>;

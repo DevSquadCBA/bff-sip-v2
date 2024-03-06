@@ -20,19 +20,23 @@ const domain = async (event:Event): Promise<{body:number, statusCode:number}> =>
         const productsWithPrice = await Product.getPricesFromIds(products);
         sale.total = productsWithPrice.reduce((acc: number, product: any)=>acc + (parseFloat(product.salePrice) * product.quantity), 0)
         sale.entity = getEntityList(event.headers.entity);
+        sale.estimatedDays = Math.ceil(Math.max(...productsWithPrice.map(product=>product.daysDelay))/10)*10;
         const budget = await Sale.create(sale);
 
         Log.info({message: `Se ha creado el presupuesto con el id ${budget.id}`});
         
-        if(products.length === 0) return {
+        if(productsWithPrice.length === 0) return {
             body: budget.id,
             statusCode: 200
         }
         try{
-            for(const product of products){
-                product.saleId = budget.id;
-                product.productId = product.id;
-                await SaleProduct.create(product);
+            for(const product of productsWithPrice){
+                const productToAdd ={
+                    saleId: budget.id,
+                    productId: product.id,
+                    quantity: product.quantity,
+                }
+                await SaleProduct.create(productToAdd);
             }
         }catch(e:any){
             Sale.destroy({where: {id: budget.id}});
