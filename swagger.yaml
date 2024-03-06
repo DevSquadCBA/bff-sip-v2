@@ -470,7 +470,42 @@ paths:
             application/json:
               schema: 
                 $ref: '#/components/schemas/Error'
-
+  /sale/getNextDueDate/{idClient}:
+    get:
+      tags:
+        - Presupuestos
+      summary: Obtiene la proxima fecha de vencimiento de un presupuesto
+      description: Obtiene la proxima fecha de vencimiento de un presupuesto
+      operationId: GetNextDueDate
+      parameters:
+        - name: idClient
+          in: path
+          description: el id del cliente
+          schema: {}
+          required: true
+      responses:
+        200:
+          description: Un Objeto DueDate
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DueDate'
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /product:
     post:
       tags:
@@ -1182,3 +1217,15 @@ components:
         status:
           type: integer
           example: 500    
+    DueDate:
+      type: object
+      properties:
+        dueDate:
+          type: string
+          example: "2023-01-01 00:50:33.000"
+        daysToDueDate:
+          type: integer
+          example: 10
+        idSale:
+          type: integer
+          example: 1

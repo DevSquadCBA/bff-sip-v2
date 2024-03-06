@@ -321,6 +321,25 @@ Resources:
                         Path: /sales
                         Method: GET
                         ApiId: !Ref ProvimatRestApi
+    GetNextDueDateFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-GetNextDueDate'
+            Handler: getNextDueDate.Handler
+            CodeUri: ./src/functions/sale
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /sale/getNextDueDate/{idClient}
+                        Method: GET
+                        ApiId: !Ref ProvimatRestApi
     GetSaleByIdFunction:
         Type: AWS::Serverless::Function
         Metadata:
