@@ -81,6 +81,7 @@ function fakeSales():ISale{
         seller: 'AstroDev',
         billing: 'AstroDev',
         deleted: false,
+        estimatedDays: faker.number.int({min: 10, max: 60}),
         entity: faker.helpers.arrayElement(EntityListValues)
     }
 }

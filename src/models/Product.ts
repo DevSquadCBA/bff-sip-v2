@@ -53,7 +53,7 @@ export class Product extends Model {
     @Column(DataType.INTEGER)
     declare daysDelay: number;
 
-    @Column(DataType.BOOLEAN)
+    @Column({type: DataType.BOOLEAN,defaultValue: false})
     declare deleted: CreationOptional<boolean>;
 
     static async getPricesFromIds(products:Partial<{id:number, quantity:number}>[]):Promise<ResponseGetPricesFromIds[]>{

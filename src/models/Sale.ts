@@ -76,7 +76,7 @@ export class Sale extends Model {
     @Column({type: DataType.INTEGER, defaultValue: 60})
     declare estimatedDays: number;
 
-    @Column(DataType.BOOLEAN)
+    @Column({type: DataType.BOOLEAN,defaultValue: false})
     declare deleted: CreationOptional<boolean>;
 
     @Column(DataType.ENUM(...EntityListValues))
