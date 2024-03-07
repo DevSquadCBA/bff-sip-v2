@@ -24,19 +24,19 @@ const domain = async (event:Event): Promise<{body:{dueDate:DueDate} | null, stat
                 state: {
                     [Op.not]: [SS.presupuesto, SS.proforma, SS.canceled, SS.finished]
                 }
-            }, order: [['updatedAt', 'ASC']]
+            }, order: [['deadline', 'ASC']]
         });
-    if(!nextSale){
+    if(!nextSale || !nextSale.deadline) {
         return {
             body: null,
             statusCode: 200
         }
     }
-    const daysToDueDate = dayjs(nextSale.updatedAt).diff(dayjs(), 'day');
+    const daysToDueDate = dayjs(nextSale.deadline).diff(dayjs(), 'day');
     return {
         body: {
             dueDate: {
-                dueDate: nextSale.updatedAt,
+                dueDate: nextSale.deadline,
                 daysToDueDate,
                 idSale: nextSale.id
             }
