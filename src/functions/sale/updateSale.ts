@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { SaleStates } from 'models/Enums';
 import {Sale, ProductsInSale } from 'models/Sale';
 import { SaleProduct } from 'models/SaleProduct';
@@ -29,7 +30,12 @@ const domain = async (event:Event): Promise<{body:string, statusCode:number}> =>
     let msg = 'Se han agregado detalles a los productos';
     const allProductsHaveDetails = saleToUpdate.products.every(product=>product.details && product.details?.length>0)
     if(allProductsHaveDetails && saleToUpdate.state !== SaleStates.proforma){
-        await Sale.update({state: saleToUpdate.state}, {where: {id: id}});
+        let deadline = null;
+        if(saleToUpdate.state  === SaleStates.comprobante ){
+            const sale = (await Sale.findByPk(id))?.get({plain:true});
+            deadline = dayjs().add(sale.estimatedDays, 'day');
+        }
+        await Sale.update({state: saleToUpdate.state, deadline}, {where: {id: id}});
         msg = 'Se ha actualizado el estado de la venta'
     }
     return {

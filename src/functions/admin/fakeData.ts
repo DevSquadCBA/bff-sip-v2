@@ -13,6 +13,7 @@ import { IProvider, Provider } from 'models/Provider';
 import { ISale, Sale } from 'models/Sale';
 import { EntityListValues, SalesStatesValues, StateProduct, StateProductValues } from 'models/Enums';
 import { ISaleProduct, SaleProduct } from 'models/SaleProduct';
+import dayjs from 'dayjs';
 
 interface Event extends ApiGatewayParsedEvent {
     headers:{
@@ -71,9 +72,11 @@ function fakeProducts():IProduct{
 
 function fakeSales():ISale{
     const price = faker.number.float({min: 10, max: 1000, multipleOf: 0.01});
+    const estimatedDays = faker.number.int({min: 10, max: 60});
+    const state = faker.helpers.arrayElement(SalesStatesValues);
     return {
         clientId: faker.number.int({min: 1, max: 20}),
-        state: faker.helpers.arrayElement(SalesStatesValues),
+        state,
         total: faker.number.float({min: 10, max: 1000, multipleOf: 0.01}),
         paid: Math.random() > 0.5 ? price : Math.random() > 0.5 ? 0 : faker.number.float({min:0, max: price, multipleOf: 0.01}),
         budgetDetails: '',
@@ -81,7 +84,8 @@ function fakeSales():ISale{
         seller: 'AstroDev',
         billing: 'AstroDev',
         deleted: false,
-        estimatedDays: faker.number.int({min: 10, max: 60}),
+        estimatedDays,
+        deadline: !['proforma', 'presupuesto'].includes(state)? dayjs().add(estimatedDays, 'day').toDate(): null,
         entity: faker.helpers.arrayElement(EntityListValues)
     }
 }

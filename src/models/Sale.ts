@@ -15,6 +15,7 @@ export type ISale = {
     seller: string,
     billing: string,
     estimatedDays: number,
+    deadline: Date|null,
     entity: EntityList
 }
 export type ProductsInSale = {
@@ -81,6 +82,9 @@ export class Sale extends Model {
 
     @Column(DataType.ENUM(...EntityListValues))
     declare entity: EntityList;
+
+    @Column({type:DataType.DATE, defaultValue: null})
+    declare deadline: CreationOptional<Date|null>;
     
     static async getActiveSales(idClient:number){
         // reference query
