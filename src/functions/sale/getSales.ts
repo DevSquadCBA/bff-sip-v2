@@ -3,24 +3,12 @@ import { Product } from 'models/Product';
 import { ProductsInSale, Sale, SaleWithProduct } from 'models/Sale';
 import { SaleProduct } from 'models/SaleProduct';
 import { ApiGatewayParsedEvent } from 'types/response-factory/proxies';
-import { Validators } from 'utils/Validator';
 import { LambdaResolver } from 'utils/lambdaResolver';
-interface Event extends ApiGatewayParsedEvent {
-    queryStringParameters: {
-        offset: string
-        limit: string
-    }
-}
+interface Event extends ApiGatewayParsedEvent {}
 
 
 const domain = async (event:Event): Promise<{body:SaleWithProduct[], statusCode:number}> => {
-    const offset = parseInt(event.queryStringParameters.offset);
-    const limit = parseInt(event.queryStringParameters.limit);
-
     const sales = await Sale.findAll({
-        offset,
-        limit,
-        subQuery:false,
         where:{
             deleted: false,
             entity: event.headers.entity
@@ -67,4 +55,4 @@ const domain = async (event:Event): Promise<{body:SaleWithProduct[], statusCode:
     }    
 }
 
-export const Handler = (event:ApiGatewayParsedEvent)=>LambdaResolver(event, domain, [Validators.OFFSET_AND_LIMITS])
+export const Handler = (event:ApiGatewayParsedEvent)=>LambdaResolver(event, domain, [])
