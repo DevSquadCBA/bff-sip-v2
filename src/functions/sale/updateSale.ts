@@ -9,6 +9,7 @@ import { LambdaResolver } from 'utils/lambdaResolver';
 type ISaleUpdateContract = {
     state: SaleStates,
     products: Omit<ProductsInSale,'saleProducts'>[]
+    amount?: string
 }
 interface Event extends ApiGatewayParsedEvent {
     pathParameters: {
@@ -31,11 +32,12 @@ const domain = async (event:Event): Promise<{body:string, statusCode:number}> =>
     const allProductsHaveDetails = saleToUpdate.products.every(product=>product.details && product.details?.length>0)
     if(allProductsHaveDetails && saleToUpdate.state !== SaleStates.proforma){
         let deadline = null;
+        const sale = (await Sale.findByPk(id))?.get({plain:true});
+        const paid = parseFloat(sale.paid) + (parseFloat(saleToUpdate.amount||'') || 0);
         if(saleToUpdate.state  === SaleStates.comprobante ){
-            const sale = (await Sale.findByPk(id))?.get({plain:true});
             deadline = dayjs().add(sale.estimatedDays, 'day');
         }
-        await Sale.update({state: saleToUpdate.state, deadline}, {where: {id: id}});
+        await Sale.update({state: saleToUpdate.state, deadline, paid}, {where: {id: id}});
         msg = 'Se ha actualizado el estado de la venta'
     }
     return {
