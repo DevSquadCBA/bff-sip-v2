@@ -30,7 +30,7 @@ const domain = async (event:Event): Promise<{body:string, statusCode:number}> =>
     }
     let msg = 'Se han agregado detalles a los productos';
     const allProductsHaveDetails = saleToUpdate.products.every(product=>product.details && product.details?.length>0)
-    if(allProductsHaveDetails && saleToUpdate.state !== SaleStates.proforma){
+    if(allProductsHaveDetails && saleToUpdate.state !== SaleStates.presupuesto){
         let deadline = null;
         const sale = (await Sale.findByPk(id))?.get({plain:true});
         const paid = parseFloat(sale.paid) + (parseFloat(saleToUpdate.amount||'') || 0);
