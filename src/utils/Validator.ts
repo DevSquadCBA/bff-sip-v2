@@ -12,7 +12,7 @@ export enum Validators{
 }
 
 function offsetAndLimitValidator(queryStringParameters:{offset?:string, limit?: string}){
-    let queryStringToReturn = {offset:'0',limit:'30'}
+    let queryStringToReturn = {offset:'0',limit:'10000'}
     if(queryStringParameters?.offset){
         if(!/^[0-9]+$/.test(queryStringParameters.offset.toString())){
             throw new BadRequestError('El offset, debe ser un número')
