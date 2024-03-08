@@ -6,12 +6,13 @@ import { createStores } from "services/generateStoreProcedures";
 interface Event extends ApiGatewayParsedEvent {
     headers:{
         entity: string
-        Admin: string
+        Admin?: string
+        admin?:string
     }
 }
 
 const domain = async (event:Event): Promise<{body:string, statusCode:number}> => {
-    const admin = event.headers.Admin;
+    const admin = event.headers.admin || event.headers['Admin'];
     if('astrodev'!= admin){
         return {
             body: 'not authorized',

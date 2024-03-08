@@ -1,25 +1,14 @@
+import { Client } from 'models/Client';
 import { Product } from 'models/Product';
 import { ProductsInSale, Sale, SaleWithProduct } from 'models/Sale';
 import { SaleProduct } from 'models/SaleProduct';
 import { ApiGatewayParsedEvent } from 'types/response-factory/proxies';
-import { Validators } from 'utils/Validator';
 import { LambdaResolver } from 'utils/lambdaResolver';
-interface Event extends ApiGatewayParsedEvent {
-    queryStringParameters: {
-        offset: string
-        limit: string
-    }
-}
+interface Event extends ApiGatewayParsedEvent {}
 
 
 const domain = async (event:Event): Promise<{body:SaleWithProduct[], statusCode:number}> => {
-    const offset = parseInt(event.queryStringParameters.offset);
-    const limit = parseInt(event.queryStringParameters.limit);
-
     const sales = await Sale.findAll({
-        offset,
-        limit,
-        subQuery:false,
         where:{
             deleted: false,
             entity: event.headers.entity
@@ -27,16 +16,20 @@ const domain = async (event:Event): Promise<{body:SaleWithProduct[], statusCode:
         attributes:{
             exclude: ['deleted']
         },
-        include: {
+        include: [
+            {
+                model: Client,
+            },
+            {
             model: Product,
             attributes: ['id', 'code', 'name', 'salePrice', 'purchasePrice'],
             as: 'products',
             through: {
                 model: SaleProduct,
-                attributes: ['quantity', 'state'],
+                attributes: ['quantity','state','details'],
                 as: 'saleProducts'
             } as any
-        }
+        }]
     });
     const salesWithProduct:SaleWithProduct[] = sales.map(saleRaw=>{
         const sale = saleRaw.get({ plain: true });
@@ -48,7 +41,8 @@ const domain = async (event:Event): Promise<{body:SaleWithProduct[], statusCode:
                 salePrice: product.salePrice,
                 purchasePrice: product.purchasePrice,
                 quantity: product.saleProducts?.quantity,
-                state: product.saleProducts?.state
+                state: product.saleProducts?.state,
+                details: product.saleProducts?.details || ''
             }
         });
         return sale;
@@ -61,4 +55,4 @@ const domain = async (event:Event): Promise<{body:SaleWithProduct[], statusCode:
     }    
 }
 
-export const Handler = (event:ApiGatewayParsedEvent)=>LambdaResolver(event, domain, [Validators.OFFSET_AND_LIMITS])
+export const Handler = (event:ApiGatewayParsedEvent)=>LambdaResolver(event, domain, [])

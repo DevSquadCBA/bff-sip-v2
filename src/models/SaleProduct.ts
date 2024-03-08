@@ -2,18 +2,21 @@ import { Column, DataType,  ForeignKey, Model, Table } from "sequelize-typescrip
 import { Sale } from "./Sale";
 import { Product } from "./Product";
 import { StateProduct, StateProductValues } from "./Enums";
+import { QueryTypes } from "sequelize";
 
 export type ISaleProduct = {
     saleId: number,
     productId: number,
     quantity: number,
     state: StateProduct
+    details?: string|null
 }
 
 
 export type IProductToAdd = {
     id: number,
-    quantity: number
+    quantity: number,
+    details?: string|null
 }
 
 
@@ -33,15 +36,21 @@ export class SaleProduct extends Model {
     @Column({type: DataType.ENUM(...StateProductValues),defaultValue: StateProduct.uninitiated})
     declare state: StateProduct;
 
+    @Column({type: DataType.STRING, defaultValue: null})
+    declare details?: string;
+
     // @Column
     // declare discountPercent: number;
 
-    static async bulkUpdate(productToUpdate: Partial<ISaleProduct>[]){
+    static async bulkUpdate(saleId: number, productToUpdate: Partial<ISaleProduct>[]){
         await this.sequelize?.query(`
-            UPDATE sale_product ('productId','quantity') 
-            VALUES ${productToUpdate.map(e=>`(${e.productId},${e.quantity})`)}
-            where saleId = ${productToUpdate[0].saleId}
-            On DUPLICATE KEY UPDATE quantity VALUES(quantity)
+            INSERT INTO sale_product (saleId,productId,quantity,state,details,createdAt, updatedAt) 
+            VALUES ${productToUpdate.map(e=>`(${saleId},${e.productId},${e.quantity},"${e.state}","${e.details}", NOW(), NOW())`).join(', ')}
+            On DUPLICATE KEY UPDATE 
+                quantity = VALUES(quantity),
+                details = VALUES(details),
+                state = VALUES(state),
+                updatedAt = NOW();
         `)
     }
 }

@@ -53,7 +53,16 @@ export class Product extends Model {
     @Column(DataType.INTEGER)
     declare daysDelay: number;
 
-    @Column(DataType.BOOLEAN)
+    @Column({type: DataType.BOOLEAN,defaultValue: false})
     declare deleted: CreationOptional<boolean>;
+
+    static async getPricesFromIds(products:Partial<{id:number, quantity:number}>[]):Promise<ResponseGetPricesFromIds[]>{
+        const productsWithPrices = await Product.findAll({where:{id:products.map(product=>product.id)}});
+        return productsWithPrices.map(product=>{
+            const quantity = products.find(e=>e.id == product.get({plain:true}).id)?.quantity || 1;
+            return {...product.get({plain:true}), salePrice: product.get({plain:true}).salePrice, quantity}
+        }) as unknown as ResponseGetPricesFromIds[]
+    }
 }
 
+type ResponseGetPricesFromIds = IProduct & {salePrice: number, quantity: number}

@@ -91,7 +91,8 @@ export function validate(validations: Validators[], event:ApiGatewayParsedEvent)
 
     if(validations.includes(Validators.VALID_JSON)){
         try{
-            event.body = JSON.parse(event.body as string);
+            JSON.parse(event.body as string);
+            event.body = event.body;
         }catch(e){
             throw new JSONInvalid();
         }

@@ -11,8 +11,9 @@ import { IProduct, Product } from 'models/Product';
 import sequelize from 'services/sequelize';
 import { IProvider, Provider } from 'models/Provider';
 import { ISale, Sale } from 'models/Sale';
-import { EntityListValues, SalesStatesValues, StateProductValues } from 'models/Enums';
+import { EntityListValues, SalesStatesValues, StateProduct, StateProductValues } from 'models/Enums';
 import { ISaleProduct, SaleProduct } from 'models/SaleProduct';
+import dayjs from 'dayjs';
 
 interface Event extends ApiGatewayParsedEvent {
     headers:{
@@ -71,9 +72,11 @@ function fakeProducts():IProduct{
 
 function fakeSales():ISale{
     const price = faker.number.float({min: 10, max: 1000, multipleOf: 0.01});
+    const estimatedDays = faker.number.int({min: 10, max: 60});
+    const state = faker.helpers.arrayElement(SalesStatesValues);
     return {
         clientId: faker.number.int({min: 1, max: 20}),
-        state: faker.helpers.arrayElement(SalesStatesValues),
+        state,
         total: faker.number.float({min: 10, max: 1000, multipleOf: 0.01}),
         paid: Math.random() > 0.5 ? price : Math.random() > 0.5 ? 0 : faker.number.float({min:0, max: price, multipleOf: 0.01}),
         budgetDetails: '',
@@ -81,16 +84,28 @@ function fakeSales():ISale{
         seller: 'AstroDev',
         billing: 'AstroDev',
         deleted: false,
+        estimatedDays,
+        deadline: !['proforma', 'presupuesto'].includes(state)? dayjs().add(estimatedDays, 'day').toDate(): null,
         entity: faker.helpers.arrayElement(EntityListValues)
     }
 }
 
 function fakeSaleProduct():ISaleProduct{
+    const state = faker.helpers.arrayElement(StateProductValues)
+    let details;
+    if(state!== StateProduct.uninitiated){
+        if(Math.random()<0.5){
+            details = 'mensaje random'
+        }else{
+            details = '';
+        }
+    }
     return {
         saleId: faker.number.int({min: 1, max: 20}),
         productId: faker.number.int({min: 1, max: 20}),
         quantity: faker.number.int({min: 1, max: 20}),
-        state: faker.helpers.arrayElement(StateProductValues)
+        state,
+        details
     }
 }
 
@@ -114,11 +129,44 @@ async function fakeData(){
 
 const domain = async (event:Event): Promise<{body:string, statusCode:number}> => {
     const admin = event.headers.admin || event.headers['Admin'];
-    console.log(event)
     if('astrodev'!= admin){
         return {
             body: 'not authorized',
             statusCode: 401
+        }
+    }
+    if(event.queryStringParameters?.id && ['clients','products','providers','sales','saleProducts'].includes(event.queryStringParameters.id)){
+        let count = 0;
+        if(event.queryStringParameters?.count){
+            count = parseInt(event.queryStringParameters.count);
+        }
+        switch(event.queryStringParameters.id){
+            case 'clients':
+                const clients:IClient[] = faker.helpers.multiple(fakeClient, {count: count || 20});
+                await Client.bulkCreate(clients);
+                break;
+            case 'products':
+                const products:IProduct[] = faker.helpers.multiple(fakeProducts, {count: count || 200});
+                await Product.bulkCreate(products);
+                break;
+            case 'providers':
+                const providers:IProvider[] = faker.helpers.multiple(fakeProvider,{count: count||20});
+                await Provider.bulkCreate(providers);
+                break;
+            case 'sales':
+                const sale:ISale[] = faker.helpers.multiple(fakeSales, {count: count || 20});
+                await Sale.bulkCreate(sale);
+                break;
+            case 'saleProducts':
+                const saleProduct:ISaleProduct[] = faker.helpers.multiple(fakeSaleProduct, {count: count || 60});
+                await SaleProduct.bulkCreate(saleProduct,{ignoreDuplicates:true});
+                break;
+            default:
+                break;
+        }
+        return {
+            body: `generated ${count} ${event.queryStringParameters.id}`,
+            statusCode: 200
         }
     }
     try{

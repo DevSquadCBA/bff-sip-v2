@@ -1,6 +1,6 @@
 import {  Column, Table, DataType, PrimaryKey, AutoIncrement, ForeignKey, BelongsTo ,Model} from 'sequelize-typescript';
 import { CreationOptional, Op } from 'sequelize';
-import { EntityList, EntityListValues, SaleStates, SalesStatesValues} from './Enums';
+import { EntityList, EntityListValues, SaleStates, SalesStatesValues, StateProduct} from './Enums';
 import { Client } from './Client';
 
 export type ISale = {
@@ -14,20 +14,25 @@ export type ISale = {
     dispatch: 'without' | 'with',
     seller: string,
     billing: string,
+    estimatedDays: number,
+    deadline: Date|null,
     entity: EntityList
 }
 export type ProductsInSale = {
     id:number,
+    productId?:number,
     code: string,
     name: string,
     salePrice: number,
     purchasePrice: number,
     saleProducts?: { 
         quantity: number,
-        state: string 
+        state: StateProduct, 
+        details?: string
     },
     quantity?: number,
-    state?: string,
+    state?: StateProduct,
+    details?: string,
     entity: EntityList
 }
 export type SaleWithProduct = ISale & {products: ProductsInSale[]}
@@ -69,11 +74,17 @@ export class Sale extends Model {
     @Column(DataType.STRING)
     declare billing: string;
 
-    @Column(DataType.BOOLEAN)
+    @Column({type: DataType.INTEGER, defaultValue: 60})
+    declare estimatedDays: number;
+
+    @Column({type: DataType.BOOLEAN,defaultValue: false})
     declare deleted: CreationOptional<boolean>;
 
     @Column(DataType.ENUM(...EntityListValues))
     declare entity: EntityList;
+
+    @Column({type:DataType.DATE, defaultValue: null})
+    declare deadline: CreationOptional<Date|null>;
     
     static async getActiveSales(idClient:number){
         // reference query

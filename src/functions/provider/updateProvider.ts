@@ -3,13 +3,15 @@ import { ApiGatewayParsedEvent } from 'types/response-factory/proxies';
 import { Validators } from 'utils/Validator';
 import { LambdaResolver } from 'utils/lambdaResolver';
 interface Event extends ApiGatewayParsedEvent {
+    pathParameters: {idProvider: string}
     body: IProvider
 }
 
 const domain = async (event:Event): Promise<{body:number, statusCode:number}> => {
+    const idProvider = event.pathParameters.idProvider;
     const parsedBody = JSON.parse(event.body as unknown as string);
     console.log(parsedBody);
-    const provider = await Provider.update(parsedBody, {where: {id: parsedBody.id}});
+    const provider = await Provider.update(parsedBody, {where: {id: idProvider}});
     return {
         body: provider[0],
         statusCode: 200
@@ -17,4 +19,4 @@ const domain = async (event:Event): Promise<{body:number, statusCode:number}> =>
 
 }
 
-export const Handler = (event:ApiGatewayParsedEvent)=>LambdaResolver(event, domain, [Validators.OFFSET_AND_LIMITS])
+export const Handler = (event:ApiGatewayParsedEvent)=>LambdaResolver(event, domain, [Validators.ID_PROVIDER, Validators.VALID_JSON])

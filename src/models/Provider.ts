@@ -54,6 +54,6 @@ export class Provider extends Model {
     @Column(DataType.INTEGER)
     declare daysDelays: number;
 
-    @Column(DataType.BOOLEAN)
+    @Column({type: DataType.BOOLEAN,defaultValue: false})
     declare deleted: CreationOptional<boolean>;
 }  
