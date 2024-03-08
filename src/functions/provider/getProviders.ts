@@ -1,4 +1,5 @@
 import { Provider,  IProvider } from 'models/Provider';
+import { Op } from 'sequelize';
 import { ApiGatewayParsedEvent } from 'types/response-factory/proxies';
 import { Validators } from 'utils/Validator';
 import { LambdaResolver } from 'utils/lambdaResolver';
@@ -13,8 +14,7 @@ const domain = async (event:Event): Promise<{body:IProvider[], statusCode:number
     const offset = parseInt(event.queryStringParameters.offset);
     const limit = parseInt(event.queryStringParameters.limit);
 
-    const providers = await Provider.findAll({ offset, limit }) as IProvider[];
-
+    const providers = await Provider.findAll({ offset, limit , where:{id:{[Op.ne]:0}, deleted: false}}) as IProvider[];
     return {
         body: providers,
         statusCode: 200
