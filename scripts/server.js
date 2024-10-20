@@ -5,10 +5,11 @@ const {parse} = require('yaml');
 const express= require('express');
 const cors = require('cors');
 
-process.env.HOST = "192.168.1.32";
-process.env.USER = "root";
-process.env.PASS = "1234";
-process.env.DB = "piatti";
+process.env.HOST = '127.0.0.1';
+process.env.USER = 'root';
+process.env.PASS = '1234';
+process.env.DB   = 'piatti';
+process.env.PORT = '3307';
 
 execSync("sam build -c -p");
 

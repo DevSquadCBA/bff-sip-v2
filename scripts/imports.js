@@ -13,6 +13,7 @@ const {Handler:GetClientByIdFunction} = require('../.aws-sam/build/GetClientById
 const {Handler:GetClientSaleFunction} = require('../.aws-sam/build/GetClientSaleFunction/getClientSales.js');
 const {Handler:GetClientsFunction} = require('../.aws-sam/build/GetClientsFunction/getClients.js');
 const {Handler:GetClientsListFunction} = require('../.aws-sam/build/GetClientsListFunction/getClientsList.js');
+const {Handler:GetNextDueDateFunction} = require('../.aws-sam/build/GetNextDueDateFunction/getNextDueDate.js');
 const {Handler:GetProductByIdFunction} = require('../.aws-sam/build/GetProductByIdFunction/getProductById.js');
 const {Handler:GetProductsFunction} = require('../.aws-sam/build/GetProductsFunction/getProducts.js');
 const {Handler:GetProductWithProviderFunction} = require('../.aws-sam/build/GetProductWithProviderFunction/getProductWithProvider.js');
@@ -45,6 +46,7 @@ module.exports={
     GetClientSaleFunction,
     GetClientsFunction,
     GetClientsListFunction,
+    GetNextDueDateFunction,
     GetProductByIdFunction,
     GetProductsFunction,
     GetProductWithProviderFunction,
