@@ -9,7 +9,7 @@ export type IProvider = {
     email: string,
     province: string,
     locality: string,
-    direction: string,
+    address: string,
     phone: string,
     voucherType: string,
     daysDelays: number,
@@ -43,7 +43,7 @@ export class Provider extends Model {
     declare locality: string;
 
     @Column(DataType.STRING)
-    declare direction: string;
+    declare address: string;
 
     @Column(DataType.STRING)
     declare phone: string;

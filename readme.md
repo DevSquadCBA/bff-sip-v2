@@ -71,7 +71,7 @@ Crea un nuevo cliente
   "email": "string",
   "phone": 0,
   "whatsapp": 0,
-  "direction": "string"
+  "address": "string"
 }
 ```
 
@@ -1505,7 +1505,7 @@ This operation does not require authentication
   "email": "string",
   "phone": 0,
   "whatsapp": 0,
-  "direction": "string"
+  "address": "string"
 }
 
 ```
@@ -1519,7 +1519,7 @@ This operation does not require authentication
 |email|string|false|none|none|
 |phone|integer|false|none|none|
 |whatsapp|integer|true|none|none|
-|direction|string|false|none|none|
+|address|string|false|none|none|
 
 <h2 id="tocS_Sale">Sale</h2>
 <!-- backwards compatibility -->

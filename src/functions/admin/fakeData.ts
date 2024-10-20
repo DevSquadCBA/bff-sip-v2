@@ -32,7 +32,7 @@ function fakeClient():IClient{
         whatsapp: Math.random() > 0.5 ? '351' + faker.number.int({min:3,max:9}) + faker.number.int({min:100000,max:999999}).toString() : undefined,
         province: faker.location.state(),
         localidad: faker.location.city(),
-        direction: faker.location.streetAddress(),
+        address: faker.location.streetAddress(),
         deleted: false,
         fiscalCategory: faker.helpers.arrayElement(['responsable_inscripto','monotributista','consumidor_final'])
     }
@@ -46,7 +46,7 @@ function fakeProvider():IProvider{
         email: faker.internet.email(),
         province: faker.location.state(),
         locality: faker.location.city(),
-        direction: faker.location.streetAddress(),
+        address: faker.location.streetAddress(),
         phone: faker.number.int({min:3,max:9}) + faker.number.int({min:100000,max:999999}).toString(),
         voucherType: faker.helpers.arrayElement(['factura','boleta']),
         daysDelays: faker.number.int({min: 10, max: 60}),

@@ -12,7 +12,7 @@ export type IClient = {
     whatsapp?: string,
     province?: string,
     localidad?: string,
-    direction?: string,
+    address?: string,
     deleted?: boolean,
 }
 @Table({
@@ -52,7 +52,7 @@ export class Client extends Model {
     declare localidad: CreationOptional<string>;
 
     @Column({ type: DataType.STRING, allowNull: true })
-    declare direction: CreationOptional<string>;
+    declare address: CreationOptional<string>;
 
     @Column({ type: DataType.BOOLEAN, defaultValue: false })
     declare deleted: CreationOptional<boolean>;

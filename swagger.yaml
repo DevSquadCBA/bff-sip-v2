@@ -1126,7 +1126,7 @@ components:
           type: integer
         whatsapp:
           type: integer
-        direction:
+        address:
           type: string
     Sale:
       type: object
