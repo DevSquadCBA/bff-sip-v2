@@ -8,11 +8,10 @@ describe('This is the testsuit for getClientById', ()=>{
             idClient: '1'
         },
         headers:{
-            Entity: 'muebles'
+            entity: 'muebles'
         }
     }
     it('should return a valid Client',async ()=>{
-        process.env.expectedResponse = JSON.stringify([{name:'pepe', id:1}])
         const response = await getClientById(event) as {body:IClient, statusCode: number};
         expect(response.statusCode).toBe(200);
     })
@@ -24,7 +23,7 @@ describe('This is the testsuit for getClientById', ()=>{
             }
         }
         const response = await getClientById(eventModded) as {body:IClient, statusCode: number};
-        expect(response.statusCode).toBe(400);
+        expect(response.statusCode).toBe(404);
     })
     it('should return an error',async()=>{
         const eventModded = {
@@ -34,6 +33,17 @@ describe('This is the testsuit for getClientById', ()=>{
             }
         }
         const response = await getClientById(eventModded) as {body:IClient, statusCode: number};
-        expect(response.statusCode).toBe(400);
+        expect(response.statusCode).toBe(404);
     })
+    it('should return body null and statusCode 404',async()=>{
+        const eventModded = {
+            ...event,
+            pathParameters:{
+                idClient: '42'
+            }
+        }
+        const response = await getClientById(eventModded) as {body:IClient, statusCode: number};
+        expect(response.statusCode).toBe(404);
+    })
+
 })

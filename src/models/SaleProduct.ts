@@ -2,8 +2,6 @@ import { Column, DataType,  ForeignKey, Model, Table } from "sequelize-typescrip
 import { Sale } from "./Sale";
 import { Product } from "./Product";
 import { StateProduct, StateProductValues } from "./Enums";
-import { QueryTypes } from "sequelize";
-
 export type ISaleProduct = {
     saleId: number,
     productId: number,

@@ -1,4 +1,5 @@
 import { Product } from 'models/Product';
+import { ErrorOnDelete } from 'types/errors';
 import { ApiGatewayParsedEvent } from 'types/response-factory/proxies';
 import { Validators } from 'utils/Validator';
 import { LambdaResolver } from 'utils/lambdaResolver';
@@ -25,10 +26,7 @@ const domain = async (event: Event): Promise<{ body: string; statusCode: number 
         };
     } catch (error) {
         console.error(error);
-        return {
-            body: 'Error deleting the product',
-            statusCode: 500,
-        };
+        throw new ErrorOnDelete('Error deleting the product');
     }
 };
 

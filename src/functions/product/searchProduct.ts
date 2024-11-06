@@ -5,11 +5,17 @@ import { ApiGatewayParsedEvent } from 'types/response-factory/proxies';
 import { Validators } from 'utils/Validator';
 import { LambdaResolver } from 'utils/lambdaResolver';
 
-interface Event extends ApiGatewayParsedEvent {}
+interface Event extends ApiGatewayParsedEvent {
+    queryStringParameters: {
+        query: string
+    }
+}
 
 const domain = async (event:Event): Promise<{body:IProduct[], statusCode:number}> => {
     const query =  event.queryStringParameters.query;
-    if(!query){return {body: [], statusCode: 200}};
+    if(!query){
+        return {body: [], statusCode: 200}
+    };
     const words = query?.split(' ');
     const products = await Product.findAll({
         include: {
@@ -26,7 +32,6 @@ const domain = async (event:Event): Promise<{body:IProduct[], statusCode:number}
         },
         attributes: { exclude: ['deleted'] }
     });
-    console.log(products);
     return {
         body: products as IProduct[],
         statusCode: 200

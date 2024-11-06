@@ -1,4 +1,4 @@
-import {Product , IProduct } from 'models/Product';
+import { Product , IProduct } from 'models/Product';
 import { ApiGatewayParsedEvent } from 'types/response-factory/proxies';
 import { Validators } from 'utils/Validator';
 import { LambdaResolver } from 'utils/lambdaResolver';
@@ -8,7 +8,6 @@ interface Event extends ApiGatewayParsedEvent {
 
 const domain = async (event:Event): Promise<{body:number, statusCode:number}> => {
     const parsedBody = JSON.parse(event.body as unknown as string);
-    console.log(parsedBody);
     const product = await Product.create(parsedBody);
     return {
         body: product.id,

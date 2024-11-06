@@ -33,7 +33,7 @@
     "test": "npm run coverage",
     "coverage": "jest --coverage",
     "debug": "node ./scripts/generateEnvVars.mjs && nodemon --ext \"ts,json,yaml\" --exec \"sam build -c -p && sam local start-api -d 9999 --parameter-overrides Environment=develop -n scripts/env_vars.json --host 0.0.0.0 --profile default --region us-east-1\"",
-    "dev": "nodemon --ext \"ts\" --exec npm run startServer",
+    "dev": "nodemon --ext \"ts\" --exec npm run start",
     "start": " node ./scripts/server.js"
   }
 }
