@@ -1,5 +1,10 @@
-import { BadRequestError, JSONInvalid } from "types/errors"
+import { BadRequestError, JSONInvalid, UnauthorizedError } from "types/errors"
 import { ApiGatewayParsedEvent } from "types/response-factory/proxies";
+import jwt from "jsonwebtoken";
+import { IToken } from "models/Token";
+import { Rol } from "models/Rol";
+
+const routesException = ['/health','/auth/login'];
 
 export enum Validators{
     OFFSET_AND_LIMITS = 'OffsetAndLimitValidator',
@@ -8,7 +13,23 @@ export enum Validators{
     ID_PRODUCT = 'validateIdProduct',
     ID_SALE = 'validateIdSale',
     VALID_JSON = 'validateJSONBody',
-    QUERY ='validateQuery'
+    QUERY ='validateQuery',
+    ADMIN_PERMISSION = 'validatePermissions',
+    SUPERVISOR_PERMISSION = 'validatePermissions',
+    ANY_PERMISSION = 'validatePermissions'
+}
+
+function checkToken(headers:{authorization?:string}):IToken{
+    if(!headers.authorization){
+        throw new UnauthorizedError("Usuario no logueado");
+    }
+    try {
+        const token = headers.authorization.split(' ')[1];
+        const decoded = jwt.verify(token, process.env.JWT as string);
+        return decoded as IToken;
+    } catch (err) {
+        throw new UnauthorizedError("Token inválido o expirado");
+    }
 }
 
 function offsetAndLimitValidator(queryStringParameters:{offset?:string, limit?: string}){
@@ -74,7 +95,23 @@ function validateQuery(queryStringParameters:{query?:string}){
     return queryStringParameters;
 }
 
+function validatePermissions(token:IToken, rol:String){
+    if(token.role !== rol){
+        throw new UnauthorizedError('No tienes permiso para realizar esta accion');
+    }
+}
+
+
 export function validate(validations: Validators[], event:ApiGatewayParsedEvent):ApiGatewayParsedEvent{
+    // every endpoint need a token
+    // except for exceptions
+    let token:IToken|null;
+    if(!routesException.includes(event.path)){
+        token = checkToken(event.headers);
+    }else{
+        token = null;
+    }
+
     if(validations.includes(Validators.OFFSET_AND_LIMITS)){
         event.queryStringParameters = {...offsetAndLimitValidator(event.queryStringParameters)}
     }else if(validations.includes(Validators.ID_CLIENT)){
@@ -87,6 +124,15 @@ export function validate(validations: Validators[], event:ApiGatewayParsedEvent)
         event.pathParameters = validateIdSale(event.pathParameters);
     } else if(validations.includes(Validators.QUERY)){
         event.queryStringParameters = {...validateQuery(event.queryStringParameters)};
+    } else if(validations.includes(Validators.ADMIN_PERMISSION)){
+        if(!token){return event;}
+        validatePermissions(token, Rol.ADMIN);
+    } else if(validations.includes(Validators.SUPERVISOR_PERMISSION)){
+        if(!token){return event;}
+        validatePermissions(token, Rol.SUPERVISOR);
+    } else if(validations.includes(Validators.ANY_PERMISSION)){
+        if(!token){return event;}
+        validatePermissions(token, Rol.USER);
     }
 
     if(validations.includes(Validators.VALID_JSON)){

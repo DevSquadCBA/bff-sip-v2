@@ -17,6 +17,7 @@ const data = functionsNames.reduce((json,lambda)=>{
             PASS : '1234',
             DB   : 'piatti',
             PORT : '3307',
+            JWT  : 'AstroDev'
         }
     }
     return json;

@@ -29,6 +29,7 @@ Globals:
                 USER: !Sub '{{resolve:ssm:/user}}'
                 PASS: !Sub '{{resolve:ssm:/pass}}'
                 DB:   !Sub '{{resolve:ssm:/${Environment}/database}}'
+                JWT:  !Sub '{{resolve:ssm:/${Environment}/jwt_secret}}'
                 DEFAULT_LIMIT: 100 # El límite de recursos que trae por defecto
                 NODE_CONFIG_DIR: !Sub '/opt/nodejs/config/'
                 NODE_ENV: !Ref Environment
@@ -164,6 +165,27 @@ Resources:
                     Properties:
                         Path: /admin/fakeData
                         Method: GET
+                        ApiId: !Ref ProvimatRestApi
+
+# Auth
+    LoginFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-Login'
+            Handler: login.Handler
+            CodeUri: ./src/functions/auth
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /auth/login
+                        Method: POST
                         ApiId: !Ref ProvimatRestApi
 
 # Clients
