@@ -1,4 +1,4 @@
-import { CreationOptional } from 'sequelize';
+import {  CreationOptional } from 'sequelize';
 import {  Column, Table, DataType, PrimaryKey, AutoIncrement, ForeignKey, BelongsTo ,Model} from 'sequelize-typescript';
 import { IRol, Rol } from './Rol';
 
@@ -9,14 +9,21 @@ export type IUser = {
     password: string,
     whatsapp?: string,
     address?: string,
-    role: IRol
+    role?: IRol
+    roleId?: number
 }
 
 
 
 @Table({
     tableName: 'user',
-    timestamps: false
+    timestamps: false,
+    indexes: [
+        {
+            unique: true,
+            fields: ['email']
+        }
+    ]
 })
 export class User extends Model<User> {
     @PrimaryKey
@@ -65,3 +72,4 @@ export class User extends Model<User> {
     @BelongsTo(() => Rol)
     declare role: Rol;
 }
+

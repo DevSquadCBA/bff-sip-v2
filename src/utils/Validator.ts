@@ -3,6 +3,7 @@ import { ApiGatewayParsedEvent } from "types/response-factory/proxies";
 import jwt from "jsonwebtoken";
 import { IToken } from "models/Token";
 import { Rol } from "models/Rol";
+import { IUser } from "models/User";
 
 const routesException = ['/health','/auth/login'];
 
@@ -14,6 +15,7 @@ export enum Validators{
     ID_SALE = 'validateIdSale',
     VALID_JSON = 'validateJSONBody',
     QUERY ='validateQuery',
+    VALID_USER = 'validateUser',
     ADMIN_PERMISSION = 'validatePermissions',
     SUPERVISOR_PERMISSION = 'validatePermissions',
     ANY_PERMISSION = 'validatePermissions'
@@ -95,6 +97,16 @@ function validateQuery(queryStringParameters:{query?:string}){
     return queryStringParameters;
 }
 
+function validateUser(body:IUser){
+    if(!body){
+        throw new BadRequestError('Es necesario enviar un user');
+    }
+    if (!body.name || !body.email || !body.password || !body.roleId) {
+        throw new BadRequestError('El user debe tener las propiedades obligatorias: name, email, password, role');
+    }
+    return body;
+}
+
 function validatePermissions(token:IToken, rol:String){
     if(token.role !== rol){
         throw new UnauthorizedError('No tienes permiso para realizar esta accion');
@@ -124,6 +136,9 @@ export function validate(validations: Validators[], event:ApiGatewayParsedEvent)
         event.pathParameters = validateIdSale(event.pathParameters);
     } else if(validations.includes(Validators.QUERY)){
         event.queryStringParameters = {...validateQuery(event.queryStringParameters)};
+    }else if (validations.includes(Validators.VALID_USER)){
+        validate([Validators.VALID_JSON], event);
+        event.body = {...validateUser(event.body as IUser)}
     } else if(validations.includes(Validators.ADMIN_PERMISSION)){
         if(!token){return event;}
         validatePermissions(token, Rol.ADMIN);
@@ -133,12 +148,11 @@ export function validate(validations: Validators[], event:ApiGatewayParsedEvent)
     } else if(validations.includes(Validators.ANY_PERMISSION)){
         if(!token){return event;}
         validatePermissions(token, Rol.USER);
-    }
+    } 
 
     if(validations.includes(Validators.VALID_JSON)){
         try{
-            JSON.parse(event.body as string);
-            event.body = event.body;
+            event.body = JSON.parse(event.body as string);;
         }catch(e){
             throw new JSONInvalid();
         }

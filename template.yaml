@@ -188,6 +188,47 @@ Resources:
                         Method: POST
                         ApiId: !Ref ProvimatRestApi
 
+# Users
+    GetUsersFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-GetUsers'
+            Handler: getUsers.Handler
+            CodeUri: ./src/functions/user
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /user
+                        Method: GET
+                        ApiId: !Ref ProvimatRestApi
+
+    CreateUserFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-CreateUser'
+            Handler: createUser.Handler
+            CodeUri: ./src/functions/user
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /user
+                        Method: POST
+                        ApiId: !Ref ProvimatRestApi
+
 # Clients
     GetClientsFunction:
         Type: AWS::Serverless::Function

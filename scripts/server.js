@@ -12,7 +12,7 @@ process.env.DB   = 'piatti';
 process.env.PORT = '3307';
 process.env.JWT = 'AstroDev';
 
-execSync("sam build -c -p");
+//execSync("sam build -c -p");
 
 const functionsFiles =[];
 const folders = fs.readdirSync('./.aws-sam/build/').filter(e=>e!=='template.yaml');
@@ -50,11 +50,7 @@ const getBody = (req) => {
                 resolve(null);
                 return;
             }
-            try {
-                resolve(JSON.parse(body));
-            } catch (error) {
-                reject(new Error('Invalid JSON'));
-            }
+            resolve(body);// lo envio como string
         });
         req.on('error', (err) => reject(err));
     });
