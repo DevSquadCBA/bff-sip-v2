@@ -4,6 +4,7 @@ const {Handler:CreateClientFunction} = require('../.aws-sam/build/CreateClientFu
 const {Handler:CreateProductFunction} = require('../.aws-sam/build/CreateProductFunction/createProduct.js');
 const {Handler:CreateProviderFunction} = require('../.aws-sam/build/CreateProviderFunction/createProvider.js');
 const {Handler:CreateSaleFunction} = require('../.aws-sam/build/CreateSaleFunction/createSale.js');
+const {Handler:CreateUserFunction} = require('../.aws-sam/build/CreateUserFunction/createUser.js');
 const {Handler:DeleteClientFunction} = require('../.aws-sam/build/DeleteClientFunction/deleteClient.js');
 const {Handler:DeleteProductFunction} = require('../.aws-sam/build/DeleteProductFunction/deleteProduct.js');
 const {Handler:DeleteProviderFunction} = require('../.aws-sam/build/DeleteProviderFunction/deleteProvider.js');
@@ -21,6 +22,8 @@ const {Handler:GetProviderByIdFunction} = require('../.aws-sam/build/GetProvider
 const {Handler:GetProvidersFunction} = require('../.aws-sam/build/GetProvidersFunction/getProviders.js');
 const {Handler:GetSaleByIdFunction} = require('../.aws-sam/build/GetSaleByIdFunction/getSaleById.js');
 const {Handler:GetSalesFunction} = require('../.aws-sam/build/GetSalesFunction/getSales.js');
+const {Handler:GetUsersFunction} = require('../.aws-sam/build/GetUsersFunction/getUsers.js');
+const {Handler:LoginFunction} = require('../.aws-sam/build/LoginFunction/login.js');
 const {Handler:SearchClientFunction} = require('../.aws-sam/build/SearchClientFunction/searchClient.js');
 const {Handler:SearchProductFunction} = require('../.aws-sam/build/SearchProductFunction/searchProduct.js');
 const {Handler:SearchProviderFunction} = require('../.aws-sam/build/SearchProviderFunction/searchProvider.js');
@@ -37,6 +40,7 @@ module.exports={
     CreateProductFunction,
     CreateProviderFunction,
     CreateSaleFunction,
+    CreateUserFunction,
     DeleteClientFunction,
     DeleteProductFunction,
     DeleteProviderFunction,
@@ -54,6 +58,8 @@ module.exports={
     GetProvidersFunction,
     GetSaleByIdFunction,
     GetSalesFunction,
+    GetUsersFunction,
+    LoginFunction,
     SearchClientFunction,
     SearchProductFunction,
     SearchProviderFunction,

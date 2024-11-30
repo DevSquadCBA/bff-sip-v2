@@ -208,7 +208,6 @@ Resources:
                         Path: /user
                         Method: GET
                         ApiId: !Ref ProvimatRestApi
-
     CreateUserFunction:
         Type: AWS::Serverless::Function
         Metadata:
