@@ -10,8 +10,9 @@ process.env.USER = 'root';
 process.env.PASS = '1234';
 process.env.DB   = 'piatti';
 process.env.PORT = '3307';
+process.env.JWT = 'AstroDev';
 
-execSync("sam build -c -p");
+//execSync("sam build -c -p");
 
 const functionsFiles =[];
 const folders = fs.readdirSync('./.aws-sam/build/').filter(e=>e!=='template.yaml');
@@ -36,19 +37,57 @@ const app = express();
 app.use(cors());
 const router = express.Router();
 const _ = require('@colors/colors'); 
-const expressToLambda = (req) => {
+const url = require('url');
+
+const getBody = (req) => {
+    return new Promise((resolve, reject) => {
+        let body = '';
+        req.on('data', (chunk) => {
+            body += chunk;
+        });
+        req.on('end', () => {
+            if (body === '') {
+                resolve(null);
+                return;
+            }
+            resolve(body);// lo envio como string
+        });
+        req.on('error', (err) => reject(err));
+    });
+};
+
+const getQueryParams = (req) => url.parse(req.url, true).query;
+
+const extractPathParams = (req, routeTemplate) => {
+    const routeParts = routeTemplate.split('/');
+    const urlParts = req.url.split('?')[0].split('/');
+    const pathParams = {};
+
+    routeParts.forEach((part, index) => {
+        if (part.startsWith(':')) {
+            const paramName = part.slice(1);
+            pathParams[paramName] = urlParts[index];
+        }
+    });
+
+    return pathParams;
+};
+
+
+/**  @param { import("http").IncomingMessage } req */
+const expressToLambda = async (req, path) => {
     return{
-        body: req.body,
+        body: await getBody(req),
         headers: req.headers,
         multiValueHeaders: req.headers,
         httpMethod: req.method,
         isBase64Encoded: false,
-        queryStringParameters: req.query,
-        multiValueQueryStringParameters: req.query,
-        pathParameters: req.params,
+        queryStringParameters: getQueryParams(req),
+        multiValueQueryStringParameters: getQueryParams(req),
+        pathParameters: extractPathParams(req, path),
         stageVariables: null,
-        path: req.path,
-        resource: req.path
+        path: path,
+        resource: path,
     }
 }
 
@@ -70,8 +109,8 @@ for(const path of Object.keys(paths)){
         if(!['get','post','put','delete'].includes(method.toLocaleLowerCase())) continue;
         const translatedPath = path.replace(/{([^}]+)}/g, ':$1');
         completePath.push({method,path});
-        router[method](translatedPath,async (request, response) => {
-            const requestLambda = expressToLambda(request);
+        router[method](translatedPath,async (/** @type { import("http").IncomingMessage } */ request,response) => {
+            const requestLambda = await expressToLambda(request, request.url);
             const responseLambda = await handler(requestLambda)
             response.setHeader('Content-Type', 'application/json');
             response.send(responseLambda.body);

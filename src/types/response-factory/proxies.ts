@@ -8,5 +8,6 @@ export interface ApiGatewayParsedEvent extends Omit<APIGatewayProxyEvent, 'body'
     pathParameters: APIGatewayProxyEventPathParameters;
     headers:{
         entity: string
+        authorization?: string
     }
 }

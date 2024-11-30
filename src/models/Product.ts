@@ -7,11 +7,11 @@ export type IProduct = {
     salePrice: number,
     purchasePrice: number,
     providerId: number,
-    stockeable: number,
-    negativeStock: number,
+    // stockeable: number,
+    // negativeStock: number,
     productType: string,
     img: string,
-    daysDelay: number,
+    // daysDelay: number,
     deleted?: boolean,
 }
 @Table({
@@ -38,11 +38,11 @@ export class Product extends Model {
     @Column(DataType.INTEGER)
     declare providerId: number;
 
-    @Column(DataType.INTEGER)
-    declare stockeable: number;
+    // @Column(DataType.INTEGER)
+    // declare stockeable: number;
 
-    @Column(DataType.INTEGER)
-    declare negativeStock: number;
+    // @Column(DataType.INTEGER)
+    // declare negativeStock: number;
 
     @Column(DataType.STRING)
     declare productType: string;
@@ -50,8 +50,8 @@ export class Product extends Model {
     @Column(DataType.STRING)
     declare img: string;
 
-    @Column(DataType.INTEGER)
-    declare daysDelay: number;
+    // @Column(DataType.INTEGER)
+    // declare daysDelay: number;
 
     @Column({type: DataType.BOOLEAN,defaultValue: false})
     declare deleted: CreationOptional<boolean>;

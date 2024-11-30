@@ -6,6 +6,8 @@ import { Sequelize } from 'sequelize-typescript';
 import { InternalServerError } from 'types/errors';
 import { Provider } from 'models/Provider';
 import { SaleProduct } from 'models/SaleProduct';
+import { Rol } from 'models/Rol';
+import { User } from 'models/User';
 const { HOST, USER, PASS, DB } = process.env;
 
 if (!HOST || !USER || !PASS || !DB) {
@@ -22,7 +24,7 @@ const sequelize = new Sequelize({
     logging: (msg) => console.dir(msg),
 });
 
-sequelize.addModels([Client , Sale , Product, Provider, SaleProduct])
+sequelize.addModels([Client , Sale , Product, Provider, SaleProduct, User, Rol])
 
 Sale.belongsToMany(Product, { through: SaleProduct , foreignKey: 'saleId', as:'products' });
 Product.belongsToMany(Sale, { through: SaleProduct , foreignKey: 'productId', as: 'sales' });

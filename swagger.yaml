@@ -15,6 +15,115 @@ servers:
     description: localhost
 
 paths:
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Login
+      description: Login
+      operationId: Login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Login"
+      responses:
+        200:
+          description: Login
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Token'
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
+
+  /user:
+    get:
+      tags:
+        - Users
+      summary: Obtiene todos los usuarios
+      description: Obtiene un listado de todos los usuarios, permitiendo filtrar por desde hasta
+      operationId: GetUsers
+      parameters: 
+        - name: offset
+          in: query
+          description: el offset
+          schema:
+            type: integer
+            format: int64
+          required: false
+        - name: limit
+          in: query
+          description: el limit
+          schema:
+            type: integer
+            format: int64
+          required: false
+      responses:
+        200:
+          description: listado de usuarios
+          content: {}
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+        - Users
+      summary: Crea un nuevo usuario
+      description: Crea un nuevo usuario
+      operationId: CreateUser
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/User"
+      responses:
+        200:
+          description: listado de usuarios
+          content: {}
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
   /client:
     #C
     post:
@@ -1208,6 +1317,16 @@ components:
         percent: 
           type: number
           example: 10
+    Login:
+      type: object
+      required: 
+        - email
+        - password
+      properties:
+        email:
+          type: string
+        password:
+          type: string
     Error:
       type: object
       properties:

@@ -61,11 +61,11 @@ function fakeProducts():IProduct{
         salePrice: faker.number.float({min: 10, max: 1000, multipleOf: 0.01}),
         purchasePrice: faker.number.float({min: 10, max: 1000, multipleOf: 0.01}),
         providerId: faker.helpers.arrayElement(Array.from({length: 20}, (_, i) => i + 1)),
-        stockeable: 1,
-        negativeStock: 0,
+        //stockeable: 1,
+        //negativeStock: 0,
         productType: 'simple', 
         img: '',
-        daysDelay: faker.number.int({min: 10, max: 60}),
+        //daysDelay: faker.number.int({min: 10, max: 60}),
         deleted: false
     }
 }
