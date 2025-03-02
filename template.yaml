@@ -56,9 +56,9 @@ Conditions:
 Mappings:
     Stage:
         develop:
-            DomainName: 'dev-sip.piatti-erp.com'
+            DomainName: Fn::ImportValue "ApiGatewayDomainDevelop"
         prod:
-            DomainName: 'sip.piatti-erp.com'
+            DomainName: Fn::ImportValue "ApiGatewayDomainProd"
     Static:
         Parameters:
             FilterPattern: '[event=REPORT* || event="*DATADOG_EVENT*"]'
@@ -108,25 +108,25 @@ Resources:
                     Name: AWS::Include
                     Parameters:
                         Location: ./swagger.yaml
-    # BasePathMapping:
-    #     Type: AWS::ApiGateway::BasePathMapping
-    #     DependsOn: PiattiRestApi
-    #     Condition: CreateDomainName
-    #     Properties:
-    #         BasePath: 'api'
-    #         DomainName: !FindInMap 
-    #             - Stage
-    #             - !Ref Environment
-    #             - DomainName
-    #         RestApiId: !Ref PiattiRestApi
-    #         Stage: !Ref PiattiRestApi.Stage    
     BasePathMapping:
         Type: AWS::ApiGateway::BasePathMapping
+        DependsOn: PiattiRestApi
+        Condition: CreateDomainName
         Properties:
-            DomainName: 
-                Fn::ImportValue: !Sub "ApiGatewayDomain${Environment}"
+            BasePath: 'api'
+            DomainName: !FindInMap 
+                - Stage
+                - !Ref Environment
+                - DomainName
             RestApiId: !Ref PiattiRestApi
-            Stage: !Ref Environment
+            Stage: !Ref PiattiRestApi.Stage    
+    # BasePathMapping:
+    #     Type: AWS::ApiGateway::BasePathMapping
+    #     Properties:
+    #         DomainName: 
+    #             Fn::ImportValue: !Sub "ApiGatewayDomain${Environment}"
+    #         RestApiId: !Ref PiattiRestApi
+    #         Stage: !Ref Environment
 
 # Layers
     Mysql2Layer:
