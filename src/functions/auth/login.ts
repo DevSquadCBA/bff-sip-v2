@@ -7,6 +7,7 @@ import { NotFoundError } from "types/errors";
 import { compare } from "functions/utils/hash";
 import { Rol } from "models/Rol";
 import { IToken } from "models/Token";
+import { Validators } from "utils/Validator";
 
 interface Event extends ApiGatewayParsedEvent {
     body: {
@@ -17,6 +18,7 @@ interface Event extends ApiGatewayParsedEvent {
 
 const domain = async (event: Event) => {
     const { email, password } = event.body;
+    console.log(email, password);
     const user = await User.findOne({
         where: {
             email
@@ -45,4 +47,4 @@ const domain = async (event: Event) => {
         statusCode: 200
     }
 }
-export const Handler = (event:ApiGatewayParsedEvent)=>LambdaResolver(event, domain, [])
+export const Handler = (event:ApiGatewayParsedEvent)=>LambdaResolver(event, domain, [Validators.VALID_JSON])

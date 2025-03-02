@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: 'Stack de Infraestructura Agnóstica - Certificado SSL, API Gateway Domains'
+Description: 'Stack de Infraestructura Agnostica - Certificado SSL, API Gateway Domains'
 
 Parameters:
     DomainName:
@@ -24,7 +24,7 @@ Parameters:
 
 Resources:
     ## Dominio personalizado en API Gateway para Develop
-    ProvimatDomainDevelop:
+    ProvimatDomaindevelop:
         Type: AWS::ApiGateway::DomainName
         Properties:
             DomainName: !Sub "${SubDomainDevelop}.${DomainName}"
@@ -34,7 +34,7 @@ Resources:
             RegionalCertificateArn: !Ref ACMCertificateArn
 
     ## Dominio personalizado en API Gateway para Prod
-    ProvimatDomainProd:
+    ProvimatDomainprod:
         Type: AWS::ApiGateway::DomainName
         Properties:
             DomainName: !Sub "${SubDomainProd}.${DomainName}"
@@ -46,12 +46,12 @@ Resources:
 Outputs:
     ApiGatewayDomainDevelop:
         Description: 'API Gateway DomainName para Develop'
-        Value: !Ref ProvimatDomainDevelop
+        Value: !Ref ProvimatDomaindevelop
         Export:
-            Name: ApiGatewayDomainDevelop
+            Name: ApiGatewayDomaindevelop
 
     ApiGatewayDomainProd:
         Description: 'API Gateway DomainName para Production'
-        Value: !Ref ProvimatDomainProd
+        Value: !Ref ProvimatDomainprod
         Export:
-            Name: ApiGatewayDomainProd
+            Name: ApiGatewayDomainprod

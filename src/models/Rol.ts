@@ -31,7 +31,7 @@ export class Rol extends Model {
     declare description: string
 
     belongsTo = () => {
-        return Rol.hasMany(User, { foreignKey: 'rolId' })
+        return Rol.hasMany(User, { foreignKey: 'roleId' })
     }
 
     static ADMIN = 'Administrador';

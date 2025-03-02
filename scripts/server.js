@@ -12,7 +12,7 @@ process.env.DB   = 'piatti';
 process.env.PORT = '3307';
 process.env.JWT = 'AstroDev';
 
-//execSync("sam build -c -p");
+execSync("sam build -c -p");
 
 const functionsFiles =[];
 const folders = fs.readdirSync('./.aws-sam/build/').filter(e=>e!=='template.yaml');

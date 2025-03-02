@@ -1,3 +1,4 @@
+import { Rol } from 'models/Rol';
 import { User , IUser } from 'models/User';
 import { ApiGatewayParsedEvent } from 'types/response-factory/proxies';
 import { Validators } from 'utils/Validator';
@@ -16,10 +17,10 @@ const domain = async (event:Event): Promise<{body:IUser[], statusCode:number}> =
         offset: parseInt(offset), 
         limit: parseInt(limit),
         include: {
-            model: User,
-            as: 'rol',
-            attributes: ['id', 'name', 'description']
-        }
+            model: Rol,
+            attributes: ['id', 'name', 'description'],
+        },
+        attributes: { exclude: ['password'] }
     });
     return {
         body: users as IUser[],

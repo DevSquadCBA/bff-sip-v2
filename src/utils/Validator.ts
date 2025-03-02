@@ -1,11 +1,22 @@
-import { BadRequestError, JSONInvalid, UnauthorizedError } from "types/errors"
+import { BadRequestError, JSONInvalid,
+     UnauthorizedError 
+    } from "types/errors"
 import { ApiGatewayParsedEvent } from "types/response-factory/proxies";
 import jwt from "jsonwebtoken";
 import { IToken } from "models/Token";
 import { Rol } from "models/Rol";
 import { IUser } from "models/User";
 
-const routesException = ['/health','/auth/login'];
+const routesException = [
+    '/health',
+    '/auth/login',
+    '/admin/syncDb',
+    '/admin/fakeData',
+    '/api/health',
+    '/api/auth/login',
+    '/api/admin/syncDb',
+    '/api/admin/fakeData'
+];
 
 export enum Validators{
     OFFSET_AND_LIMITS = 'OffsetAndLimitValidator',
@@ -118,7 +129,7 @@ export function validate(validations: Validators[], event:ApiGatewayParsedEvent)
     // every endpoint need a token
     // except for exceptions
     let token:IToken|null;
-    if(!routesException.includes(event.path)){
+    if(!routesException.includes(event.path) && !routesException.includes(event.resource)){
         token = checkToken(event.headers);
     }else{
         token = null;
@@ -139,7 +150,8 @@ export function validate(validations: Validators[], event:ApiGatewayParsedEvent)
     }else if (validations.includes(Validators.VALID_USER)){
         validate([Validators.VALID_JSON], event);
         event.body = {...validateUser(event.body as IUser)}
-    } else if(validations.includes(Validators.ADMIN_PERMISSION)){
+    }
+     else if(validations.includes(Validators.ADMIN_PERMISSION)){
         if(!token){return event;}
         validatePermissions(token, Rol.ADMIN);
     } else if(validations.includes(Validators.SUPERVISOR_PERMISSION)){
