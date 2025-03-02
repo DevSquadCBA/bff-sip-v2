@@ -307,52 +307,52 @@ paths:
             application/json:
               schema: 
                 $ref: '#/components/schemas/Error'
-  # /client/{idClient}/sales:
-  #   get:
-  #     tags:
-  #       - Presupuestos
-  #     summary: Obtiene todos los presupuestos de un cliente
-  #     description: Obtiene los presupuestos de un cliente en concreto
-  #     operationId: GetClientSale
-  #     parameters:
-  #       - name: idClient
-  #         in: path
-  #         description: el id del cliente
-  #         schema: {}
-  #         required: true
-  #       # - name: idSale
-  #       #   in: query
-  #       #   description: el id del presupuesto en particular
-  #       #   schema:
-  #       #     type: integer
-  #       #     format: int64
-  #       #   required: false
-  #       # - name: status
-  #       #   in: query
-  #       #   description: el estatus
-  #       #   schema:
-  #       #     type: string
-  #       #   required: false
-  #     responses:
-  #       200:
-  #         description: listado de ventas
-  #         content: {}
-  #         headers:
-  #           Access-Control-Allow-Origin:
-  #             schema:
-  #               type: string
-  #           Access-Control-Allow-Methods:
-  #             schema:
-  #               type: string
-  #           Access-Control-Allow-Headers:
-  #             schema:
-  #               type: string
-  #       500:
-  #         description: Error
-  #         content:
-  #           application/json:
-  #             schema: 
-  #               $ref: '#/components/schemas/Error'
+  /client/{idClient}/sales:
+    get:
+      tags:
+        - Presupuestos
+      summary: Obtiene todos los presupuestos de un cliente
+      description: Obtiene los presupuestos de un cliente en concreto
+      operationId: GetClientSale
+      parameters:
+        - name: idClient
+          in: path
+          description: el id del cliente
+          schema: {}
+          required: true
+        # - name: idSale
+        #   in: query
+        #   description: el id del presupuesto en particular
+        #   schema:
+        #     type: integer
+        #     format: int64
+        #   required: false
+        # - name: status
+        #   in: query
+        #   description: el estatus
+        #   schema:
+        #     type: string
+        #   required: false
+      responses:
+        200:
+          description: listado de ventas
+          content: {}
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
   /clients:
     get:
       tags:
@@ -380,604 +380,604 @@ paths:
             application/json:
               schema: 
                 $ref: '#/components/schemas/Error'
-  # /sales:
-  #   get:
-  #     tags:
-  #       - Presupuestos
-  #     summary: Obtiene todos los presupuestos
-  #     description: Obtiene un listado de todos los presupuestos
-  #     operationId: GetSales
-  #     parameters: []
-  #     responses:
-  #       200:
-  #         description: estos son todos los presupuestos
-  #         content: {}
-  #         headers:
-  #           Access-Control-Allow-Origin:
-  #             schema:
-  #               type: string
-  #           Access-Control-Allow-Methods:
-  #             schema:
-  #               type: string
-  #           Access-Control-Allow-Headers:
-  #             schema:
-  #               type: string
-  #       500:
-  #         description: Error
-  #         content:
-  #           application/json:
-  #             schema: 
-  #               $ref: '#/components/schemas/Error'
-  # /sale:
-  #   post:
-  #     tags:
-  #       - Presupuestos
-  #     summary: Crea un nuevo Presupuesto
-  #     description: Crea un nuevo Presupuesto
-  #     operationId: Createsale
-  #     requestBody:
-  #       content:
-  #         application/json:
-  #           schema:
-  #             $ref: "#/components/schemas/NewSale"
-  #     responses:
-  #       200:
-  #         description: Devuelve el id del presupuesto creado
-  #         content: {}
-  #         headers:
-  #           Access-Control-Allow-Origin:
-  #             schema:
-  #               type: string
-  #           Access-Control-Allow-Methods:
-  #             schema:
-  #               type: string
-  #           Access-Control-Allow-Headers:
-  #             schema:
-  #               type: string
-  #       500:
-  #         description: Error
-  #         content:
-  #           application/json:
-  #             schema: 
-  #               $ref: '#/components/schemas/Error'
-  # /sale/{idSale}:
-  #   get:
-  #     tags:
-  #       - Presupuestos
-  #     summary: Obtiene un presupuesto
-  #     description: Obtiene un presupuesto basándose en el ID
-  #     operationId: GetSaleById
-  #     parameters:
-  #       - name: idSale
-  #         in: path
-  #         description: El ID del presupuesto
-  #         schema: {}
-  #         required: true
-  #     responses:
-  #       200:
-  #         description: Un Presupuesto
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/Sale'
-  #         headers:
-  #           Access-Control-Allow-Origin:
-  #             schema:
-  #               type: string
-  #           Access-Control-Allow-Methods:
-  #             schema:
-  #               type: string
-  #           Access-Control-Allow-Headers:
-  #             schema:
-  #               type: string
-  #       500:
-  #         description: Error
-  #         content:
-  #           application/json:
-  #             schema: 
-  #               $ref: '#/components/schemas/Error'
-  #   put:
-  #     tags:
-  #       - Presupuestos
-  #     summary: Actualiza un presupuesto
-  #     description: Actualiza un presupuesto basándose en el ID
-  #     operationId: UpdateSale
-  #     parameters:
-  #       - name: idSale
-  #         in: path
-  #         description: El ID del presupuesto
-  #         schema: {}
-  #         required: true
-  #     requestBody:
-  #       content:
-  #         application/json: {}
-  #     responses:
-  #       200:
-  #         description: Un Presupuesto
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/Sale'
-  #         headers:
-  #           Access-Control-Allow-Origin:
-  #             schema:
-  #               type: string
-  #           Access-Control-Allow-Methods:
-  #             schema:
-  #               type: string
-  #           Access-Control-Allow-Headers:
-  #             schema:
-  #               type: string
-  #       500:
-  #         description: Error
-  #         content:
-  #           application/json:
-  #             schema: 
-  #               $ref: '#/components/schemas/Error'
-  #   delete:
-  #     tags:
-  #       - Presupuestos
-  #     summary: Borra logicamente un presupuesto
-  #     description: Borra logicamente un presupuesto basándose en el ID
-  #     operationId: DeleteSale
-  #     parameters:
-  #       - name: idSale
-  #         in: path
-  #         description: El ID del presupuesto
-  #         schema: {}
-  #         required: true
-  #     responses:
-  #       200:
-  #         description: Un Presupuesto
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/Sale'
-  #         headers:
-  #           Access-Control-Allow-Origin:
-  #             schema:
-  #               type: string
-  #           Access-Control-Allow-Methods:
-  #             schema:
-  #               type: string
-  #           Access-Control-Allow-Headers:
-  #             schema:
-  #               type: string
-  #       500:
-  #         description: Error
-  #         content:
-  #           application/json:
-  #             schema: 
-  #               $ref: '#/components/schemas/Error'
-  # /sale/{idSale}/addProducts:
-  #   post:
-  #     tags:
-  #       - agrega productos
-  #     summary: agrega, quita, actualiza productos de un presupuesto
-  #     description: agrega, quita, actualiza productos de un presupuesto
-  #     operationId: AddOrRemoveProducts
-  #     parameters:
-  #       - name: idSale
-  #         in: path
-  #         description: el id del presupuesto
-  #         schema: {}
-  #         required: true
-  #     requestBody:
-  #       content:
-  #         application/json:
-  #           schema:
-  #             $ref: "#/components/schemas/addProducts"
-  #     responses:
-  #       200:
-  #         description: crea productos
-  #         content: {}
-  #         headers:
-  #           Access-Control-Allow-Origin:
-  #             schema:
-  #               type: string
-  #           Access-Control-Allow-Methods:
-  #             schema:
-  #               type: string
-  #           Access-Control-Allow-Headers:
-  #             schema:
-  #               type: string
-  #       500:
-  #         description: Error
-  #         content:
-  #           application/json:
-  #             schema: 
-  #               $ref: '#/components/schemas/Error'
-  # /sale/getNextDueDate/{idClient}:
-  #   get:
-  #     tags:
-  #       - Presupuestos
-  #     summary: Obtiene la proxima fecha de vencimiento de un presupuesto
-  #     description: Obtiene la proxima fecha de vencimiento de un presupuesto
-  #     operationId: GetNextDueDate
-  #     parameters:
-  #       - name: idClient
-  #         in: path
-  #         description: el id del cliente
-  #         schema: {}
-  #         required: true
-  #     responses:
-  #       200:
-  #         description: Un Objeto DueDate
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/DueDate'
-  #         headers:
-  #           Access-Control-Allow-Origin:
-  #             schema:
-  #               type: string
-  #           Access-Control-Allow-Methods:
-  #             schema:
-  #               type: string
-  #           Access-Control-Allow-Headers:
-  #             schema:
-  #               type: string
-  #       500:
-  #         description: Error
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/Error'
-  # /product:
-  #   post:
-  #     tags:
-  #       - Productos
-  #     summary: Crea un nuevo Producto
-  #     description: Crea un nuevo Producto
-  #     operationId: CreateProduct
-  #     requestBody:
-  #       content:
-  #         application/json:
-  #           schema:
-  #             $ref: "#/components/schemas/Product"
-  #     responses:
-  #       200:
-  #         description: Devuelve el id del Producto creado
-  #         content: {}
-  #         headers:
-  #           Access-Control-Allow-Origin:
-  #             schema:
-  #               type: string
-  #           Access-Control-Allow-Methods:
-  #             schema:
-  #               type: string
-  #           Access-Control-Allow-Headers:
-  #             schema:
-  #               type: string
-  #       500:
-  #         description: Error
-  #         content:
-  #           application/json:
-  #             schema: 
-  #               $ref: '#/components/schemas/Error'
-  #   get:
-  #     tags:
-  #       - Productos
-  #     summary: Te devuelve todos los productos
-  #     description: Te devuelve todos los productos
-  #     operationId: GetProducts
-  #     parameters: []
-  #     responses:
-  #       200:
-  #         description: listado de productos
-  #         content: {}
-  #         headers:
-  #           Access-Control-Allow-Origin:
-  #             schema:
-  #               type: string
-  #           Access-Control-Allow-Methods:
-  #             schema:
-  #               type: string
-  #           Access-Control-Allow-Headers:
-  #             schema:
-  #               type: string
-  #       500:
-  #         description: Error
-  #         content:
-  #           application/json:
-  #             schema: 
-  #               $ref: '#/components/schemas/Error'
-  # /product/{idProduct}:
-  #   get:
-  #     tags:
-  #       - Productos
-  #     summary: Obtiene un producto
-  #     description: Obtiene un producto en particular basado en su id
-  #     operationId: GetProductById
-  #     parameters:
-  #       - name: idProduct
-  #         in: path
-  #         description: el id del producto
-  #         schema:
-  #           type: number
-  #         required: true
-  #     responses:
-  #       200:
-  #         description: Un producto
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/Product'
-  #         headers:
-  #           Access-Control-Allow-Origin:
-  #             schema:
-  #               type: string
-  #           Access-Control-Allow-Methods:
-  #             schema:
-  #               type: string
-  #           Access-Control-Allow-Headers:
-  #             schema:
-  #               type: string
-  #       500:
-  #         description: Error
-  #         content:
-  #           application/json:
-  #             schema: 
-  #               $ref: '#/components/schemas/Error'
-  #   delete:
-  #     tags:
-  #       - Productos
-  #     summary: Da de baja un producto
-  #     description: Da de baja lógica un producto que estaba en estado pendiente
-  #     operationId: DeleteProduct
-  #     parameters:
-  #       - name: idProduct
-  #         in: path
-  #         description: el id del producto
-  #         schema: {}
-  #         required: true
-  #     responses:
-  #       200:
-  #         description: listado de clientes
-  #         content: {}
-  #         headers:
-  #           Access-Control-Allow-Origin:
-  #             schema:
-  #               type: string
-  #           Access-Control-Allow-Methods:
-  #             schema:
-  #               type: string
-  #           Access-Control-Allow-Headers:
-  #             schema:
-  #               type: string
-  #       500:
-  #         description: Error
-  #         content:
-  #           application/json:
-  #             schema: 
-  #               $ref: '#/components/schemas/Error'
-  #   put:
-  #     tags:
-  #       - Productos
-  #     summary: Crea un nuevo Producto
-  #     description: Crea un nuevo Producto
-  #     operationId: UpdateProduct
-  #     parameters:
-  #       - name: idProduct
-  #         in: path
-  #         description: el id del Producto
-  #         schema: {}
-  #         required: true
-  #     requestBody:
-  #       content:
-  #         application/json:
-  #           schema:
-  #             $ref: "#/components/schemas/Product"
-  #     responses:
-  #       200:
-  #         description: Devuelve el id del presupuesto creado
-  #         content: {}
-  #         headers:
-  #           Access-Control-Allow-Origin:
-  #             schema:
-  #               type: string
-  #           Access-Control-Allow-Methods:
-  #             schema:
-  #               type: string
-  #           Access-Control-Allow-Headers:
-  #             schema:
-  #               type: string
-  #       500:
-  #         description: Error
-  #         content:
-  #           application/json:
-  #             schema: 
-  #               $ref: '#/components/schemas/Error'
-  # /products:
-  #   get:
-  #     tags:
-  #       - Productos
-  #     summary: Obtiene los productos con datos.
-  #     description: Obtiene los productos con sus respectivos proveedores.
-  #     operationId: GetProductWithProvider
-  #     responses:
-  #       200:
-  #         description: Productos con proveedores
-  #         content: {}
-  #         headers:
-  #           Access-Control-Allow-Origin:
-  #             schema:
-  #               type: string
-  #           Access-Control-Allow-Methods:
-  #             schema:
-  #               type: string
-  #           Access-Control-Allow-Headers:
-  #             schema:
-  #               type: string
-  #       500:
-  #         description: Error
-  #         content:
-  #           application/json:
-  #             schema: 
-  #               $ref: '#/components/schemas/Error'
-  # /provider:
-  #   post:
-  #     tags:
-  #       - Proveedores
-  #     summary: Crea un nuevo Proveedor
-  #     description: Crea un nuevo Proveedor
-  #     operationId: CreateProvider
-  #     requestBody:
-  #       content:
-  #         application/json:
-  #           schema:
-  #             $ref: "#/components/schemas/Provider"
-  #     responses:
-  #       200:
-  #         description: Devuelve el id del proveedor creado
-  #         content: {}
-  #         headers:
-  #           Access-Control-Allow-Origin:
-  #             schema:
-  #               type: string
-  #           Access-Control-Allow-Methods:
-  #             schema:
-  #               type: string
-  #           Access-Control-Allow-Headers:
-  #             schema:
-  #               type: string
-  #       500:
-  #         description: Error
-  #         content:
-  #           application/json:
-  #             schema: 
-  #               $ref: '#/components/schemas/Error'
-  #   get:
-  #     tags:
-  #       - Proveedores
-  #     summary: Te devuelve todos los Proveedores
-  #     description: Te devuelve todos los Proveedores
-  #     operationId: GetProviders
-  #     responses:
-  #       200:
-  #         description: listado de clientes
-  #         content: {}
-  #         headers:
-  #           Access-Control-Allow-Origin:
-  #             schema:
-  #               type: string
-  #           Access-Control-Allow-Methods:
-  #             schema:
-  #               type: string
-  #           Access-Control-Allow-Headers:
-  #             schema:
-  #               type: string
-  #       500:
-  #         description: Error
-  #         content:
-  #           application/json:
-  #             schema: 
-  #               $ref: '#/components/schemas/Error'
-  # /provider/{idProvider}:
-    # delete:
-    #   tags:
-    #     - Proveedores
-    #   summary: Da de baja un Proveedor
-    #   description: Da de baja lógica un Proveedor
-    #   operationId: DeleteProvider
-    #   parameters:
-    #     - name: idProvider
-    #       in: path
-    #       description: el id del Proveedores
-    #       schema: {}
-    #       required: true
-    #   responses:
-    #     200:
-    #       description: un proveedor
-    #       content:
-    #         application/json:
-    #           schema:
-    #             $ref: '#/components/schemas/Provider'
-    #       headers:
-    #         Access-Control-Allow-Origin:
-    #           schema:
-    #             type: string
-    #         Access-Control-Allow-Methods:
-    #           schema:
-    #             type: string
-    #         Access-Control-Allow-Headers:
-    #           schema:
-    #             type: string
-    #     500:
-    #       description: Error
-    #       content:
-    #         application/json:
-    #           schema: 
-    #             $ref: '#/components/schemas/Error'
-    # get:
-    #   tags:
-    #     - Proveedores
-    #   summary: Te devuelve el Proveedor
-    #   description: Te devuelve el Proveedores con el id proporcionado
-    #   operationId: GetProviderById
-    #   parameters:
-    #     - name: idProvider
-    #       in: path
-    #       description: el id del proveedor
-    #       schema: {}
-    #       required: true
-    #   responses:
-    #     200:
-    #       description: listado de clientes
-    #       content: {}
-    #       headers:
-    #         Access-Control-Allow-Origin:
-    #           schema:
-    #             type: string
-    #         Access-Control-Allow-Methods:
-    #           schema:
-    #             type: string
-    #         Access-Control-Allow-Headers:
-    #           schema:
-    #             type: string
-    #     500:
-    #       description: Error
-    #       content:
-    #         application/json:
-    #           schema: 
-    #             $ref: '#/components/schemas/Error'
-    # put:
-      # tags:
-      #   - Proveedores
-      # summary: Actualiza un Proveedor
-      # description: Actualiza un Proveedor
-      # operationId: UpdateProvider
-      # parameters:
-      #   - name: idProvider
-      #     in: path
-      #     description: el id del presupuesto
-      #     schema: {}
-      #     required: true
-      # requestBody:
-      #   content:
-      #     application/json:
-      #       schema:
-      #         $ref: "#/components/schemas/Provider"
-      # responses:
-      #   200:
-      #     description: Devuelve el id del presupuesto creado
-      #     content: {}
-      #     headers:
-      #       Access-Control-Allow-Origin:
-      #         schema:
-      #           type: string
-      #       Access-Control-Allow-Methods:
-      #         schema:
-      #           type: string
-      #       Access-Control-Allow-Headers:
-      #         schema:
-      #           type: string
-      #   500:
-      #     description: Error
-      #     content:
-      #       application/json:
-      #         schema: 
-      #           $ref: '#/components/schemas/Error'
+  /sales:
+    get:
+      tags:
+        - Presupuestos
+      summary: Obtiene todos los presupuestos
+      description: Obtiene un listado de todos los presupuestos
+      operationId: GetSales
+      parameters: []
+      responses:
+        200:
+          description: estos son todos los presupuestos
+          content: {}
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
+  /sale:
+    post:
+      tags:
+        - Presupuestos
+      summary: Crea un nuevo Presupuesto
+      description: Crea un nuevo Presupuesto
+      operationId: Createsale
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewSale"
+      responses:
+        200:
+          description: Devuelve el id del presupuesto creado
+          content: {}
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
+  /sale/{idSale}:
+    get:
+      tags:
+        - Presupuestos
+      summary: Obtiene un presupuesto
+      description: Obtiene un presupuesto basándose en el ID
+      operationId: GetSaleById
+      parameters:
+        - name: idSale
+          in: path
+          description: El ID del presupuesto
+          schema: {}
+          required: true
+      responses:
+        200:
+          description: Un Presupuesto
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sale'
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+        - Presupuestos
+      summary: Actualiza un presupuesto
+      description: Actualiza un presupuesto basándose en el ID
+      operationId: UpdateSale
+      parameters:
+        - name: idSale
+          in: path
+          description: El ID del presupuesto
+          schema: {}
+          required: true
+      requestBody:
+        content:
+          application/json: {}
+      responses:
+        200:
+          description: Un Presupuesto
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sale'
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - Presupuestos
+      summary: Borra logicamente un presupuesto
+      description: Borra logicamente un presupuesto basándose en el ID
+      operationId: DeleteSale
+      parameters:
+        - name: idSale
+          in: path
+          description: El ID del presupuesto
+          schema: {}
+          required: true
+      responses:
+        200:
+          description: Un Presupuesto
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sale'
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
+  /sale/{idSale}/addProducts:
+    post:
+      tags:
+        - agrega productos
+      summary: agrega, quita, actualiza productos de un presupuesto
+      description: agrega, quita, actualiza productos de un presupuesto
+      operationId: AddOrRemoveProducts
+      parameters:
+        - name: idSale
+          in: path
+          description: el id del presupuesto
+          schema: {}
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/addProducts"
+      responses:
+        200:
+          description: crea productos
+          content: {}
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
+  /sale/getNextDueDate/{idClient}:
+    get:
+      tags:
+        - Presupuestos
+      summary: Obtiene la proxima fecha de vencimiento de un presupuesto
+      description: Obtiene la proxima fecha de vencimiento de un presupuesto
+      operationId: GetNextDueDate
+      parameters:
+        - name: idClient
+          in: path
+          description: el id del cliente
+          schema: {}
+          required: true
+      responses:
+        200:
+          description: Un Objeto DueDate
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DueDate'
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /product:
+    post:
+      tags:
+        - Productos
+      summary: Crea un nuevo Producto
+      description: Crea un nuevo Producto
+      operationId: CreateProduct
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Product"
+      responses:
+        200:
+          description: Devuelve el id del Producto creado
+          content: {}
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
+    get:
+      tags:
+        - Productos
+      summary: Te devuelve todos los productos
+      description: Te devuelve todos los productos
+      operationId: GetProducts
+      parameters: []
+      responses:
+        200:
+          description: listado de productos
+          content: {}
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
+  /product/{idProduct}:
+    get:
+      tags:
+        - Productos
+      summary: Obtiene un producto
+      description: Obtiene un producto en particular basado en su id
+      operationId: GetProductById
+      parameters:
+        - name: idProduct
+          in: path
+          description: el id del producto
+          schema:
+            type: number
+          required: true
+      responses:
+        200:
+          description: Un producto
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - Productos
+      summary: Da de baja un producto
+      description: Da de baja lógica un producto que estaba en estado pendiente
+      operationId: DeleteProduct
+      parameters:
+        - name: idProduct
+          in: path
+          description: el id del producto
+          schema: {}
+          required: true
+      responses:
+        200:
+          description: listado de clientes
+          content: {}
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+        - Productos
+      summary: Crea un nuevo Producto
+      description: Crea un nuevo Producto
+      operationId: UpdateProduct
+      parameters:
+        - name: idProduct
+          in: path
+          description: el id del Producto
+          schema: {}
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Product"
+      responses:
+        200:
+          description: Devuelve el id del presupuesto creado
+          content: {}
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
+  /products:
+    get:
+      tags:
+        - Productos
+      summary: Obtiene los productos con datos.
+      description: Obtiene los productos con sus respectivos proveedores.
+      operationId: GetProductWithProvider
+      responses:
+        200:
+          description: Productos con proveedores
+          content: {}
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
+  /provider:
+    post:
+      tags:
+        - Proveedores
+      summary: Crea un nuevo Proveedor
+      description: Crea un nuevo Proveedor
+      operationId: CreateProvider
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Provider"
+      responses:
+        200:
+          description: Devuelve el id del proveedor creado
+          content: {}
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
+    get:
+      tags:
+        - Proveedores
+      summary: Te devuelve todos los Proveedores
+      description: Te devuelve todos los Proveedores
+      operationId: GetProviders
+      responses:
+        200:
+          description: listado de clientes
+          content: {}
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
+  /provider/{idProvider}:
+    delete:
+      tags:
+        - Proveedores
+      summary: Da de baja un Proveedor
+      description: Da de baja lógica un Proveedor
+      operationId: DeleteProvider
+      parameters:
+        - name: idProvider
+          in: path
+          description: el id del Proveedores
+          schema: {}
+          required: true
+      responses:
+        200:
+          description: un proveedor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Provider'
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
+    get:
+      tags:
+        - Proveedores
+      summary: Te devuelve el Proveedor
+      description: Te devuelve el Proveedores con el id proporcionado
+      operationId: GetProviderById
+      parameters:
+        - name: idProvider
+          in: path
+          description: el id del proveedor
+          schema: {}
+          required: true
+      responses:
+        200:
+          description: listado de clientes
+          content: {}
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+        - Proveedores
+      summary: Actualiza un Proveedor
+      description: Actualiza un Proveedor
+      operationId: UpdateProvider
+      parameters:
+        - name: idProvider
+          in: path
+          description: el id del presupuesto
+          schema: {}
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Provider"
+      responses:
+        200:
+          description: Devuelve el id del presupuesto creado
+          content: {}
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
     # post:
     #   tags:
     #     - Proveedores
@@ -1015,138 +1015,138 @@ paths:
     #         application/json:
     #           schema: 
     #             $ref: '#/components/schemas/Error'
-  # /search/client:
-  #   get:
-  #     tags:
-  #       - Search
-  #     summary: Busca clientes
-  #     description: Te devuelve clientes que coincidan con la consulta
-  #     operationId: SearchClient
-  #     requestBody:
-  #       content:
-  #         application/json:
-  #           schema:
-  #             $ref: "#/components/schemas/Search"
-  #             required: true
-  #     responses:
-  #       200:
-  #         description: listado de clientes
-  #         content: {}
-  #         headers:
-  #           Access-Control-Allow-Origin:
-  #             schema:
-  #               type: string
-  #           Access-Control-Allow-Methods:
-  #             schema:
-  #               type: string
-  #           Access-Control-Allow-Headers:
-  #             schema:
-  #               type: string
-  #       500:
-  #         description: Error
-  #         content:
-  #           application/json:
-  #             schema: 
-  #               $ref: '#/components/schemas/Error'
-  # /search/sale:
-  #   get:
-  #     tags:
-  #       - Search
-  #     summary: Busca el Presupuesto
-  #     description: Te devuelve el presupuesto que coincidan con la consulta
-  #     operationId: SearchSale
-  #     requestBody:
-  #       content:
-  #         application/json:
-  #           schema:
-  #             $ref: "#/components/schemas/Search"
-  #             required: true
-  #     responses:
-  #       200:
-  #         description: listado de presupuestos
-  #         content: {}
-  #         headers:
-  #           Access-Control-Allow-Origin:
-  #             schema:
-  #               type: string
-  #           Access-Control-Allow-Methods:
-  #             schema:
-  #               type: string
-  #           Access-Control-Allow-Headers:
-  #             schema:
-  #               type: string
-  #       500:
-  #         description: Error
-  #         content:
-  #           application/json:
-  #             schema: 
-  #               $ref: '#/components/schemas/Error'
-  # /search/product:
-  #   get:
-  #     tags:
-  #       - Search
-  #     summary: Busca productos
-  #     description: Te devuelve productos que coincidan con la consulta
-  #     operationId: SearchProduct
-  #     requestBody:
-  #       content:
-  #         application/json:
-  #           schema:
-  #             $ref: "#/components/schemas/Search"
-  #             required: true
-  #     responses:
-  #       200:
-  #         description: listado de productos
-  #         content: {}
-  #         headers:
-  #           Access-Control-Allow-Origin:
-  #             schema:
-  #               type: string
-  #           Access-Control-Allow-Methods:
-  #             schema:
-  #               type: string
-  #           Access-Control-Allow-Headers:
-  #             schema:
-  #               type: string
-  #       500:
-  #         description: Error
-  #         content:
-  #           application/json:
-  #             schema: 
-  #               $ref: '#/components/schemas/Error'
-  # /search/provider:
-    # get:
-    #   tags:
-    #     - Search
-    #   summary: Busca Provedores
-    #   description: Te devuelve provedores que coincidan con la consulta
-    #   operationId: SearchProvider
-    #   requestBody:
-    #     content:
-    #       application/json:
-    #         schema:
-    #           $ref: "#/components/schemas/Search"
-    #           required: true
-    #   responses:
-    #     200:
-    #       description: listado de provedores
-    #       content: {}
-    #       headers:
-    #         Access-Control-Allow-Origin:
-    #           schema:
-    #             type: string
-    #         Access-Control-Allow-Methods:
-    #           schema:
-    #             type: string
-    #         Access-Control-Allow-Headers:
-    #           schema:
-    #             type: string
-    #     500:
-    #       description: Error
-    #       content:
-    #         application/json:
-    #           schema: 
-    #             $ref: '#/components/schemas/Error'
+  /search/client:
+    get:
+      tags:
+        - Search
+      summary: Busca clientes
+      description: Te devuelve clientes que coincidan con la consulta
+      operationId: SearchClient
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Search"
+              required: true
+      responses:
+        200:
+          description: listado de clientes
+          content: {}
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
+  /search/sale:
+    get:
+      tags:
+        - Search
+      summary: Busca el Presupuesto
+      description: Te devuelve el presupuesto que coincidan con la consulta
+      operationId: SearchSale
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Search"
+              required: true
+      responses:
+        200:
+          description: listado de presupuestos
+          content: {}
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
+  /search/product:
+    get:
+      tags:
+        - Search
+      summary: Busca productos
+      description: Te devuelve productos que coincidan con la consulta
+      operationId: SearchProduct
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Search"
+              required: true
+      responses:
+        200:
+          description: listado de productos
+          content: {}
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
+  /search/provider:
+    get:
+      tags:
+        - Search
+      summary: Busca Provedores
+      description: Te devuelve provedores que coincidan con la consulta
+      operationId: SearchProvider
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Search"
+              required: true
+      responses:
+        200:
+          description: listado de provedores
+          content: {}
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
   /count:
     get:
       tags: 
