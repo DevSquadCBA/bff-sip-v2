@@ -125,7 +125,7 @@ Resources:
         Properties:
             DomainName: 
                 Fn::ImportValue: !Sub "ApiGatewayDomain${Environment}"
-            RestApiId: !Ref ProvimatRestApi
+            RestApiId: !Ref PiattiRestApi
             Stage: !Ref Environment
 
 # Layers
