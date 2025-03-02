@@ -19,4 +19,4 @@ aws s3api create-bucket --bucket %BUCKET%-persistance
 aws s3api create-bucket --bucket %BUCKET%
 
 echo "================== Build =================="
-@REM sam deploy  --template-file persistance.yaml --no-confirm-changeset --s3-bucket %BUCKET% --region %REGION_1% --profile %PROFILE% --stack-name %STACK% --capabilities CAPABILITY_NAMED_IAM --parameter-overrides ACMCertificateArn=%ARN_CERT%
+sam deploy  --template-file persistance.yaml --no-confirm-changeset --s3-bucket %BUCKET% --region %REGION_1% --profile %PROFILE% --stack-name %STACK% --capabilities CAPABILITY_NAMED_IAM --parameter-overrides ACMCertificateArn=%ARN_CERT%
