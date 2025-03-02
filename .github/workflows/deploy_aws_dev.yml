@@ -32,10 +32,10 @@ jobs:
           sam build -p --beta-features
       - name: Deploy
         run: |
-          for /f "tokens=*" %%a in ('aws sts get-caller-identity --query Account --output text') do set AWS_ACCOUNT_NUMBER=%%a
           ENVIRONMENT=develop
           CI_PROJECT_NAME=bff-sip-api
           STACK=$ENVIRONMENT-$CI_PROJECT_NAME
-          BUCKET=%AWS_ACCOUNT_NUMBER%-$STACK-deploy-piatti
+          AWS_ACCOUNT_NUMBER=$(aws sts get-caller-identity --query Account --output text)
+          BUCKET="${AWS_ACCOUNT_NUMBER}-${STACK}-deploy-piatti"
           REGION_1=us-east-1
           sam deploy --no-confirm-changeset --s3-bucket $BUCKET --region $REGION_1 --stack-name $STACK --capabilities CAPABILITY_NAMED_IAM --parameter-overrides Environment=$ENVIRONMENT
