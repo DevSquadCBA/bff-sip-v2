@@ -54,11 +54,11 @@ Conditions:
 
 ### ENV VARS ###
 Mappings:
-    # Stage:
-    #     develop:
-    #         DomainName: 'dev-sip.devsquadcba.com'
-    #     prod:
-    #         DomainName: 'sip.devsquadcba.com'
+    Stage:
+        develop:
+            DomainName: 'dev-sip.piatti-erp.com'
+        prod:
+            DomainName: 'sip.piatti-erp.com'
     Static:
         Parameters:
             FilterPattern: '[event=REPORT* || event="*DATADOG_EVENT*"]'

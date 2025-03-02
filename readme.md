@@ -72,7 +72,7 @@ Una vez configurado el dominio despliega el stack con:
 ```
 
 ### Despliegue de la aplicación de stack
-En este template no debes modificar nada. <br>
+En el template.yaml, debes configurar el dominio en Mappings stage, para que coincida con tu dominio <br>
 Debes modificar el entorno dentro de scripts/manual_deploy.[sh|bat] por prod si quieres despegar a prod<br>
 Luego deberás ejecutar:
 
