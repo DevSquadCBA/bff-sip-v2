@@ -19,7 +19,15 @@ const domain = async (event:Event): Promise<{body:string, statusCode:number}> =>
             statusCode: 401
         }
     }
-    await sequelize.sync({alter:true, force:true})
+    try{
+        // check if db exists
+        await sequelize.authenticate();
+        console.log('db exists');
+    }catch(e){
+        // create db
+        await sequelize.sync();
+    }
+    await sequelize.sync({alter:true, force:false})
     await createStores(sequelize);
     return {
         body: 'ok',

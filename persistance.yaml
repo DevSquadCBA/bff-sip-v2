@@ -1,0 +1,57 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: 'Stack de Infraestructura Agnóstica - Certificado SSL, API Gateway Domains'
+
+Parameters:
+    DomainName:
+        Type: String
+        Description: 'Dominio principal en Cloudflare'
+        Default: 'piatti-erp.com'
+
+    SubDomainDevelop:
+        Type: String
+        Description: 'Subdominio para entorno de desarrollo'
+        Default: 'dev-sip'
+
+    SubDomainProd:
+        Type: String
+        Description: 'Subdominio para entorno de producción'
+        Default: 'sip'
+
+    ACMCertificateArn:
+        Type: String
+        Description: 'ARN del Certificado SSL en AWS ACM (Validado manualmente)'
+
+Resources:
+    ## Dominio personalizado en API Gateway para Develop
+    ProvimatDomainDevelop:
+        Type: AWS::ApiGateway::DomainName
+        Properties:
+            DomainName: !Sub "${SubDomainDevelop}.${DomainName}"
+            EndpointConfiguration:
+                Types:
+                    - REGIONAL
+            RegionalCertificateArn: !Ref ACMCertificateArn
+
+    ## Dominio personalizado en API Gateway para Prod
+    ProvimatDomainProd:
+        Type: AWS::ApiGateway::DomainName
+        Properties:
+            DomainName: !Sub "${SubDomainProd}.${DomainName}"
+            EndpointConfiguration:
+                Types:
+                    - REGIONAL
+            RegionalCertificateArn: !Ref ACMCertificateArn
+
+Outputs:
+    ApiGatewayDomainDevelop:
+        Description: 'API Gateway DomainName para Develop'
+        Value: !Ref ProvimatDomainDevelop
+        Export:
+            Name: ApiGatewayDomainDevelop
+
+    ApiGatewayDomainProd:
+        Description: 'API Gateway DomainName para Production'
+        Value: !Ref ProvimatDomainProd
+        Export:
+            Name: ApiGatewayDomainProd
