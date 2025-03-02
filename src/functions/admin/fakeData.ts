@@ -34,7 +34,7 @@ function fakeClient():IClient{
         localidad: faker.location.city(),
         address: faker.location.streetAddress(),
         deleted: false,
-        fiscalCategory: faker.helpers.arrayElement(['responsable_inscripto','monotributista','consumidor_final'])
+        fiscalCategory: faker.helpers.arrayElement(['Consumidor Final', 'Monotributista', 'Responsable Inscripto', 'Exento', 'No categorizado'])
     }
 }
 
