@@ -242,8 +242,7 @@ paths:
           required: true
       requestBody:
         content:
-          application/json:
-            schema: {}
+          application/json: {}
       responses:
         200:
           description: listado de clientes
@@ -481,8 +480,7 @@ paths:
           required: true
       requestBody:
         content:
-          application/json:
-            schema: {}
+          application/json: {}
       responses:
         200:
           description: Un Presupuesto
@@ -1179,13 +1177,14 @@ paths:
         200:
           description: 'ok'            
           content:
-            application/json:
+            text/plain:
               schema:
                 type: string
+                example: "ok"
         401:
           description: NotAuthorized
           content:
-            application/json:
+             text/plain:
               schema:
                 type: string
   /admin/fakeData:
@@ -1199,13 +1198,13 @@ paths:
         200:
           description: 'ok'            
           content:
-            application/json:
+             text/plain:
               schema:
                 type: string
         401:
           description: NotAuthorized
           content:
-            application/json:
+             text/plain:
               schema:
                 type: string
   
@@ -1348,3 +1347,32 @@ components:
         idSale:
           type: integer
           example: 1
+    User:
+      type: object
+      required:
+        - id
+        - name
+        - email
+        - phone
+        - password
+        - role_id
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: integer
+        password:
+          type: string
+        whatsapp:
+          type: integer
+        address:
+          type: string
+        role_id:
+          type: integer
+          enum: [1,2,3]
+    Token:
+      type: string
