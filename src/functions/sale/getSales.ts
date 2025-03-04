@@ -6,13 +6,25 @@ import { ApiGatewayParsedEvent } from 'types/response-factory/proxies';
 import { LambdaResolver } from 'utils/lambdaResolver';
 interface Event extends ApiGatewayParsedEvent {}
 
+type whereCondition = {
+    deleted: boolean,
+    entity: string,
+    state?: string
+}
 
 const domain = async (event:Event): Promise<{body:SaleWithProduct[], statusCode:number}> => {
+    let where:whereCondition = {
+        deleted: false,
+        entity: event.headers.entity,
+    };
+    if (event.queryStringParameters.state) {
+        where =  {
+            ...where,
+            state: event.queryStringParameters.state,
+        }
+    }
     const sales = await Sale.findAll({
-        where:{
-            deleted: false,
-            entity: event.headers.entity
-        },
+        where,
         attributes:{
             exclude: ['deleted']
         },

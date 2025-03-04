@@ -2,6 +2,7 @@ export enum SaleStates {
     presupuesto = 'presupuesto',            // cuando se crea
     proforma = 'proforma',                  // pago parcial o cuando hace un pago
     comprobante = 'comprobante',            // cuando define las caracteristicas
+    
     in_order = 'in_order',                  // cuando le avisa al proveedor
     in_provider = 'in_provider',            // cuando el proveedor acepta el pedido, aca se disparan los estados del producto
     delayed_provider = 'delayed_provider',  // cuando está todo listo, pero el proveedor tiene demora

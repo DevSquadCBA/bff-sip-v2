@@ -60,22 +60,23 @@ const getQueryParams = (req) => url.parse(req.url, true).query;
 
 const extractPathParams = (req, routeTemplate) => {
     const routeParts = routeTemplate.split('/');
-    const urlParts = req.url.split('?')[0].split('/');
+    const urlParts = req.url.split('/');
     const pathParams = {};
 
     routeParts.forEach((part, index) => {
-        if (part.startsWith(':')) {
+       // if (part.startsWith(':')) {
             const paramName = part.slice(1);
             pathParams[paramName] = urlParts[index];
-        }
+       // }
     });
 
     return pathParams;
 };
 
 
-/**  @param { import("http").IncomingMessage } req */
+
 const expressToLambda = async (req, path) => {
+    const pathParameters = req.params;
     return{
         body: await getBody(req),
         headers: req.headers,
@@ -84,7 +85,7 @@ const expressToLambda = async (req, path) => {
         isBase64Encoded: false,
         queryStringParameters: getQueryParams(req),
         multiValueQueryStringParameters: getQueryParams(req),
-        pathParameters: extractPathParams(req, path),
+        pathParameters: pathParameters,
         stageVariables: null,
         path: path,
         resource: path,
@@ -113,7 +114,7 @@ for(const path of Object.keys(paths)){
             const requestLambda = await expressToLambda(request, request.url);
             const responseLambda = await handler(requestLambda)
             response.setHeader('Content-Type', 'application/json');
-            response.send(responseLambda.body);
+            response.status(responseLambda.statusCode).send(responseLambda.body);
         });
     }
 }

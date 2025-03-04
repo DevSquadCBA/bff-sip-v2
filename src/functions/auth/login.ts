@@ -18,7 +18,7 @@ interface Event extends ApiGatewayParsedEvent {
 
 const domain = async (event: Event) => {
     const { email, password } = event.body;
-    console.log(email, password);
+    console.log({ email, password });
     const user = await User.findOne({
         where: {
             email
@@ -29,7 +29,7 @@ const domain = async (event: Event) => {
         }
     })
     if (!user) {
-        throw new NotFoundError('Email or password incorrect');
+        throw new NotFoundError('user not found');
     }
     if (user) {
         const isValid = await compare(password, user.password);
@@ -38,7 +38,7 @@ const domain = async (event: Event) => {
         }
     }
     const token = jwt.sign(
-        { id: user.id, email: user.email, role: user.role.name } as IToken,
+        { id: user.id, email: user.email, role: user.role.name,username: user.name } as IToken,
         process.env.JWT as string,
         {expiresIn: '1d',algorithm: 'HS256'}
     );

@@ -32,6 +32,8 @@ Product.belongsToMany(Sale, { through: SaleProduct , foreignKey: 'productId', as
 SaleProduct.belongsTo(Sale, { foreignKey: 'saleId', as:'sale'});
 SaleProduct.belongsTo(Product, { foreignKey: 'productId', as: 'product'});
 
+Product.hasOne(SaleProduct, { foreignKey: 'productId', as: 'saleProduct' });
+
 Product.belongsTo(Provider, { foreignKey: 'providerId', as: 'provider'});
 Sale.belongsTo(Client, { foreignKey: 'clientId'});
 

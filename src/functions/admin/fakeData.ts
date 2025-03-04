@@ -11,9 +11,10 @@ import { IProduct, Product } from 'models/Product';
 import sequelize from 'services/sequelize';
 import { IProvider, Provider } from 'models/Provider';
 import { ISale, Sale } from 'models/Sale';
-import { EntityListValues, SalesStatesValues, StateProduct, StateProductValues } from 'models/Enums';
+import { EntityList,  SalesStatesValues, StateProduct, StateProductValues } from 'models/Enums';
 import { ISaleProduct, SaleProduct } from 'models/SaleProduct';
 import dayjs from 'dayjs';
+import { IUser, User } from 'models/User';
 
 interface Event extends ApiGatewayParsedEvent {
     headers:{
@@ -86,7 +87,7 @@ function fakeSales():ISale{
         deleted: false,
         estimatedDays,
         deadline: !['proforma', 'presupuesto'].includes(state)? dayjs().add(estimatedDays, 'day').toDate(): null,
-        entity: faker.helpers.arrayElement(EntityListValues)
+        entity: EntityList.muebles //' #faker.helpers.arrayElement(EntityListValues)
     }
 }
 
@@ -109,6 +110,16 @@ function fakeSaleProduct():ISaleProduct{
     }
 }
 
+function fakeUser():IUser{
+    return {
+            name: 'Leandro',
+            email: 'leandro@a.com',
+            phone:'1',
+            password: '$2a$12$CTlcYkAN3eM2tb.2u08sM.o.6pGaSxweFQbe7yBAickd3KYS1JM6S', // .
+            roleId:1
+        }
+    
+}
 
 
 async function fakeData(){
@@ -117,12 +128,14 @@ async function fakeData(){
     const products:IProduct[] = faker.helpers.multiple(fakeProducts, {count: 200});
     const sale:ISale[] = faker.helpers.multiple(fakeSales, {count: 20});
     const saleProduct:ISaleProduct[] = faker.helpers.multiple(fakeSaleProduct, {count: 60});
+    const users:IUser[] = faker.helpers.multiple(fakeUser, {count: 1});
 
     await Client.bulkCreate(clients);
     await Provider.bulkCreate(providers);
     await Product.bulkCreate(products);
     await Sale.bulkCreate(sale);
     await SaleProduct.bulkCreate(saleProduct,{ignoreDuplicates:true});
+    await User.bulkCreate(users, {ignoreDuplicates: true});
 }
 
 
