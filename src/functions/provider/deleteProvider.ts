@@ -5,17 +5,17 @@ import { LambdaResolver } from 'utils/lambdaResolver';
 
 interface Event extends ApiGatewayParsedEvent {
     pathParameters: {
-        id: string;
+        idProvider: string;
     };
 }
 
 const domain = async (event: Event): Promise<{ body: string; statusCode: number }> => {
-    const { id } = event.pathParameters;
+    const { idProvider } = event.pathParameters;
 
     try {
         await Provider.destroy({
             where: {
-                id: parseInt(id, 10),
+                id: parseInt(idProvider, 10),
             },
         });
 

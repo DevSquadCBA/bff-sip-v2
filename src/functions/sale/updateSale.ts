@@ -23,11 +23,17 @@ const domain = async (event:Event): Promise<{body:string, statusCode:number}> =>
     if(!id){
         throw new InvalidIdError('Invalid idSale');
     }
-    const saleToUpdate = JSON.parse(event.body) as ISaleUpdateContract;
-    const mappedProducts = saleToUpdate.products.map(e=>({productId: e.id || e.productId, quantity: e.quantity, state: e.state, details: e.details}))
+    const saleToUpdate = typeof event.body === 'string'? JSON.parse(event.body) as ISaleUpdateContract : event.body;
+    const mappedProducts = saleToUpdate.products.map(e=>({productId: e.id || e.productId, quantity: e.quantity, state: e.state, details: e.details, price: e.salePrice}));
     for(const product of mappedProducts){
         await SaleProduct.update(product, {where: {saleId: id, productId: product.productId}, logging:true})
     }
+    let total = mappedProducts.reduce((acc, product)=> {
+        if(!product.price || !product.quantity){return acc}
+        return acc + (product.quantity * product.price)
+    }, 0);
+    console.log({total, mappedProducts});
+    await Sale.update({total}, {where: {id: id}});
     let msg = 'Se han agregado detalles a los productos';
     const allProductsHaveDetails = saleToUpdate.products.every(product=>product.details && product.details?.length>0)
     if(allProductsHaveDetails && saleToUpdate.state !== SaleStates.presupuesto){

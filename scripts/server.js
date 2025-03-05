@@ -50,7 +50,12 @@ const getBody = (req) => {
                 resolve(null);
                 return;
             }
-            resolve(body);// lo envio como string
+            // if body is a string
+            if (typeof body === 'string') {
+                resolve(body);
+                return;
+            }
+            resolve(JSON.stringify(body));// lo envio como string
         });
         req.on('error', (err) => reject(err));
     });
@@ -77,8 +82,11 @@ const extractPathParams = (req, routeTemplate) => {
 
 const expressToLambda = async (req, path) => {
     const pathParameters = req.params;
+    console.log(pathParameters);
+    const body = await getBody(req)
+    console.log(body);
     return{
-        body: await getBody(req),
+        body,
         headers: req.headers,
         multiValueHeaders: req.headers,
         httpMethod: req.method,

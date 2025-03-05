@@ -1,7 +1,9 @@
-import { Client } from 'models/Client';
-import { Product } from 'models/Product';
+import dayjs from 'dayjs';
+import { Client, IClient } from 'models/Client';
+import { IProduct, Product } from 'models/Product';
 import { Provider } from 'models/Provider';
 import { Sale,  ISale } from 'models/Sale';
+import { SaleProduct } from 'models/SaleProduct';
 import { Sequelize } from 'sequelize';
 import { ApiGatewayParsedEvent } from 'types/response-factory/proxies';
 import { Validators } from 'utils/Validator';
@@ -16,80 +18,74 @@ interface Event extends ApiGatewayParsedEvent {
     }
 }
 
+function differenceInCalendarDays(createdAt:string, estimatedDays:number, now: Date): any { 
+    const creationDate = dayjs(createdAt);
+    const deadline = creationDate.add(estimatedDays, 'day');
+    return dayjs(deadline).diff(now, 'day');
+}
+
+type SaleComplete = ISale & {
+    createdAt: string,
+    distinctProviders: number,
+    daysToDueDate: number,
+    total: number
+    client: IClient,
+    products: (IProduct & {
+        provider: Provider
+        saleProduct: SaleProduct
+    })[],
+    get: ({plain}:{plain: boolean}) => any
+}
+
 const domain = async (event:Event): Promise<{body:ISale[], statusCode:number}> => {
     const offset = parseInt(event.queryStringParameters.offset);
     const limit = parseInt(event.queryStringParameters.limit);
     const idClient = parseInt(event.pathParameters.idClient);
     const entity = event.headers.entity;
-    const budgets = await Sale.findAll({
-        offset,
-        limit,
-        where: {
+    let sales = await Sale.findAll({
+        where:{
             clientId: idClient,
+            deleted: false,
             entity
         },
-        attributes: {
-            exclude: ['deleted'],
-            include: [
-                [
-                    Sequelize.literal(`(
-                        SELECT COUNT(DISTINCT p.providerId) 
-                        FROM sale_product sp
-                        INNER JOIN products p ON p.id = sp.productId
-                        WHERE sp.saleId = Sale.id
-                    )`),
-                    'distinctProviders'
-                ],
-                [
-                    Sequelize.literal(`(
-                        SELECT COALESCE(SUM(p.salePrice * sp.quantity), 0)
-                        FROM sale_product sp
-                        INNER JOIN products p ON p.id = sp.productId
-                        WHERE sp.saleId = Sale.id
-                    )`),
-                    'granTotal'
-                ],
-                [
-                    Sequelize.literal(`(
-                        SELECT COUNT(DISTINCT sp.productId)
-                        FROM sale_product sp
-                        WHERE sp.saleId = Sale.id
-                    )`),
-                    'productsCount'
-                ],
-                [
-                    Sequelize.literal(`DATEDIFF(Sale.deadline, NOW())`),
-                    'daysRemaining'
-                ]
-            ]
-        },
         include: [
-            {
-                model: Client,
-                attributes: { exclude: ['deleted'] },
-                where: { deleted: false }
-            },
-            {
-                model: Product,
-                as: 'products',
-                attributes: ['id', 'name', 'code', 'providerId', 'salePrice'],
-                include: [
-                    {
-                        model: Provider,
-                        as: 'provider',
-                        attributes: ['id', 'name']
-                    },
-                ],
-                
-
-            }
-        ]
-    }) as ISale[];
+            {model: Client,attributes: { exclude: ['deleted'] }},
+            {model: Product,
+                attributes: { exclude: ['deleted']},
+                as: 'products', 
+                through: {
+                    attributes: { exclude: ['deleted', 'saleId', 'productId'] }, as: 'saleProduct'},
+                    include: [{model: Provider, as: 'provider'}]
+                },
+        ],
+        limit,
+        offset
+    })as unknown as SaleComplete[];
     
+    if(!sales || sales.length === 0) return {
+        body: [],
+        statusCode: 201
+    };
+    sales = sales.map((saleInstance) => saleInstance.get({ plain: true }));
+    sales = sales.map(sale => {
+        const allProviderIds = sale.products.map(product => product.providerId);
+        const distinctProviders = [...new Set(allProviderIds)];
+        const totalProducts = sale.products.length;
+        const total = sale.products.reduce((acc, product) => acc + product.salePrice * product.saleProduct.quantity, 0);
+        return {
+          ...sale,
+          distinctProviders: distinctProviders.length,
+          totalProducts,
+          deadline:differenceInCalendarDays(sale.createdAt,sale.estimatedDays, new Date()),
+          total
+        };
+    });
+
     return {
-        body: budgets,
-        statusCode: 200
-    }    
+      body: sales,
+      statusCode: 200
+    };
 }
 
 export const Handler = (event:ApiGatewayParsedEvent)=>LambdaResolver(event, domain, [Validators.OFFSET_AND_LIMITS, Validators.ID_CLIENT])
+
