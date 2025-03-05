@@ -70,12 +70,12 @@ const domain = async (event:Event): Promise<{body:ISale[], statusCode:number}> =
     sales = sales.map(sale => {
         const allProviderIds = sale.products.map(product => product.providerId);
         const distinctProviders = [...new Set(allProviderIds)];
-        const totalProducts = sale.products.length;
+        const productsCount = sale.products.length;
         const total = sale.products.reduce((acc, product) => acc + product.salePrice * product.saleProduct.quantity, 0);
         return {
           ...sale,
           distinctProviders: distinctProviders.length,
-          totalProducts,
+          productsCount,
           deadline:differenceInCalendarDays(sale.createdAt,sale.estimatedDays, new Date()),
           total
         };
