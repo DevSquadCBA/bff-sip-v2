@@ -265,6 +265,44 @@ Resources:
                         Path: /user
                         Method: POST
                         ApiId: !Ref PiattiRestApi
+    UpdateUserFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-UpdateUser'
+            Handler: updateUser.Handler
+            CodeUri: ./src/functions/user
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /user/{id}
+                        Method: PUT
+                        ApiId: !Ref PiattiRestApi
+    DeleteUserFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-DeleteUser'
+            Handler: deleteUser.Handler
+            CodeUri: ./src/functions/user
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /user/{id}
+                        Method: DELETE
+                        ApiId: !Ref PiattiRestApi
 
 # Clients
     GetClientsFunction:
@@ -533,6 +571,44 @@ Resources:
                     Type: HttpApi
                     Properties:
                         Path: /sale/{idSale}/addProducts
+                        Method: POST
+                        ApiId: !Ref PiattiRestApi
+    AddPaymentToSaleFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-addPaymentToSale'
+            Handler: addPaymentToSale.Handler
+            CodeUri: ./src/functions/sale
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /sale/{idSale}/addPayment
+                        Method: POST
+                        ApiId: !Ref PiattiRestApi
+    AddDetailsToProductsFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-addDetailsToProducts'
+            Handler: addDetailsToProducts.Handler
+            CodeUri: ./src/functions/sale
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /sale/{idSale}/updateDetails
                         Method: POST
                         ApiId: !Ref PiattiRestApi
 # # Products

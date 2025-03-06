@@ -18,7 +18,6 @@ interface Event extends ApiGatewayParsedEvent {
 
 const domain = async (event: Event) => {
     const { email, password } = event.body;
-    console.log({ email, password });
     const user = await User.findOne({
         where: {
             email

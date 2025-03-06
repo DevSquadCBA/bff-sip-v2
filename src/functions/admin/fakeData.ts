@@ -14,7 +14,8 @@ import { ISale, Sale } from 'models/Sale';
 import { EntityList,  SalesStatesValues, StateProduct, StateProductValues } from 'models/Enums';
 import { ISaleProduct, SaleProduct } from 'models/SaleProduct';
 import dayjs from 'dayjs';
-import { IUser, User } from 'models/User';
+import { User } from 'models/User';
+import { Rol } from 'models/Rol';
 
 interface Event extends ApiGatewayParsedEvent {
     headers:{
@@ -56,11 +57,12 @@ function fakeProvider():IProvider{
 }
 
 function fakeProducts():IProduct{
+    const purchasePrice = faker.number.float({min: 10, max: 1000, multipleOf: 0.01});
     return {
         code: faker.number.int({min: 10000000, max: 99999999}),
         name: faker.commerce.productName(),
-        salePrice: faker.number.float({min: 10, max: 1000, multipleOf: 0.01}),
-        purchasePrice: faker.number.float({min: 10, max: 1000, multipleOf: 0.01}),
+        salePrice: faker.number.float({min: purchasePrice, max: purchasePrice + 500, multipleOf: 0.01}),
+        purchasePrice,
         providerId: faker.helpers.arrayElement(Array.from({length: 20}, (_, i) => i + 1)),
         //stockeable: 1,
         //negativeStock: 0,
@@ -75,8 +77,9 @@ function fakeSales():ISale{
     const price = faker.number.float({min: 10, max: 1000, multipleOf: 0.01});
     const estimatedDays = faker.number.int({min: 10, max: 60});
     const state = faker.helpers.arrayElement(SalesStatesValues);
+    // create 3 sale for each type of state for each type of client
     return {
-        clientId: faker.number.int({min: 1, max: 20}),
+        clientId: faker.number.int({min: 1, max: 10}),
         state,
         total: faker.number.float({min: 10, max: 1000, multipleOf: 0.01}),
         paid: Math.random() > 0.5 ? price : Math.random() > 0.5 ? 0 : faker.number.float({min:0, max: price, multipleOf: 0.01}),
@@ -91,51 +94,68 @@ function fakeSales():ISale{
     }
 }
 
-function fakeSaleProduct():ISaleProduct{
+function fakeSaleProduct(fakeProducts:IProduct[]):ISaleProduct{
     const state = faker.helpers.arrayElement(StateProductValues)
     let details;
     if(state!== StateProduct.uninitiated){
         if(Math.random()<0.5){
-            details = 'mensaje random'
+            details = faker.commerce.productMaterial()
         }else{
             details = '';
         }
     }
+    const randomProduct = faker.helpers.arrayElement(fakeProducts);
+    const price = randomProduct.salePrice
+    const discount = Math.random() > 0.92 ? faker.number.float({min: 0.5, max: 0.9, multipleOf: 0.1}) : 0
+    const quantity =faker.number.int({min: 1, max: 20});
     return {
         saleId: faker.number.int({min: 1, max: 20}),
-        productId: faker.number.int({min: 1, max: 20}),
-        quantity: faker.number.int({min: 1, max: 20}),
+        productId: randomProduct.id as number,  //faker.number.int({min: 1, max: 200}),
+        quantity ,
+        price: (price * quantity) * (discount || 1),
+        discount,
         state,
         details
     }
 }
 
-function fakeUser():IUser{
-    return {
-            name: 'Leandro',
-            email: 'leandro@a.com',
-            phone:'1',
-            password: '$2a$12$CTlcYkAN3eM2tb.2u08sM.o.6pGaSxweFQbe7yBAickd3KYS1JM6S', // .
-            roleId:1
-        }
-    
-}
-
-
 async function fakeData(){
-    const clients:IClient[] = faker.helpers.multiple(fakeClient, {count: 20});
+    const clients:IClient[] = faker.helpers.multiple(fakeClient, {count: 10});
     const providers:IProvider[] = faker.helpers.multiple(fakeProvider,{count:20});
-    const products:IProduct[] = faker.helpers.multiple(fakeProducts, {count: 200});
-    const sale:ISale[] = faker.helpers.multiple(fakeSales, {count: 20});
-    const saleProduct:ISaleProduct[] = faker.helpers.multiple(fakeSaleProduct, {count: 60});
-    const users:IUser[] = faker.helpers.multiple(fakeUser, {count: 1});
-
+    const products:IProduct[] = faker.helpers.multiple(fakeProducts, {count: 300});
+    const sale:ISale[] = faker.helpers.multiple(fakeSales, {count: 40});
+    
     await Client.bulkCreate(clients);
     await Provider.bulkCreate(providers);
     await Product.bulkCreate(products);
     await Sale.bulkCreate(sale);
+    const realProducts = await Product.findAll({where: {deleted: false}});
+    const saleProduct:ISaleProduct[] = faker.helpers.multiple(()=>fakeSaleProduct(realProducts), {count: 100});
     await SaleProduct.bulkCreate(saleProduct,{ignoreDuplicates:true});
-    await User.bulkCreate(users, {ignoreDuplicates: true});
+    await Rol.create({id:1,name:'Administrador',description:'Administrador'})
+    await Rol.create({id:2,name:'Supervisor',description:'Supervisor'})
+    await Rol.create({id:3,name:'Vendedor',description:'Vendedor'})
+    await User.create({
+            name: 'Maria Eugenia Díaz Segura',
+            email: 'bujes',
+            phone:'1',
+            password: '$2a$12$CTlcYkAN3eM2tb.2u08sM.o.6pGaSxweFQbe7yBAickd3KYS1JM6S', // .
+            roleId:1
+        } as User
+    );
+    // recalculate the sales price
+    const sales = await Sale.findAll({where: {deleted: false}});
+    for (let i = 0; i < sales.length; i++) {
+        const sale = sales[i].get({plain: true});
+        const saleProducts = await SaleProduct.findAll({where: {saleId: sale.id}});
+        let total = 0;
+        for (let j = 0; j < saleProducts.length; j++) {
+            const saleProduct = saleProducts[j].get({plain: true});
+            total += parseFloat(saleProduct.price);
+        }
+        await Sale.update({total: total}, {where: {id: sale.id}});
+    }
+
 }
 
 
@@ -171,7 +191,8 @@ const domain = async (event:Event): Promise<{body:string, statusCode:number}> =>
                 await Sale.bulkCreate(sale);
                 break;
             case 'saleProducts':
-                const saleProduct:ISaleProduct[] = faker.helpers.multiple(fakeSaleProduct, {count: count || 60});
+                const productsForSale:IProduct[] = faker.helpers.multiple(fakeProducts, {count: count || 200});
+                const saleProduct:ISaleProduct[] = faker.helpers.multiple(()=>fakeSaleProduct(productsForSale), {count: count || 60});
                 await SaleProduct.bulkCreate(saleProduct,{ignoreDuplicates:true});
                 break;
             default:

@@ -1,4 +1,6 @@
+const {Handler:AddDetailsToProductsFunction} = require('../.aws-sam/build/AddDetailsToProductsFunction/addDetailsToProducts.js');
 const {Handler:AddOrRemoveProductsFunction} = require('../.aws-sam/build/AddOrRemoveProductsFunction/addOrRemoveProducts.js');
+const {Handler:AddPaymentToSaleFunction} = require('../.aws-sam/build/AddPaymentToSaleFunction/addPaymentToSale.js');
 const {Handler:CountFunction} = require('../.aws-sam/build/CountFunction/count.js');
 const {Handler:CreateClientFunction} = require('../.aws-sam/build/CreateClientFunction/createClient.js');
 const {Handler:CreateProductFunction} = require('../.aws-sam/build/CreateProductFunction/createProduct.js');
@@ -9,6 +11,7 @@ const {Handler:DeleteClientFunction} = require('../.aws-sam/build/DeleteClientFu
 const {Handler:DeleteProductFunction} = require('../.aws-sam/build/DeleteProductFunction/deleteProduct.js');
 const {Handler:DeleteProviderFunction} = require('../.aws-sam/build/DeleteProviderFunction/deleteProvider.js');
 const {Handler:DeleteSaleFunction} = require('../.aws-sam/build/DeleteSaleFunction/deleteSale.js');
+const {Handler:DeleteUserFunction} = require('../.aws-sam/build/DeleteUserFunction/deleteUser.js');
 const {Handler:FakeDataFunction} = require('../.aws-sam/build/FakeDataFunction/fakeData.js');
 const {Handler:GetClientByIdFunction} = require('../.aws-sam/build/GetClientByIdFunction/getClientById.js');
 const {Handler:GetClientSaleFunction} = require('../.aws-sam/build/GetClientSaleFunction/getClientSales.js');
@@ -34,8 +37,11 @@ const {Handler:UpdateClientFunction} = require('../.aws-sam/build/UpdateClientFu
 const {Handler:UpdateProductFunction} = require('../.aws-sam/build/UpdateProductFunction/updateProduct.js');
 const {Handler:UpdateProviderFunction} = require('../.aws-sam/build/UpdateProviderFunction/updateProvider.js');
 const {Handler:UpdateSaleFunction} = require('../.aws-sam/build/UpdateSaleFunction/updateSale.js');
+const {Handler:UpdateUserFunction} = require('../.aws-sam/build/UpdateUserFunction/updateUser.js');
 module.exports={
+    AddDetailsToProductsFunction,
     AddOrRemoveProductsFunction,
+    AddPaymentToSaleFunction,
     CountFunction,
     CreateClientFunction,
     CreateProductFunction,
@@ -46,6 +52,7 @@ module.exports={
     DeleteProductFunction,
     DeleteProviderFunction,
     DeleteSaleFunction,
+    DeleteUserFunction,
     FakeDataFunction,
     GetClientByIdFunction,
     GetClientSaleFunction,
@@ -71,4 +78,5 @@ module.exports={
     UpdateProductFunction,
     UpdateProviderFunction,
     UpdateSaleFunction,
+    UpdateUserFunction,
 }

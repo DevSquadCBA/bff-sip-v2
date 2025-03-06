@@ -9,6 +9,13 @@ export type IRol = {
     description: string
 }
 
+export enum Roles {
+    ADMIN = 'Administrador',
+    SUPERVISOR = 'Supervisor',
+    SELLER = 'Vendedor',
+    USER = 'Vendedor'
+}
+
 @Table({
     tableName: 'role',
     timestamps: false

@@ -6,15 +6,15 @@ import { LambdaResolver } from 'utils/lambdaResolver';
 
 interface Event extends ApiGatewayParsedEvent {
     pathParameters: {
-        id: string;
+        idClient: string;
     };
 }
 
 const domain = async (event: Event): Promise<{ body: string; statusCode: number }> => {
-    const { id } = event.pathParameters;
+    const { idClient } = event.pathParameters;
 
     try {
-        await Client.update({ deleted: true }, {where: {id: parseInt(id,10)},});
+        await Client.update({ deleted: true }, {where: {id: parseInt(idClient,10)},});
 
         return {
             body: 'Deleted successfully',

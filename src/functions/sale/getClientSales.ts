@@ -4,7 +4,6 @@ import { IProduct, Product } from 'models/Product';
 import { Provider } from 'models/Provider';
 import { Sale,  ISale } from 'models/Sale';
 import { SaleProduct } from 'models/SaleProduct';
-import { Sequelize } from 'sequelize';
 import { ApiGatewayParsedEvent } from 'types/response-factory/proxies';
 import { Validators } from 'utils/Validator';
 import { LambdaResolver } from 'utils/lambdaResolver';
@@ -18,10 +17,10 @@ interface Event extends ApiGatewayParsedEvent {
     }
 }
 
-function differenceInCalendarDays(createdAt:string, estimatedDays:number, now: Date): any { 
+function differenceInCalendarDays(createdAt:string, estimatedDays:number, now: Date): Date { 
     const creationDate = dayjs(createdAt);
-    const deadline = creationDate.add(estimatedDays, 'day');
-    return dayjs(deadline).diff(now, 'day');
+    const daysToDeadLine = creationDate.add(estimatedDays, 'day');
+    return daysToDeadLine.toDate();
 }
 
 type SaleComplete = ISale & {
@@ -68,10 +67,13 @@ const domain = async (event:Event): Promise<{body:ISale[], statusCode:number}> =
     };
     sales = sales.map((saleInstance) => saleInstance.get({ plain: true }));
     sales = sales.map(sale => {
+        const hasDiscount = sale.products.some((p:any)=>p.discount && p.discount>0);
         const allProviderIds = sale.products.map(product => product.providerId);
         const distinctProviders = [...new Set(allProviderIds)];
         const productsCount = sale.products.length;
-        const total = sale.products.reduce((acc, product) => acc + product.salePrice * product.saleProduct.quantity, 0);
+        const total = hasDiscount 
+            ? sale.products.reduce((acc: number, product: any) => acc + (product.saleProduct.price * product.quantity) * product.discount, 0)
+            : sale.products.reduce((acc, product) => acc + product.saleProduct.price * product.saleProduct.quantity, 0);
         return {
           ...sale,
           distinctProviders: distinctProviders.length,

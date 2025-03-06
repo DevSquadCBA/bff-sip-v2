@@ -24,6 +24,7 @@ export enum Validators{
     ID_PROVIDER = 'validateIdProvider',
     ID_PRODUCT = 'validateIdProduct',
     ID_SALE = 'validateIdSale',
+    ID_USER = 'validateIdUser',
     VALID_JSON = 'validateJSONBody',
     QUERY ='validateQuery',
     VALID_USER = 'validateUser',
@@ -77,6 +78,15 @@ function validateIdProvider(pathParameters:{idProvider?:string}){
         throw new BadRequestError('Es necesario enviar un idProvider');
     }
     if(!/^[0-9]+$/.test(pathParameters.idProvider)){
+        throw new BadRequestError('El idProvider debe ser un número');
+    }
+    return pathParameters;
+}
+function validateIdUser(pathParameters:{idUser?:string}){
+    if(!pathParameters.idUser){
+        throw new BadRequestError('Es necesario enviar un idUser');
+    }
+    if(!/^[0-9]+$/.test(pathParameters.idUser)){
         throw new BadRequestError('El idProvider debe ser un número');
     }
     return pathParameters;
@@ -150,8 +160,7 @@ export function validate(validations: Validators[], event:ApiGatewayParsedEvent)
     }else if (validations.includes(Validators.VALID_USER)){
         validate([Validators.VALID_JSON], event);
         event.body = {...validateUser(event.body as IUser)}
-    }
-     else if(validations.includes(Validators.ADMIN_PERMISSION)){
+    } else if(validations.includes(Validators.ADMIN_PERMISSION)){
         if(!token){return event;}
         validatePermissions(token, Rol.ADMIN);
     } else if(validations.includes(Validators.SUPERVISOR_PERMISSION)){
@@ -160,7 +169,9 @@ export function validate(validations: Validators[], event:ApiGatewayParsedEvent)
     } else if(validations.includes(Validators.ANY_PERMISSION)){
         if(!token){return event;}
         validatePermissions(token, Rol.USER);
-    } 
+    } else if(validations.includes(Validators.ID_USER)){
+        event.pathParameters = validateIdUser(event.pathParameters);
+    }
 
     if(validations.includes(Validators.VALID_JSON)){
         try{

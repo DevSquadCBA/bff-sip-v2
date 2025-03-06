@@ -134,6 +134,69 @@ paths:
             application/json:
               schema: 
                 $ref: '#/components/schemas/Error'
+  /user/{id}:
+    put:
+      tags:
+        - Users
+      summary: Actualiza un usuario
+      description: Actualiza un usuario
+      operationId: UpdateUser
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/User"
+      responses:
+        200:
+          description: listado de usuarios
+          content: {}
+          headers:  
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - Users
+      summary: Elimina un usuario
+      description: Elimina un usuario
+      operationId: DeleteUser
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/User"
+      responses:
+        200:
+          description: listado de usuarios
+          content: {}
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
   /client:
     #C
     post:
@@ -570,6 +633,79 @@ paths:
       responses:
         200:
           description: crea productos
+          content: {}
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
+  /sale/{idSale}/addPayment:
+    post:
+      tags:
+        - agrega pagos
+      summary: agrega pagos a una venta
+      description: agrega pagos a una venta
+      operationId: AddPaymentToSale
+      parameters:
+        - name: idSale
+          in: path
+          description: el id del presupuesto
+          schema: {}
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Sale"
+      responses:
+        200:
+          description: Pago agregado a la venta
+          content: {}
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
+  /sale/{idSale}/updateDetails:
+    post:
+      tags:
+        - actualiza detalles
+      summary: actualiza detalles de una venta
+      description: actualiza detalles de una venta
+      operationId: AddDetailsToProducts
+      parameters:
+        - name: idSale
+          in: path
+          description: el id de la venta
+          schema: {}
+          required: true
+      requestBody:
+        content: {}
+      responses:
+        200:
+          description: detalles actualizados
           content: {}
           headers:
             Access-Control-Allow-Origin:
