@@ -17,6 +17,7 @@ const {Handler:GetClientByIdFunction} = require('../.aws-sam/build/GetClientById
 const {Handler:GetClientSaleFunction} = require('../.aws-sam/build/GetClientSaleFunction/getClientSales.js');
 const {Handler:GetClientsFunction} = require('../.aws-sam/build/GetClientsFunction/getClients.js');
 const {Handler:GetClientsListFunction} = require('../.aws-sam/build/GetClientsListFunction/getClientsList.js');
+const {Handler:GetDataForHomeFunction} = require('../.aws-sam/build/GetDataForHomeFunction/getDataForHome.js');
 const {Handler:GetLogFunction} = require('../.aws-sam/build/GetLogFunction/getLogs.js');
 const {Handler:GetNextDueDateFunction} = require('../.aws-sam/build/GetNextDueDateFunction/getNextDueDate.js');
 const {Handler:GetProductByIdFunction} = require('../.aws-sam/build/GetProductByIdFunction/getProductById.js');
@@ -59,6 +60,7 @@ module.exports={
     GetClientSaleFunction,
     GetClientsFunction,
     GetClientsListFunction,
+    GetDataForHomeFunction,
     GetLogFunction,
     GetNextDueDateFunction,
     GetProductByIdFunction,

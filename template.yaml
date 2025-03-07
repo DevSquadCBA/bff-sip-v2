@@ -959,6 +959,26 @@ Resources:
                         Path: /log
                         Method: GET
                         ApiId: !Ref PiattiRestApi
+
+    GetDataForHomeFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: false
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-GetDataForHome'
+            Handler: getDataForHome.Handler
+            CodeUri: ./src/functions/metric
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /home
+                        Method: GET
+                        ApiId: !Ref PiattiRestApi
 # Esta url nunca cambia
 Outputs:
     ApiUrl:

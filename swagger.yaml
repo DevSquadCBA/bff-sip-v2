@@ -25,6 +25,16 @@ paths:
       responses:
         200:
           description: ok
+  /home:
+    get:
+      tags:
+        - Home
+      summary: Home
+      description: Home
+      operationId: GetDataForHome
+      responses:
+        200:
+          description: ok
 
   /health:
     get:

@@ -130,7 +130,7 @@ function validateUser(body:IUser){
 
 function validatePermissions(token:IToken, rol:String[]){
     console.log({token, rol})
-    if(rol.includes(token.role)){
+    if(!rol.includes(token.role)){
         throw new ForbiddenError('No tienes permiso para realizar esta accion');
     }
 }
