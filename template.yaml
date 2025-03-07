@@ -940,7 +940,25 @@ Resources:
                         Path: /count
                         Method: GET
                         ApiId: !Ref PiattiRestApi
-
+    GetLogFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-GetLog'
+            Handler: getLogs.Handler
+            CodeUri: ./src/functions/logs
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /log
+                        Method: GET
+                        ApiId: !Ref PiattiRestApi
 # Esta url nunca cambia
 Outputs:
     ApiUrl:

@@ -53,3 +53,13 @@ export function getEntityList(entity:string):EntityList{
     }
     return Object.entries(EntityList).find(([_, v]) => v === entity)?.[0] as EntityList | EntityList.muebles
 }
+
+export enum LogCategory {
+    CLIENT = 'CLIENTE',
+    SALE = 'VENTAS',
+    PRODUCT = 'PRODUCTOS',
+    PROVIDER = 'PROVEEDORES',
+    USER = 'USUARIOS',
+    SALE_PRODUCT = 'PRODUCTOS EN VENTA',
+    PAYMENT = 'PAGO'
+}

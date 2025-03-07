@@ -8,6 +8,7 @@ import { Provider } from 'models/Provider';
 import { SaleProduct } from 'models/SaleProduct';
 import { Rol } from 'models/Rol';
 import { User } from 'models/User';
+import { Log } from 'models/Log';
 const { HOST, USER, PASS, DB } = process.env;
 
 if (!HOST || !USER || !PASS || !DB) {
@@ -24,7 +25,7 @@ const sequelize = new Sequelize({
     logging: (msg) => console.dir(msg),
 });
 
-sequelize.addModels([Client , Sale , Product, Provider, SaleProduct, User, Rol])
+sequelize.addModels([Client , Sale , Product, Provider, SaleProduct, User, Rol, Log])
 
 Sale.belongsToMany(Product, { through: SaleProduct , foreignKey: 'saleId', as:'products' });
 Sale.hasMany(SaleProduct, { foreignKey: 'saleId', as: 'saleProducts' });

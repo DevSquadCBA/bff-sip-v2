@@ -4,7 +4,6 @@ import { BadRequestError, UnauthorizedError } from 'types/errors';
 import { ApiGatewayParsedEvent } from 'types/response-factory/proxies';
 import { Validators } from 'utils/Validator';
 import { LambdaResolver } from 'utils/lambdaResolver';
-import { Log } from 'utils/utils';
 import {getEntityList} from 'models/Enums';
 import { Product, ResponseGetPricesFromIds } from 'models/Product';
 import { getNameFromToken, getRoleFromToken } from 'functions/utils/tokenUtils';
@@ -50,8 +49,7 @@ const domain = async (event:Event): Promise<{body:number, statusCode:number}> =>
         //sale.estimatedDays = Math.ceil(Math.max(...productsWithPrice.map(product=>product.daysDelay))/10)*10;
         const budget = await Sale.create(sale);
 
-        Log.info({message: `Se ha creado el presupuesto con el id ${budget.id}`});
-        
+                
         if(productsToAdd.length === 0) return {
             body: budget.id,
             statusCode: 200

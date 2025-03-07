@@ -23,17 +23,37 @@ const domain = async (event:Event): Promise<{body:string, statusCode:number}> =>
     if(!id){throw new InvalidIdError('Invalid idSale');}
 
     const saleToUpdate = typeof event.body === 'string'? JSON.parse(event.body) as ISaleUpdateContract : event.body;
-
-    const mappedProducts = saleToUpdate.products.map(e=>({productId: e.id || e.productId, quantity: e.quantity, state: e.state, details: e.details, price: e.salePrice}));
+    const mappedProducts = saleToUpdate.products.map((e:ProductsInSale)=>({
+        productId: e.id || e.productId,
+        quantity: e.saleProduct?.quantity || 1,
+        state: e.state,
+        details: e.details,
+        salePrice: e.salePrice,
+        price: e.saleProduct?.price || (e.salePrice * (e.saleProduct?.quantity || 1)),
+        discount: e.saleProduct?.discount||1
+    }));
 
     for(const product of mappedProducts){
         await SaleProduct.update(product, {where: {saleId: id, productId: product.productId}, logging:true})
     }
-    let total = mappedProducts.reduce((acc, product)=> {
-        if(!product.price || !product.quantity){return acc}
-        return acc + (product.quantity * product.price)
-    }, 0);
-    console.log({total, mappedProducts});
+
+    const hasDiscount = mappedProducts.some((p:any)=>p.discount && p.discount>0);
+    let total;
+
+    if(!hasDiscount){
+        console.log('no discount');
+        total = mappedProducts.reduce((acc, product)=> {
+            return acc + (product.quantity * product.salePrice)
+        }, 0);
+    }else{
+        console.log('discount');
+        console.log({mappedProducts});
+        total = mappedProducts.reduce((acc, product)=>{
+            return acc + ((parseFloat(product.salePrice) * parseFloat(product.quantity)) * ( parseFloat(product.discount) || 1));
+        },0)
+    }
+    console.log({total});
+
     // actualizo el total de la venta, por si acaso
     await Sale.update({total}, {where: {id: id}});
 
@@ -60,6 +80,13 @@ const domain = async (event:Event): Promise<{body:string, statusCode:number}> =>
         }
         await Sale.update({state: saleToUpdate.state, deadline, paid}, {where: {id: id}});
         msg = `Se ha actualizado el estado de la venta a ${saleToUpdate.state}`;
+    }
+    //para el resto de estados, simplemente actualizo el estado, aprovecho a calcular la fecha de vencimiento y demás
+    if(saleToUpdate.state !== SaleStates.comprobante && saleToUpdate.state !== SaleStates.proforma){
+        const sale = (await Sale.findByPk(id))?.get({plain:true});
+        const deadline = dayjs().add(sale.estimatedDays, 'day');
+        await Sale.update({state: saleToUpdate.state, deadline}, {where: {id: id}});
+        msg = `Se ha actualizado el estado de la venta a ${saleToUpdate.state}`
     }
     return {
         body: msg,

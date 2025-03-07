@@ -15,7 +15,6 @@ const domain = async (event:Event): Promise<{body:ISale, statusCode:number}> => 
     const {paid} = typeof event.body === 'string'? JSON.parse(event.body) : event.body;
     const sale =  await Sale.findByPk(idSale);
     if(!sale){throw new Error('sale not found');}
-
     const totalPaid = parseInt(sale?.paid.toString()|| '') + parseInt(paid);
     
     // si paid es mayor a total, arroja error

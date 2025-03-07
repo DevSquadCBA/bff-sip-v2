@@ -15,6 +15,17 @@ servers:
     description: localhost
 
 paths:
+  /log:
+    get:
+      tags:
+        - Utils
+      summary: Log
+      description: Log
+      operationId: GetLog
+      responses:
+        200:
+          description: ok
+
   /health:
     get:
       tags:

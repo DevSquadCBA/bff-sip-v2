@@ -26,4 +26,4 @@ const domain = async (event: Event): Promise<{ body: string; statusCode: number 
 };
 
 export const Handler = (event: ApiGatewayParsedEvent) =>
-    LambdaResolver(event, domain, [Validators.OFFSET_AND_LIMITS]);
+    LambdaResolver(event, domain, [Validators.ADMIN_PERMISSION, Validators.OFFSET_AND_LIMITS]);

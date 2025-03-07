@@ -1,7 +1,9 @@
 import { Client } from 'models/Client';
+import { SaleStates } from 'models/Enums';
 import { Product } from 'models/Product';
 import { Provider } from 'models/Provider';
 import { Sale } from 'models/Sale';
+import { Op } from 'sequelize';
 import { ApiGatewayParsedEvent } from 'types/response-factory/proxies';
 import { LambdaResolver } from 'utils/lambdaResolver';
 interface Event extends ApiGatewayParsedEvent {}
@@ -9,7 +11,7 @@ interface Event extends ApiGatewayParsedEvent {}
 type whereCondition = {
     deleted: boolean,
     entity: string,
-    state?: string
+    state?: string|any
 }
 
 const domain = async (event:Event): Promise<{body:Sale[], statusCode:number}> => {
@@ -17,10 +19,18 @@ const domain = async (event:Event): Promise<{body:Sale[], statusCode:number}> =>
         deleted: false,
         entity: event.headers.entity,
     };
-    if (event.queryStringParameters.state) {
+    if (event.queryStringParameters.state && event.queryStringParameters.state !== SaleStates.comprobante ) {
         where =  {
             ...where,
             state: event.queryStringParameters.state,
+        }
+    }
+    if (event.queryStringParameters.state && event.queryStringParameters.state == SaleStates.comprobante ) {
+        where =  {
+            ...where,
+            state: {
+                [Op.notIn]: [SaleStates.presupuesto, SaleStates.proforma]
+            }
         }
     }
     const sales = await Sale.findAll({
