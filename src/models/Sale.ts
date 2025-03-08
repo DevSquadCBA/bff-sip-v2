@@ -16,7 +16,9 @@ export type ISale = {
     billing: string,
     estimatedDays: number,
     deadline: Date|null,
-    entity: EntityList
+    entity: EntityList,
+    createdAt?:string,
+    updatedAt?:string
 }
 export type ProductsInSale = {
     id:number,
