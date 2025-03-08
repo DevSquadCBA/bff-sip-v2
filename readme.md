@@ -1,3 +1,5 @@
+[![Deploy-AWS-PROD](https://github.com/DevSquadCBA/bff-sip-v2/actions/workflows/deploy_aws_prod.yml/badge.svg?event=check_run)](https://github.com/DevSquadCBA/bff-sip-v2/actions/workflows/deploy_aws_prod.yml)
+
 # Backend for frontend of Sistema Integral Piatti
 
 ## Pre install
