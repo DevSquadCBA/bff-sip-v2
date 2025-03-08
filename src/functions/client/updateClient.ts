@@ -11,7 +11,7 @@ interface Event extends ApiGatewayParsedEvent {
 
 const domain = async (event:Event): Promise<{body:string, statusCode:number}> => {
     const idClient = parseInt(event.pathParameters.idClient);
-    const parsedBody = typeof event.body == 'string' ? JSON.parse(event.body as unknown as string): event.body;
+    const parsedBody = JSON.parse(event.body as unknown as string);
     await Client.update(parsedBody, {where: {id: idClient}});
     return {
         body: 'updated',

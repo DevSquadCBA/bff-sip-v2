@@ -1,4 +1,3 @@
-import { hash } from 'functions/utils/hash';
 import { IUser, User } from 'models/User';
 import { ApiGatewayParsedEvent } from 'types/response-factory/proxies';
 import { Validators } from 'utils/Validator';
@@ -10,8 +9,8 @@ interface Event extends ApiGatewayParsedEvent {
 
 const domain = async (event:Event): Promise<{body:number, statusCode:number}> => {
     const id = event.pathParameters.id;
-    const parsedBody = typeof event.body == 'string' ? JSON.parse(event.body as unknown as string): event.body;
-    parsedBody.password = await hash(parsedBody.password);
+    const parsedBody = JSON.parse(event.body as unknown as string);
+    
     const user = await User.update(parsedBody, {where: {id: id}});
     return {
         body: user[0],

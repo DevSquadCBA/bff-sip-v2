@@ -18,7 +18,7 @@ interface Event extends ApiGatewayParsedEvent {
 
 const domain = async (event:Event): Promise<{body:number, statusCode:number}> => {
     try{
-        const parsedBody = typeof event.body == 'string' ? JSON.parse(event.body as unknown as string): event.body;
+        const parsedBody = JSON.parse(event.body as unknown as string);
         const {products} = parsedBody;
 
         delete parsedBody.products;
