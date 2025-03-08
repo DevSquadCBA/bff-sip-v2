@@ -12,7 +12,7 @@ export default {
     },
     collectCoverage: true,
     coverageReporters: ['text'],
-    collectCoverageFrom: ['./src/**/*.ts', '!**/(config|schemas|interfaces|types)/**/*.ts'],
+    collectCoverageFrom: ['./src/**/*.ts', '!**/(config|schemas|interfaces|types|admin)/**/*.ts'],
     setupFiles: ['./tests/jestSetup.ts'],
     modulePaths: ['<rootDir>/src'],
     coverageDirectory: 'coverage',

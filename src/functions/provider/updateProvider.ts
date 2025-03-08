@@ -9,7 +9,7 @@ interface Event extends ApiGatewayParsedEvent {
 
 const domain = async (event:Event): Promise<{body:number, statusCode:number}> => {
     const idProvider = event.pathParameters.idProvider;
-    const parsedBody = JSON.parse(event.body as unknown as string);
+    const parsedBody = typeof event.body === 'string'? JSON.parse(event.body) : event.body;
     console.log(parsedBody);
     const provider = await Provider.update(parsedBody, {where: {id: idProvider}});
     return {
@@ -19,4 +19,4 @@ const domain = async (event:Event): Promise<{body:number, statusCode:number}> =>
 
 }
 
-export const Handler = (event:ApiGatewayParsedEvent)=>LambdaResolver(event, domain, [Validators.ID_PROVIDER, Validators.VALID_JSON])
+export const Handler = (event:ApiGatewayParsedEvent)=>LambdaResolver(event, domain, [Validators.SUPERVISOR_PERMISSION,Validators.ID_PROVIDER, Validators.VALID_JSON])

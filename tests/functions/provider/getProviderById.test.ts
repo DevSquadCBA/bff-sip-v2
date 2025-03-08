@@ -8,7 +8,7 @@ describe('This is the testsuit for getProviderById', ()=>{
             idProvider: '1'
         },
         headers:{
-            Entity: 'muebles'
+            entity: 'muebles'
         }
     }
     it('should return a valid Provider',async ()=>{

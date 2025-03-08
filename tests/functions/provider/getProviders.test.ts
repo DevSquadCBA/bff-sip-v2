@@ -4,7 +4,7 @@ describe('Test suit for getCProviders',()=>{
     const event ={
         ...mockEvent,
         headers:{
-            Entity: 'muebles'
+            entity: 'muebles'
         }
     }
 

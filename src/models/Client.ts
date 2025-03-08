@@ -12,7 +12,7 @@ export type IClient = {
     whatsapp?: string,
     province?: string,
     localidad?: string,
-    direction?: string,
+    address?: string,
     deleted?: boolean,
 }
 @Table({
@@ -30,8 +30,8 @@ export class Client extends Model {
     @Column({ type: DataType.STRING, allowNull: true })
     declare fantasyName: CreationOptional<string>;
 
-    @Column(DataType.STRING)
-    declare fiscalCategory: string;
+    @Column(DataType.ENUM('Consumidor Final', 'Monotributista', 'Responsable Inscripto', 'Exento', 'No categorizado'))
+    declare fiscalCategory: 'Consumidor Final' | 'Monotributista' | 'Responsable Inscripto' | 'Exento' | 'No categorizado';
 
     @Column(DataType.STRING)
     declare dni: string;
@@ -52,7 +52,7 @@ export class Client extends Model {
     declare localidad: CreationOptional<string>;
 
     @Column({ type: DataType.STRING, allowNull: true })
-    declare direction: CreationOptional<string>;
+    declare address: CreationOptional<string>;
 
     @Column({ type: DataType.BOOLEAN, defaultValue: false })
     declare deleted: CreationOptional<boolean>;

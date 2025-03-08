@@ -13,7 +13,7 @@ const domain = async (event:Event): Promise<{body:IProduct[], statusCode:number}
     const offset = parseInt(event.queryStringParameters.offset);
     const limit = parseInt(event.queryStringParameters.limit);
 
-    const products = await Product.findAll({offset, limit}) as IProduct[];
+    const products = await Product.findAll({offset, limit, where:{deleted: false}}) as IProduct[];
     return {
         body: products,
         statusCode: 200

@@ -6,12 +6,12 @@ export type IProvider = {
     name: string,
     fantasyName: string,
     cuit_cuil: number,
-    email: string,
-    province: string,
-    locality: string,
-    direction: string,
-    phone: string,
-    voucherType: string,
+    email?: string,
+    province?: string,
+    locality?: string,
+    address?: string,
+    phone?: string,
+    voucherType?: string,
     daysDelays: number,
     deleted?: boolean,
 }
@@ -34,22 +34,22 @@ export class Provider extends Model {
     declare cuit_cuil: number;
 
     @Column(DataType.STRING)
-    declare email: string;
+    declare email: CreationOptional<string>;
 
     @Column(DataType.STRING)
-    declare province: string;
+    declare province: CreationOptional<string>;
 
     @Column(DataType.STRING)
-    declare locality: string;
+    declare locality: CreationOptional<string>;
 
     @Column(DataType.STRING)
-    declare direction: string;
+    declare address: CreationOptional<string>;
 
     @Column(DataType.STRING)
-    declare phone: string;
+    declare phone: CreationOptional<string>;
 
     @Column(DataType.STRING)
-    declare voucherType: string;
+    declare voucherType: CreationOptional<string>;
 
     @Column(DataType.INTEGER)
     declare daysDelays: number;

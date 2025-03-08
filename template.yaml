@@ -1,11 +1,14 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: 'Sistema integral Provimat backend en typescript'
+Description: 'Sistema integral Piatti backend en typescript'
 
 Parameters:
     Environment:
         Type: String
-        Description: 'entorno de desarrollo'
+        Description: 'entorno de ejecución'
+        AllowedValues:
+            - develop
+            - prod
     RetentionInDays:
         Type: Number
         Description: Retention in days cloudwatch logs
@@ -29,6 +32,7 @@ Globals:
                 USER: !Sub '{{resolve:ssm:/user}}'
                 PASS: !Sub '{{resolve:ssm:/pass}}'
                 DB:   !Sub '{{resolve:ssm:/${Environment}/database}}'
+                JWT:  !Sub '{{resolve:ssm:/${Environment}/JWT}}'
                 DEFAULT_LIMIT: 100 # El límite de recursos que trae por defecto
                 NODE_CONFIG_DIR: !Sub '/opt/nodejs/config/'
                 NODE_ENV: !Ref Environment
@@ -52,9 +56,12 @@ Conditions:
 Mappings:
     Stage:
         develop:
-            DomainName: 'dev-sip.devsquadcba.com'
+            DomainName: "dev-sip.piatti-erp.com" # Placeholder, lo reemplazaremos en `BasePathMapping`
+            Value: Develop
         prod:
-            DomainName: 'sip.devsquadcba.com'
+            DomainName: "sip.piatti-erp.com" # Placeholder
+            Value: Production
+
     Static:
         Parameters:
             FilterPattern: '[event=REPORT* || event="*DATADOG_EVENT*"]'
@@ -88,7 +95,7 @@ Resources:
                                 - ssm:GetParameters
                             Resource:
                                 Fn::Sub: arn:aws:ssm:*:${AWS::AccountId}:parameter/${Environment}/*
-    ProvimatRestApi:
+    PiattiRestApi:
         Type: AWS::Serverless::Api
         Properties:
 #            ApiId: gyl18gwcs5
@@ -104,18 +111,28 @@ Resources:
                     Name: AWS::Include
                     Parameters:
                         Location: ./swagger.yaml
+    # BasePathMapping:
+    #     Type: AWS::ApiGateway::BasePathMapping
+    #     DependsOn: PiattiRestApi
+    #     Condition: CreateDomainName
+    #     Properties:
+    #         BasePath: 'api'
+    #         DomainName: !FindInMap 
+    #             - Stage
+    #             - !Ref Environment
+    #             - DomainName
+    #         RestApiId: !Ref PiattiRestApi
+    #         Stage: !Ref PiattiRestApi.Stage    
     BasePathMapping:
         Type: AWS::ApiGateway::BasePathMapping
-        DependsOn: ProvimatRestApi
+        DependsOn: PiattiRestApi
         Condition: CreateDomainName
         Properties:
+            DomainName: 
+                Fn::ImportValue: !Sub "ApiGatewayDomain${Environment}"
+            RestApiId: !Ref PiattiRestApi
+            Stage: !Ref PiattiRestApi.Stage    
             BasePath: 'api'
-            DomainName: !FindInMap 
-                - Stage
-                - !Ref Environment
-                - DomainName
-            RestApiId: !Ref ProvimatRestApi
-            Stage: !Ref ProvimatRestApi.Stage    
 
 # Layers
     Mysql2Layer:
@@ -126,13 +143,35 @@ Resources:
             ContentUri: ./src/layers/nodejs
             CompatibleRuntimes:
                 - nodejs16.x
+# Health
+
+    HealthFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-Health'
+            Handler: health.Handler
+            CodeUri: ./src/functions/utils
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /health
+                        Method: GET
+                        ApiId: !Ref PiattiRestApi
+
 # Admin
     SyncDbFunction:
         Type: AWS::Serverless::Function
         Metadata:
             BuildMethod: esbuild
             BuildProperties:
-                Minify: true
+                Minify: false
                 Sourcemap: true
                 MainFields: "module,main"
         Properties:
@@ -145,7 +184,7 @@ Resources:
                     Properties:
                         Path: /admin/syncDb
                         Method: GET
-                        ApiId: !Ref ProvimatRestApi
+                        ApiId: !Ref PiattiRestApi
     FakeDataFunction:
         Type: AWS::Serverless::Function
         Metadata:
@@ -164,7 +203,106 @@ Resources:
                     Properties:
                         Path: /admin/fakeData
                         Method: GET
-                        ApiId: !Ref ProvimatRestApi
+                        ApiId: !Ref PiattiRestApi
+
+# Auth
+    LoginFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-Login'
+            Handler: login.Handler
+            CodeUri: ./src/functions/auth
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /auth/login
+                        Method: POST
+                        ApiId: !Ref PiattiRestApi
+
+# Users
+    GetUsersFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-GetUsers'
+            Handler: getUsers.Handler
+            CodeUri: ./src/functions/user
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /user
+                        Method: GET
+                        ApiId: !Ref PiattiRestApi
+    CreateUserFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-CreateUser'
+            Handler: createUser.Handler
+            CodeUri: ./src/functions/user
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /user
+                        Method: POST
+                        ApiId: !Ref PiattiRestApi
+    UpdateUserFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-UpdateUser'
+            Handler: updateUser.Handler
+            CodeUri: ./src/functions/user
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /user/{id}
+                        Method: PUT
+                        ApiId: !Ref PiattiRestApi
+    DeleteUserFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-DeleteUser'
+            Handler: deleteUser.Handler
+            CodeUri: ./src/functions/user
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /user/{id}
+                        Method: DELETE
+                        ApiId: !Ref PiattiRestApi
 
 # Clients
     GetClientsFunction:
@@ -185,7 +323,7 @@ Resources:
                     Properties:
                         Path: /client
                         Method: GET
-                        ApiId: !Ref ProvimatRestApi
+                        ApiId: !Ref PiattiRestApi
     GetClientsListFunction:
         Type: AWS::Serverless::Function
         Metadata:
@@ -204,7 +342,7 @@ Resources:
                     Properties:
                         Path: /clients
                         Method: GET
-                        ApiId: !Ref ProvimatRestApi
+                        ApiId: !Ref PiattiRestApi
     GetClientByIdFunction:
         Type: AWS::Serverless::Function
         Metadata:
@@ -223,7 +361,7 @@ Resources:
                     Properties:
                         Path: /client/{idClient}
                         Method: GET
-                        ApiId: !Ref ProvimatRestApi
+                        ApiId: !Ref PiattiRestApi
     CreateClientFunction:
         Type: AWS::Serverless::Function
         Metadata:
@@ -242,7 +380,7 @@ Resources:
                     Properties:
                         Path: /client
                         Method: POST
-                        ApiId: !Ref ProvimatRestApi
+                        ApiId: !Ref PiattiRestApi
     UpdateClientFunction:
         Type: AWS::Serverless::Function
         Metadata:
@@ -261,7 +399,7 @@ Resources:
                     Properties:
                         Path: /client/{idClient}
                         Method: PUT
-                        ApiId: !Ref ProvimatRestApi
+                        ApiId: !Ref PiattiRestApi
     DeleteClientFunction:
         Type: AWS::Serverless::Function
         Metadata:
@@ -280,7 +418,7 @@ Resources:
                     Properties:
                         Path: /client/{idClient}
                         Method: DELETE
-                        ApiId: !Ref ProvimatRestApi
+                        ApiId: !Ref PiattiRestApi
 
 # Sale
     CreateSaleFunction:
@@ -301,7 +439,7 @@ Resources:
                     Properties:
                         Path: /sale
                         Method: POST
-                        ApiId: !Ref ProvimatRestApi
+                        ApiId: !Ref PiattiRestApi
     GetSalesFunction:
         Type: AWS::Serverless::Function
         Metadata:
@@ -320,7 +458,7 @@ Resources:
                     Properties:
                         Path: /sales
                         Method: GET
-                        ApiId: !Ref ProvimatRestApi
+                        ApiId: !Ref PiattiRestApi
     GetNextDueDateFunction:
         Type: AWS::Serverless::Function
         Metadata:
@@ -339,7 +477,7 @@ Resources:
                     Properties:
                         Path: /sale/getNextDueDate/{idClient}
                         Method: GET
-                        ApiId: !Ref ProvimatRestApi
+                        ApiId: !Ref PiattiRestApi
     GetSaleByIdFunction:
         Type: AWS::Serverless::Function
         Metadata:
@@ -358,13 +496,13 @@ Resources:
                     Properties:
                         Path: /sale/{idSale}
                         Method: GET
-                        ApiId: !Ref ProvimatRestApi
+                        ApiId: !Ref PiattiRestApi
     UpdateSaleFunction:
         Type: AWS::Serverless::Function
         Metadata:
             BuildMethod: esbuild
             BuildProperties:
-                Minify: false
+                Minify: true
                 Sourcemap: true
                 MainFields: "module,main"
         Properties:
@@ -377,7 +515,7 @@ Resources:
                     Properties:
                         Path: /sale/{idSale}
                         Method: PUT
-                        ApiId: !Ref ProvimatRestApi
+                        ApiId: !Ref PiattiRestApi
     DeleteSaleFunction:
         Type: AWS::Serverless::Function
         Metadata:
@@ -396,7 +534,7 @@ Resources:
                     Properties:
                         Path: /sale/{idSale}
                         Method: DELETE
-                        ApiId: !Ref ProvimatRestApi
+                        ApiId: !Ref PiattiRestApi
     GetClientSaleFunction:
         Type: AWS::Serverless::Function
         Metadata:
@@ -415,7 +553,7 @@ Resources:
                     Properties:
                         Path: /client/{idClient}/sales
                         Method: GET 
-                        ApiId: !Ref ProvimatRestApi
+                        ApiId: !Ref PiattiRestApi
     AddOrRemoveProductsFunction:
         Type: AWS::Serverless::Function
         Metadata:
@@ -434,7 +572,45 @@ Resources:
                     Properties:
                         Path: /sale/{idSale}/addProducts
                         Method: POST
-                        ApiId: !Ref ProvimatRestApi
+                        ApiId: !Ref PiattiRestApi
+    AddPaymentToSaleFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-addPaymentToSale'
+            Handler: addPaymentToSale.Handler
+            CodeUri: ./src/functions/sale
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /sale/{idSale}/addPayment
+                        Method: POST
+                        ApiId: !Ref PiattiRestApi
+    AddDetailsToProductsFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-addDetailsToProducts'
+            Handler: addDetailsToProducts.Handler
+            CodeUri: ./src/functions/sale
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /sale/{idSale}/updateDetails
+                        Method: POST
+                        ApiId: !Ref PiattiRestApi
 # # Products
     CreateProductFunction:
         Type: AWS::Serverless::Function
@@ -454,7 +630,7 @@ Resources:
                     Properties:
                         Path: /product
                         Method: POST
-                        ApiId: !Ref ProvimatRestApi
+                        ApiId: !Ref PiattiRestApi
     GetProductsFunction:
         Type: AWS::Serverless::Function
         Metadata:
@@ -473,7 +649,7 @@ Resources:
                     Properties:
                         Path: /product
                         Method: GET
-                        ApiId: !Ref ProvimatRestApi
+                        ApiId: !Ref PiattiRestApi
     GetProductByIdFunction:
         Type: AWS::Serverless::Function
         Metadata:
@@ -492,7 +668,7 @@ Resources:
                     Properties:
                         Path: /product/{idProduct}
                         Method: GET
-                        ApiId: !Ref ProvimatRestApi
+                        ApiId: !Ref PiattiRestApi
     GetProductWithProviderFunction:
         Type: AWS::Serverless::Function
         Metadata:
@@ -511,7 +687,7 @@ Resources:
                     Properties:
                         Path: /products
                         Method: GET
-                        ApiId: !Ref ProvimatRestApi
+                        ApiId: !Ref PiattiRestApi
     DeleteProductFunction:
         Type: AWS::Serverless::Function
         Metadata:
@@ -530,7 +706,7 @@ Resources:
                     Properties:
                         Path: /product/{idProduct}
                         Method: DELETE
-                        ApiId: !Ref ProvimatRestApi
+                        ApiId: !Ref PiattiRestApi
     UpdateProductFunction:
         Type: AWS::Serverless::Function
         Metadata:
@@ -549,7 +725,7 @@ Resources:
                     Properties:
                         Path: /product/{idProduct}
                         Method: PUT
-                        ApiId: !Ref ProvimatRestApi
+                        ApiId: !Ref PiattiRestApi
 
 # Providers
     CreateProviderFunction:
@@ -570,7 +746,7 @@ Resources:
                     Properties:
                         Path: /provider
                         Method: POST
-                        ApiId: !Ref ProvimatRestApi
+                        ApiId: !Ref PiattiRestApi
     GetProvidersFunction:
         Type: AWS::Serverless::Function
         Metadata:
@@ -589,7 +765,7 @@ Resources:
                     Properties:
                         Path: /provider
                         Method: GET
-                        ApiId: !Ref ProvimatRestApi
+                        ApiId: !Ref PiattiRestApi
     DeleteProviderFunction:
         Type: AWS::Serverless::Function
         Metadata:
@@ -608,7 +784,7 @@ Resources:
                     Properties:
                         Path: /provider/{idProvider}
                         Method: DELETE
-                        ApiId: !Ref ProvimatRestApi
+                        ApiId: !Ref PiattiRestApi
     GetProviderByIdFunction:
         Type: AWS::Serverless::Function
         Metadata:
@@ -627,7 +803,7 @@ Resources:
                     Properties:
                         Path: /provider/{idProvider}
                         Method: GET
-                        ApiId: !Ref ProvimatRestApi
+                        ApiId: !Ref PiattiRestApi
     UpdateProviderFunction:
         Type: AWS::Serverless::Function
         Metadata:
@@ -646,7 +822,7 @@ Resources:
                     Properties:
                         Path: /provider/{idProvider}
                         Method: PUT
-                        ApiId: !Ref ProvimatRestApi
+                        ApiId: !Ref PiattiRestApi
 
 ## Funciones de búsqueda
     SearchClientFunction:
@@ -667,7 +843,7 @@ Resources:
                     Properties:
                         Path: /search/client
                         Method: GET
-                        ApiId: !Ref ProvimatRestApi
+                        ApiId: !Ref PiattiRestApi
     SearchSaleFunction:
         Type: AWS::Serverless::Function
         Metadata:
@@ -686,7 +862,7 @@ Resources:
                     Properties:
                         Path: /search/sale
                         Method: GET
-                        ApiId: !Ref ProvimatRestApi
+                        ApiId: !Ref PiattiRestApi
     SearchProductFunction:
         Type: AWS::Serverless::Function
         Metadata:
@@ -705,7 +881,7 @@ Resources:
                     Properties:
                         Path: /search/product
                         Method: GET
-                        ApiId: !Ref ProvimatRestApi
+                        ApiId: !Ref PiattiRestApi
     SearchProviderFunction:
         Type: AWS::Serverless::Function
         Metadata:
@@ -724,7 +900,7 @@ Resources:
                     Properties:
                         Path: /search/provider
                         Method: GET
-                        ApiId: !Ref ProvimatRestApi
+                        ApiId: !Ref PiattiRestApi
 #     UpdateProductPricesFunction:
 #         Type: AWS::Serverless::Function
 #         Metadata:
@@ -742,7 +918,7 @@ Resources:
 #                     Properties:
 #                         Path: /provider/{idProvider}
 #                         Method: POST
-#                         ApiId: !Ref ProvimatRestApi
+#                         ApiId: !Ref PiattiRestApi
 
 # Utils
     CountFunction:
@@ -763,10 +939,48 @@ Resources:
                     Properties:
                         Path: /count
                         Method: GET
-                        ApiId: !Ref ProvimatRestApi
+                        ApiId: !Ref PiattiRestApi
+    GetLogFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-GetLog'
+            Handler: getLogs.Handler
+            CodeUri: ./src/functions/logs
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /log
+                        Method: GET
+                        ApiId: !Ref PiattiRestApi
 
+    GetDataForHomeFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: false
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-GetDataForHome'
+            Handler: getDataForHome.Handler
+            CodeUri: ./src/functions/metric
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /home
+                        Method: GET
+                        ApiId: !Ref PiattiRestApi
 # Esta url nunca cambia
 Outputs:
     ApiUrl:
         Description: URL de la API
-        Value: !Sub "https://${ProvimatRestApi}.execute-api.${AWS::Region}.amazonaws.com/${Environment}"
+        Value: !Sub "https://${PiattiRestApi}.execute-api.${AWS::Region}.amazonaws.com/${Environment}"

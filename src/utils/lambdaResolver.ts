@@ -1,6 +1,6 @@
 import { HTTPError } from "types/errors";
 import { ApiGatewayParsedEvent } from "types/response-factory/proxies";
-import { getEntity } from "./utils";
+import { getEntity, saveLog } from "./utils";
 import { Validators, validate } from "./Validator";
 import sequelize from "services/sequelize";
 
@@ -32,6 +32,7 @@ export async function LambdaResolver(event:ApiGatewayParsedEvent, domain:any, va
         if(!sequelize.isDefined) return responseFactory({body: 'No se ha inicializado la base de datos', statusCode: 500})
         let finalEvent = event;
         getEntity(event.headers)
+        saveLog(event);
         if(validators){
             finalEvent = validate(validators, event);
         }

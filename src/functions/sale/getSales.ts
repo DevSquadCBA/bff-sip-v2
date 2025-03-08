@@ -1,18 +1,40 @@
 import { Client } from 'models/Client';
+import { SaleStates } from 'models/Enums';
 import { Product } from 'models/Product';
-import { ProductsInSale, Sale, SaleWithProduct } from 'models/Sale';
-import { SaleProduct } from 'models/SaleProduct';
+import { Provider } from 'models/Provider';
+import { Sale } from 'models/Sale';
+import { Op } from 'sequelize';
 import { ApiGatewayParsedEvent } from 'types/response-factory/proxies';
 import { LambdaResolver } from 'utils/lambdaResolver';
 interface Event extends ApiGatewayParsedEvent {}
 
+type whereCondition = {
+    deleted: boolean,
+    entity: string,
+    state?: string|any
+}
 
-const domain = async (event:Event): Promise<{body:SaleWithProduct[], statusCode:number}> => {
+const domain = async (event:Event): Promise<{body:Sale[], statusCode:number}> => {
+    let where:whereCondition = {
+        deleted: false,
+        entity: event.headers.entity,
+    };
+    if (event.queryStringParameters.state && event.queryStringParameters.state !== SaleStates.comprobante ) {
+        where =  {
+            ...where,
+            state: event.queryStringParameters.state,
+        }
+    }
+    if (event.queryStringParameters.state && event.queryStringParameters.state == SaleStates.comprobante ) {
+        where =  {
+            ...where,
+            state: {
+                [Op.notIn]: [SaleStates.presupuesto, SaleStates.proforma]
+            }
+        }
+    }
     const sales = await Sale.findAll({
-        where:{
-            deleted: false,
-            entity: event.headers.entity
-        },
+        where,
         attributes:{
             exclude: ['deleted']
         },
@@ -20,37 +42,17 @@ const domain = async (event:Event): Promise<{body:SaleWithProduct[], statusCode:
             {
                 model: Client,
             },
-            {
-            model: Product,
-            attributes: ['id', 'code', 'name', 'salePrice', 'purchasePrice'],
-            as: 'products',
-            through: {
-                model: SaleProduct,
-                attributes: ['quantity','state','details'],
-                as: 'saleProducts'
-            } as any
-        }]
-    });
-    const salesWithProduct:SaleWithProduct[] = sales.map(saleRaw=>{
-        const sale = saleRaw.get({ plain: true });
-        sale.products = sale.products.map((product:ProductsInSale)=>{
-            return {
-                id: product.id,
-                code: product.code,
-                name: product.name,
-                salePrice: product.salePrice,
-                purchasePrice: product.purchasePrice,
-                quantity: product.saleProducts?.quantity,
-                state: product.saleProducts?.state,
-                details: product.saleProducts?.details || ''
+            {model: Product,
+                attributes: { exclude: ['deleted']},
+                as: 'products', 
+                through: {
+                    attributes: { exclude: ['deleted', 'saleId', 'productId'] }, as: 'saleProduct'},
+                    include: [{model: Provider, as: 'provider'}]
             }
-        });
-        return sale;
-    })
-    
-
+        ]
+    });
     return {
-        body: salesWithProduct,
+        body: sales,
         statusCode: 200
     }    
 }

@@ -17,7 +17,7 @@ const domain = async (event:Event): Promise<{body:ISale[], statusCode:number}> =
     const sales = await Sale.findAll({ 
         include: {
             model: Client,
-            attributes:{exclude: ['deleted','createdAt','updatedAt','province','localidad','direction']}
+            attributes:{exclude: ['deleted','createdAt','updatedAt','province','localidad','address']}
         },
         where: {
             [Op.or]: [

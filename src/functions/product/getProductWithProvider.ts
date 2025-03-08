@@ -12,6 +12,7 @@ const domain = async (event:Event): Promise<{body:IProduct[], statusCode:number}
     const products = await Product.findAll({
         limit: parseInt(limit),
         offset: parseInt(offset),
+        where: { deleted: false },
         include: {
             model: Provider,
             as:'provider',

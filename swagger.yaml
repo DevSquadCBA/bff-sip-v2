@@ -7,14 +7,217 @@ info:
 #     - CustomSecurityAuthorizer: []
 
 servers:
-  - url: "https://dev-sip.devsquadcba.com/api"
+  - url: "https://dev-sip.piatti-erp.com/api"
     description: Develop
-  - url: "https://sip.devsquadcba.com/api"
+  - url: "https://sip.piatti-erp.com/api"
     description: Produccion
   - url: http://127.0.0.1/
     description: localhost
 
 paths:
+  /log:
+    get:
+      tags:
+        - Utils
+      summary: Log
+      description: Log
+      operationId: GetLog
+      responses:
+        200:
+          description: ok
+  /home:
+    get:
+      tags:
+        - Home
+      summary: Home
+      description: Home
+      operationId: GetDataForHome
+      responses:
+        200:
+          description: ok
+
+  /health:
+    get:
+      tags:
+        - Health
+      summary: Health
+      description: Health
+      operationId: Health
+      responses:
+        200:
+          description: ok
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Login
+      description: Login
+      operationId: Login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Login"
+      responses:
+        200:
+          description: Login
+          content: 
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Token'
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
+
+  /user:
+    get:
+      tags:
+        - Users
+      summary: Obtiene todos los usuarios
+      description: Obtiene un listado de todos los usuarios, permitiendo filtrar por desde hasta
+      operationId: GetUsers
+      parameters: 
+        - name: offset
+          in: query
+          description: el offset
+          schema:
+            type: integer
+            format: int64
+          required: false
+        - name: limit
+          in: query
+          description: el limit
+          schema:
+            type: integer
+            format: int64
+          required: false
+      responses:
+        200:
+          description: listado de usuarios
+          content: {}
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+        - Users
+      summary: Crea un nuevo usuario
+      description: Crea un nuevo usuario
+      operationId: CreateUser
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/User"
+      responses:
+        200:
+          description: listado de usuarios
+          content: {}
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
+  /user/{id}:
+    put:
+      tags:
+        - Users
+      summary: Actualiza un usuario
+      description: Actualiza un usuario
+      operationId: UpdateUser
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/User"
+      responses:
+        200:
+          description: listado de usuarios
+          content: {}
+          headers:  
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - Users
+      summary: Elimina un usuario
+      description: Elimina un usuario
+      operationId: DeleteUser
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: "#/components/schemas/User"
+      responses:
+        200:
+          description: listado de usuarios
+          content: {}
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
   /client:
     #C
     post:
@@ -133,8 +336,7 @@ paths:
           required: true
       requestBody:
         content:
-          application/json:
-            schema: {}
+          application/json: {}
       responses:
         200:
           description: listado de clientes
@@ -372,8 +574,7 @@ paths:
           required: true
       requestBody:
         content:
-          application/json:
-            schema: {}
+          application/json: {}
       responses:
         200:
           description: Un Presupuesto
@@ -453,6 +654,79 @@ paths:
       responses:
         200:
           description: crea productos
+          content: {}
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
+  /sale/{idSale}/addPayment:
+    post:
+      tags:
+        - agrega pagos
+      summary: agrega pagos a una venta
+      description: agrega pagos a una venta
+      operationId: AddPaymentToSale
+      parameters:
+        - name: idSale
+          in: path
+          description: el id del presupuesto
+          schema: {}
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Sale"
+      responses:
+        200:
+          description: Pago agregado a la venta
+          content: {}
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+        500:
+          description: Error
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Error'
+  /sale/{idSale}/updateDetails:
+    post:
+      tags:
+        - actualiza detalles
+      summary: actualiza detalles de una venta
+      description: actualiza detalles de una venta
+      operationId: AddDetailsToProducts
+      parameters:
+        - name: idSale
+          in: path
+          description: el id de la venta
+          schema: {}
+          required: true
+      requestBody:
+        content: {}
+      responses:
+        200:
+          description: detalles actualizados
           content: {}
           headers:
             Access-Control-Allow-Origin:
@@ -1070,13 +1344,14 @@ paths:
         200:
           description: 'ok'            
           content:
-            application/json:
+            text/plain:
               schema:
                 type: string
+                example: "ok"
         401:
           description: NotAuthorized
           content:
-            application/json:
+             text/plain:
               schema:
                 type: string
   /admin/fakeData:
@@ -1090,13 +1365,13 @@ paths:
         200:
           description: 'ok'            
           content:
-            application/json:
+             text/plain:
               schema:
                 type: string
         401:
           description: NotAuthorized
           content:
-            application/json:
+             text/plain:
               schema:
                 type: string
   
@@ -1126,7 +1401,7 @@ components:
           type: integer
         whatsapp:
           type: integer
-        direction:
+        address:
           type: string
     Sale:
       type: object
@@ -1208,6 +1483,16 @@ components:
         percent: 
           type: number
           example: 10
+    Login:
+      type: object
+      required: 
+        - email
+        - password
+      properties:
+        email:
+          type: string
+        password:
+          type: string
     Error:
       type: object
       properties:
@@ -1229,3 +1514,32 @@ components:
         idSale:
           type: integer
           example: 1
+    User:
+      type: object
+      required:
+        - id
+        - name
+        - email
+        - phone
+        - password
+        - role_id
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: integer
+        password:
+          type: string
+        whatsapp:
+          type: integer
+        address:
+          type: string
+        role_id:
+          type: integer
+          enum: [1,2,3]
+    Token:
+      type: string

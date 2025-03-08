@@ -134,3 +134,4 @@ node_modules
 /scripts/env_vars.json
 yarn.lock
 package-lock.json
+yarn.lock
