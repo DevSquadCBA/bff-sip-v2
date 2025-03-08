@@ -23,6 +23,9 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
+      - name: Check if bucket exist, if not create it
+        run: |
+          aws s3api create-bucket --bucket $BUCKET
       - name: Install esbuild
         run: |
           npm i -g esbuild
