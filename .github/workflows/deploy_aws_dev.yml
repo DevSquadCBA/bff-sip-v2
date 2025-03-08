@@ -23,6 +23,15 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
+      - name: Check if bucket exist, if not create it
+        run: |
+          ENVIRONMENT=develop
+          CI_PROJECT_NAME=bff-sip-api
+          STACK=$ENVIRONMENT-$CI_PROJECT_NAME
+          AWS_ACCOUNT_NUMBER=$(aws sts get-caller-identity --query Account --output text)
+          BUCKET="${AWS_ACCOUNT_NUMBER}-${STACK}-deploy-piatti"
+          REGION_1=us-east-1
+          aws s3api create-bucket --bucket $BUCKET
       - name: Install esbuild
         run: |
           npm i -g esbuild
