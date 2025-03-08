@@ -7,6 +7,7 @@
 if [ $# -eq 0 ] 
 then
     ENVIRONMENT=develop
+    
 else
     ENVIRONMENT=$1
 fi

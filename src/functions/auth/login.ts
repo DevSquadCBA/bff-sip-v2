@@ -7,6 +7,7 @@ import { NotFoundError } from "types/errors";
 import { compare } from "functions/utils/hash";
 import { Rol } from "models/Rol";
 import { IToken } from "models/Token";
+import { Validators } from "utils/Validator";
 
 interface Event extends ApiGatewayParsedEvent {
     body: {
@@ -27,7 +28,7 @@ const domain = async (event: Event) => {
         }
     })
     if (!user) {
-        throw new NotFoundError('Email or password incorrect');
+        throw new NotFoundError('user not found');
     }
     if (user) {
         const isValid = await compare(password, user.password);
@@ -36,7 +37,7 @@ const domain = async (event: Event) => {
         }
     }
     const token = jwt.sign(
-        { id: user.id, email: user.email, role: user.role.name } as IToken,
+        { id: user.id, email: user.email, role: user.role.name,username: user.name } as IToken,
         process.env.JWT as string,
         {expiresIn: '1d',algorithm: 'HS256'}
     );
@@ -45,4 +46,4 @@ const domain = async (event: Event) => {
         statusCode: 200
     }
 }
-export const Handler = (event:ApiGatewayParsedEvent)=>LambdaResolver(event, domain, [])
+export const Handler = (event:ApiGatewayParsedEvent)=>LambdaResolver(event, domain, [Validators.VALID_JSON])

@@ -6,6 +6,8 @@ export type ISaleProduct = {
     saleId: number,
     productId: number,
     quantity: number,
+    discount?: number,
+    price:number,
     state: StateProduct
     details?: string|null
 }
@@ -30,6 +32,12 @@ export class SaleProduct extends Model {
     
     @Column({type: DataType.INTEGER, defaultValue: 1})
     declare quantity: number;
+
+    @Column({type: DataType.DECIMAL(10,2), defaultValue: 0})
+    declare discount: number;
+
+    @Column({type: DataType.DECIMAL(10,2), defaultValue: 0})
+    declare price: number;
     
     @Column({type: DataType.ENUM(...StateProductValues),defaultValue: StateProduct.uninitiated})
     declare state: StateProduct;
@@ -42,8 +50,8 @@ export class SaleProduct extends Model {
 
     static async bulkUpdate(saleId: number, productToUpdate: Partial<ISaleProduct>[]){
         await this.sequelize?.query(`
-            INSERT INTO sale_product (saleId,productId,quantity,state,details,createdAt, updatedAt) 
-            VALUES ${productToUpdate.map(e=>`(${saleId},${e.productId},${e.quantity},"${e.state}","${e.details}", NOW(), NOW())`).join(', ')}
+            INSERT INTO sale_product (saleId,productId,quantity,discount,price,state,details,createdAt, updatedAt) 
+            VALUES ${productToUpdate.map(e=>`(${saleId},${e.productId},${e.quantity},${e.discount},${e.price},"${e.state}","${e.details}", NOW(), NOW())`).join(', ')}
             On DUPLICATE KEY UPDATE 
                 quantity = VALUES(quantity),
                 details = VALUES(details),

@@ -25,15 +25,17 @@ export type ProductsInSale = {
     name: string,
     salePrice: number,
     purchasePrice: number,
-    saleProducts?: { 
+    saleProduct?: { 
         quantity: number,
         state: StateProduct, 
         details?: string
+        price?: number,
+        discount?: number
     },
     quantity?: number,
     state?: StateProduct,
     details?: string,
-    entity: EntityList
+    entity: EntityList,
 }
 export type SaleWithProduct = ISale & {products: ProductsInSale[]}
 

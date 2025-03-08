@@ -12,7 +12,7 @@ process.env.DB   = 'piatti';
 process.env.PORT = '3307';
 process.env.JWT = 'AstroDev';
 
-//execSync("sam build -c -p");
+execSync("sam build -c -p");
 
 const functionsFiles =[];
 const folders = fs.readdirSync('./.aws-sam/build/').filter(e=>e!=='template.yaml');
@@ -50,7 +50,12 @@ const getBody = (req) => {
                 resolve(null);
                 return;
             }
-            resolve(body);// lo envio como string
+            // if body is a string
+            if (typeof body === 'string') {
+                resolve(body);
+                return;
+            }
+            resolve(JSON.stringify(body));// lo envio como string
         });
         req.on('error', (err) => reject(err));
     });
@@ -60,31 +65,35 @@ const getQueryParams = (req) => url.parse(req.url, true).query;
 
 const extractPathParams = (req, routeTemplate) => {
     const routeParts = routeTemplate.split('/');
-    const urlParts = req.url.split('?')[0].split('/');
+    const urlParts = req.url.split('/');
     const pathParams = {};
 
     routeParts.forEach((part, index) => {
-        if (part.startsWith(':')) {
+       // if (part.startsWith(':')) {
             const paramName = part.slice(1);
             pathParams[paramName] = urlParts[index];
-        }
+       // }
     });
 
     return pathParams;
 };
 
 
-/**  @param { import("http").IncomingMessage } req */
+
 const expressToLambda = async (req, path) => {
+    const pathParameters = req.params;
+    console.log(pathParameters);
+    const body = await getBody(req)
+    console.log(body);
     return{
-        body: await getBody(req),
+        body,
         headers: req.headers,
         multiValueHeaders: req.headers,
         httpMethod: req.method,
         isBase64Encoded: false,
         queryStringParameters: getQueryParams(req),
         multiValueQueryStringParameters: getQueryParams(req),
-        pathParameters: extractPathParams(req, path),
+        pathParameters: pathParameters,
         stageVariables: null,
         path: path,
         resource: path,
@@ -113,7 +122,7 @@ for(const path of Object.keys(paths)){
             const requestLambda = await expressToLambda(request, request.url);
             const responseLambda = await handler(requestLambda)
             response.setHeader('Content-Type', 'application/json');
-            response.send(responseLambda.body);
+            response.status(responseLambda.statusCode).send(responseLambda.body);
         });
     }
 }

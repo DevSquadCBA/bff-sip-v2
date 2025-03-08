@@ -9,6 +9,13 @@ export type IRol = {
     description: string
 }
 
+export enum Roles {
+    ADMIN = 'Administrador',
+    SUPERVISOR = 'Supervisor',
+    SELLER = 'Vendedor',
+    USER = 'Vendedor'
+}
+
 @Table({
     tableName: 'role',
     timestamps: false
@@ -31,7 +38,7 @@ export class Rol extends Model {
     declare description: string
 
     belongsTo = () => {
-        return Rol.hasMany(User, { foreignKey: 'rolId' })
+        return Rol.hasMany(User, { foreignKey: 'roleId' })
     }
 
     static ADMIN = 'Administrador';

@@ -5,17 +5,17 @@ import { LambdaResolver } from 'utils/lambdaResolver';
 
 interface Event extends ApiGatewayParsedEvent {
     pathParameters: {
-        id: string;
+        idSale: string;
     };
 }
 
 const domain = async (event: Event): Promise<{ body: string; statusCode: number }> => {
-    const { id } = event.pathParameters;
+    const { idSale } = event.pathParameters;
 
     try {
         await Sale.update({ deleted: true }, {
             where: {
-                id: parseInt(id, 10),
+                id: parseInt(idSale, 10),
             },
         });
 
@@ -33,4 +33,4 @@ const domain = async (event: Event): Promise<{ body: string; statusCode: number 
 };
 
 export const Handler = (event: ApiGatewayParsedEvent) =>
-    LambdaResolver(event, domain, [Validators.OFFSET_AND_LIMITS]);
+    LambdaResolver(event, domain, [Validators.ADMIN_PERMISSION,Validators.OFFSET_AND_LIMITS]);

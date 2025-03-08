@@ -2,6 +2,7 @@ export enum SaleStates {
     presupuesto = 'presupuesto',            // cuando se crea
     proforma = 'proforma',                  // pago parcial o cuando hace un pago
     comprobante = 'comprobante',            // cuando define las caracteristicas
+    
     in_order = 'in_order',                  // cuando le avisa al proveedor
     in_provider = 'in_provider',            // cuando el proveedor acepta el pedido, aca se disparan los estados del producto
     delayed_provider = 'delayed_provider',  // cuando está todo listo, pero el proveedor tiene demora
@@ -51,4 +52,14 @@ export function getEntityList(entity:string):EntityList{
         return EntityList.muebles;
     }
     return Object.entries(EntityList).find(([_, v]) => v === entity)?.[0] as EntityList | EntityList.muebles
+}
+
+export enum LogCategory {
+    CLIENT = 'CLIENTE',
+    SALE = 'VENTAS',
+    PRODUCT = 'PRODUCTOS',
+    PROVIDER = 'PROVEEDORES',
+    USER = 'USUARIOS',
+    SALE_PRODUCT = 'PRODUCTOS EN VENTA',
+    PAYMENT = 'PAGO'
 }

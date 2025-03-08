@@ -30,8 +30,8 @@ export class Client extends Model {
     @Column({ type: DataType.STRING, allowNull: true })
     declare fantasyName: CreationOptional<string>;
 
-    declare fiscalCategory: 'Consumidor Final' | 'Monotributista' | 'Responsable Inscripto' | 'Exento' | 'No categorizado';
     @Column(DataType.ENUM('Consumidor Final', 'Monotributista', 'Responsable Inscripto', 'Exento', 'No categorizado'))
+    declare fiscalCategory: 'Consumidor Final' | 'Monotributista' | 'Responsable Inscripto' | 'Exento' | 'No categorizado';
 
     @Column(DataType.STRING)
     declare dni: string;

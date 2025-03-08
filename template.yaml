@@ -56,9 +56,12 @@ Conditions:
 Mappings:
     Stage:
         develop:
-            DomainName: 'dev-sip.piatti-erp.com'
+            DomainName: "dev-sip.piatti-erp.com" # Placeholder, lo reemplazaremos en `BasePathMapping`
+            Value: Develop
         prod:
-            DomainName: 'sip.piatti-erp.com'
+            DomainName: "sip.piatti-erp.com" # Placeholder
+            Value: Production
+
     Static:
         Parameters:
             FilterPattern: '[event=REPORT* || event="*DATADOG_EVENT*"]'
@@ -122,11 +125,14 @@ Resources:
     #         Stage: !Ref PiattiRestApi.Stage    
     BasePathMapping:
         Type: AWS::ApiGateway::BasePathMapping
+        DependsOn: PiattiRestApi
+        Condition: CreateDomainName
         Properties:
             DomainName: 
                 Fn::ImportValue: !Sub "ApiGatewayDomain${Environment}"
             RestApiId: !Ref PiattiRestApi
-            Stage: !Ref Environment
+            Stage: !Ref PiattiRestApi.Stage    
+            BasePath: 'api'
 
 # Layers
     Mysql2Layer:
@@ -137,13 +143,35 @@ Resources:
             ContentUri: ./src/layers/nodejs
             CompatibleRuntimes:
                 - nodejs16.x
+# Health
+
+    HealthFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-Health'
+            Handler: health.Handler
+            CodeUri: ./src/functions/utils
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /health
+                        Method: GET
+                        ApiId: !Ref PiattiRestApi
+
 # Admin
     SyncDbFunction:
         Type: AWS::Serverless::Function
         Metadata:
             BuildMethod: esbuild
             BuildProperties:
-                Minify: true
+                Minify: false
                 Sourcemap: true
                 MainFields: "module,main"
         Properties:
@@ -236,6 +264,44 @@ Resources:
                     Properties:
                         Path: /user
                         Method: POST
+                        ApiId: !Ref PiattiRestApi
+    UpdateUserFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-UpdateUser'
+            Handler: updateUser.Handler
+            CodeUri: ./src/functions/user
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /user/{id}
+                        Method: PUT
+                        ApiId: !Ref PiattiRestApi
+    DeleteUserFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-DeleteUser'
+            Handler: deleteUser.Handler
+            CodeUri: ./src/functions/user
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /user/{id}
+                        Method: DELETE
                         ApiId: !Ref PiattiRestApi
 
 # Clients
@@ -436,7 +502,7 @@ Resources:
         Metadata:
             BuildMethod: esbuild
             BuildProperties:
-                Minify: false
+                Minify: true
                 Sourcemap: true
                 MainFields: "module,main"
         Properties:
@@ -505,6 +571,44 @@ Resources:
                     Type: HttpApi
                     Properties:
                         Path: /sale/{idSale}/addProducts
+                        Method: POST
+                        ApiId: !Ref PiattiRestApi
+    AddPaymentToSaleFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-addPaymentToSale'
+            Handler: addPaymentToSale.Handler
+            CodeUri: ./src/functions/sale
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /sale/{idSale}/addPayment
+                        Method: POST
+                        ApiId: !Ref PiattiRestApi
+    AddDetailsToProductsFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-addDetailsToProducts'
+            Handler: addDetailsToProducts.Handler
+            CodeUri: ./src/functions/sale
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /sale/{idSale}/updateDetails
                         Method: POST
                         ApiId: !Ref PiattiRestApi
 # # Products
@@ -836,7 +940,45 @@ Resources:
                         Path: /count
                         Method: GET
                         ApiId: !Ref PiattiRestApi
+    GetLogFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: true
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-GetLog'
+            Handler: getLogs.Handler
+            CodeUri: ./src/functions/logs
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /log
+                        Method: GET
+                        ApiId: !Ref PiattiRestApi
 
+    GetDataForHomeFunction:
+        Type: AWS::Serverless::Function
+        Metadata:
+            BuildMethod: esbuild
+            BuildProperties:
+                Minify: false
+                Sourcemap: true
+                MainFields: "module,main"
+        Properties:
+            FunctionName: !Sub '${Environment}-GetDataForHome'
+            Handler: getDataForHome.Handler
+            CodeUri: ./src/functions/metric
+            Events:
+                HttpEvent:
+                    Type: HttpApi
+                    Properties:
+                        Path: /home
+                        Method: GET
+                        ApiId: !Ref PiattiRestApi
 # Esta url nunca cambia
 Outputs:
     ApiUrl:
