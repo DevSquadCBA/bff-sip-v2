@@ -49,7 +49,7 @@ const domain = async (event:Event): Promise<{body:string, statusCode:number}> =>
         console.log('discount');
         console.log({mappedProducts});
         total = mappedProducts.reduce((acc, product)=>{
-            return acc + ((parseFloat(product.salePrice) * parseFloat(product.quantity)) * ( parseFloat(product.discount) || 1));
+            return acc + Math.round(((parseFloat(product.salePrice) * parseFloat(product.quantity)) * ( parseFloat(product.discount) || 1)));
         },0)
     }
     console.log({total});
