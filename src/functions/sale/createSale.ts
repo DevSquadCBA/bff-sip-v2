@@ -38,8 +38,15 @@ const domain = async (event:Event): Promise<{body:number, statusCode:number}> =>
             const role = getRoleFromToken(event.headers.authorization.replace('Bearer ', ''));
             if(role != Roles.ADMIN && role != Roles.SUPERVISOR){throw new UnauthorizedError('No autorizado');}
             //+(((foundProduct.quantity || 0) * (foundProduct.salePrice)) * newDiscount).toFixed(2)
-            sale.total = products.reduce((acc: number, product: any)=>acc + Math.round((product.salePrice * product.quantity) * ( product.discount)), 0);
-            productsToAdd = products.map((product:any)=>({...product, discount: product.discount || 0, price: Math.round((product.salePrice * product.quantity) * ( product.discount))}));
+            sale.total = products.reduce((acc: number, product: any)=>{
+                    const total = (product.salePrice * product.quantity) * ( product.discount);
+                    return acc + Math.round(total);
+                },0);
+            productsToAdd = products.map((product:any)=>({
+                ...product, 
+                discount: product.discount || 0, 
+                price: Math.round((product.salePrice * product.quantity) * ( product.discount))
+            }));
         }else{
             sale.total = productsWithPrice.reduce((acc: number, product: any)=>acc + (parseFloat(product.salePrice) * product.quantity), 0)
             productsToAdd = productsWithPrice.map((product:any)=>({...product, discount: 0, price: +(parseFloat(product.salePrice) * product.quantity)}));

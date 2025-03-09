@@ -72,7 +72,10 @@ const domain = async (event:Event): Promise<{body:ISale[], statusCode:number}> =
         const distinctProviders = [...new Set(allProviderIds)];
         const productsCount = sale.products.length;
         const total = hasDiscount
-            ? sale.products.reduce((acc: number, product: any) => acc + Math.round((parseFloat(product.saleProduct.price) * parseFloat(product.quantity)) * parseFloat(product.discount)), 0)
+            ? sale.products.reduce((acc: number, product: any) => {
+                    const total = (parseFloat(product.saleProduct.price) * parseFloat(product.quantity)) * parseFloat(product.discount);
+                    return acc + Math.round(total)
+                }, 0)
             : sale.products.reduce((acc, product) => acc + product.saleProduct.price * (product.saleProduct.quantity), 0);
         return {
           ...sale,
