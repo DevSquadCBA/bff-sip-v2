@@ -141,12 +141,14 @@ export function validate(validations: Validators[], event:ApiGatewayParsedEvent)
         // every endpoint need a token
         // except for exceptions
         let token:IToken|null;
-        if(!routesException.includes(event.path) && !routesException.includes(event.resource)){
-            token = checkToken(event.headers);
-        }else{
-            console.log('La ruta es una excepción, no revisaré token');
-            token = null;
-        }
+        if(routesException.includes(event.path) 
+            || routesException.includes(event.resource)
+            || routesException.includes(event.resource.split('?')[0])){
+              console.log('La ruta es una excepción, no revisaré token');
+              token = null;
+          }else{
+              token = checkToken(event.headers);
+          }
 
         if(validations.includes(Validators.OFFSET_AND_LIMITS)){
             event.queryStringParameters = {...offsetAndLimitValidator(event.queryStringParameters)}

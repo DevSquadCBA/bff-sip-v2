@@ -77,6 +77,9 @@ function fakeSales():ISale{
     const price = faker.number.float({min: 10, max: 1000, multipleOf: 0.01});
     const estimatedDays = faker.number.int({min: 10, max: 60});
     const state = faker.helpers.arrayElement(SalesStatesValues);
+    const createdAt = faker.date.between({from:'2024-01-01',to:dayjs().format('YYYY-MM-DD')});
+    const updatedAt = createdAt;
+    const deadline = !['proforma', 'presupuesto'].includes(state)? dayjs(createdAt).add(estimatedDays, 'day').toDate(): null;
     // create 3 sale for each type of state for each type of client
     return {
         clientId: faker.number.int({min: 1, max: 10}),
@@ -89,12 +92,14 @@ function fakeSales():ISale{
         billing: 'AstroDev',
         deleted: false,
         estimatedDays,
-        deadline: !['proforma', 'presupuesto'].includes(state)? dayjs().add(estimatedDays, 'day').toDate(): null,
-        entity: EntityList.muebles //' #faker.helpers.arrayElement(EntityListValues)
+        deadline,
+        entity: EntityList.muebles, //' #faker.helpers.arrayElement(EntityListValues)
+        createdAt: createdAt.toString(), 
+        updatedAt: updatedAt.toString()
     }
 }
 
-function fakeSaleProduct(fakeProducts:IProduct[]):ISaleProduct{
+function fakeSaleProduct(fakeProducts:IProduct[], sales:ISale[]):ISaleProduct{
     const state = faker.helpers.arrayElement(StateProductValues)
     let details;
     if(state!== StateProduct.uninitiated){
@@ -109,7 +114,7 @@ function fakeSaleProduct(fakeProducts:IProduct[]):ISaleProduct{
     const discount = Math.random() > 0.92 ? faker.number.float({min: 0.5, max: 0.9, multipleOf: 0.1}) : 0
     const quantity =faker.number.int({min: 1, max: 20});
     return {
-        saleId: faker.number.int({min: 1, max: 20}),
+        saleId: faker.number.int({min: 1, max: sales[0].id}),
         productId: randomProduct.id as number,  //faker.number.int({min: 1, max: 200}),
         quantity ,
         price: (price * quantity) * (discount || 1),
@@ -129,8 +134,9 @@ async function fakeData(){
     await Provider.bulkCreate(providers);
     await Product.bulkCreate(products);
     await Sale.bulkCreate(sale);
+    const realSales = await Sale.findAll({order: [['id', 'DESC']]});
     const realProducts = await Product.findAll({where: {deleted: false}});
-    const saleProduct:ISaleProduct[] = faker.helpers.multiple(()=>fakeSaleProduct(realProducts), {count: 100});
+    const saleProduct:ISaleProduct[] = faker.helpers.multiple(()=>fakeSaleProduct(realProducts, realSales), {count: 100});
     await SaleProduct.bulkCreate(saleProduct,{ignoreDuplicates:true});
     await Rol.create({id:1,name:'Administrador',description:'Administrador'})
     await Rol.create({id:2,name:'Supervisor',description:'Supervisor'})
@@ -143,19 +149,44 @@ async function fakeData(){
             roleId:1
         } as User
     );
+    await User.create({
+        name: 'Leandro Ezequiel Ferrarotti Blasco',
+        email: 'lean',
+        phone:'1',
+        password: '$2a$12$CTlcYkAN3eM2tb.2u08sM.o.6pGaSxweFQbe7yBAickd3KYS1JM6S', // .
+        roleId:2
+    } as User
+    );
+    await User.create({
+        name: 'Mono D Luffy',
+        email: 'vendor',
+        phone:'1',
+        password: '$2a$12$CTlcYkAN3eM2tb.2u08sM.o.6pGaSxweFQbe7yBAickd3KYS1JM6S', // .
+        roleId:3
+    } as User
+    );
+    recalculateSales(await Sale.findAll({where: {deleted: false},include:[{model: Product, as: 'products'}]}));
+}
+
+async function recalculateSales(sales:Sale[]){
     // recalculate the sales price
-    const sales = await Sale.findAll({where: {deleted: false}});
     for (let i = 0; i < sales.length; i++) {
         const sale = sales[i].get({plain: true});
         const saleProducts = await SaleProduct.findAll({where: {saleId: sale.id}});
         let total = 0;
+        const hasDiscount = saleProducts.some((p:any)=>p.discount && p.discount>0);
         for (let j = 0; j < saleProducts.length; j++) {
+            const product = sale.products.find((p:any)=>p.id === saleProducts[j].productId)
             const saleProduct = saleProducts[j].get({plain: true});
-            total += parseFloat(saleProduct.price);
+            if(hasDiscount){
+                total += (parseFloat(product.salePrice) * parseInt(saleProduct.quantity)) * (saleProduct.discount || 1);
+            }else{
+                total += (parseFloat(product.salePrice) * parseInt(saleProduct.quantity)) 
+            }
         }
+        total = Math.round(total);
         await Sale.update({total: total}, {where: {id: sale.id}});
     }
-
 }
 
 
@@ -189,11 +220,14 @@ const domain = async (event:Event): Promise<{body:string, statusCode:number}> =>
             case 'sales':
                 const sale:ISale[] = faker.helpers.multiple(fakeSales, {count: count || 20});
                 await Sale.bulkCreate(sale);
+                await recalculateSales(await Sale.findAll({where: {deleted: false}}))
                 break;
             case 'saleProducts':
-                const productsForSale:IProduct[] = faker.helpers.multiple(fakeProducts, {count: count || 200});
-                const saleProduct:ISaleProduct[] = faker.helpers.multiple(()=>fakeSaleProduct(productsForSale), {count: count || 60});
+                const realSales = await Sale.findAll({order: [['id', 'DESC']]});
+                const productsForSale:IProduct[] = await Product.findAll();
+                const saleProduct:ISaleProduct[] = faker.helpers.multiple(()=>fakeSaleProduct(productsForSale, realSales), {count: count || 60});
                 await SaleProduct.bulkCreate(saleProduct,{ignoreDuplicates:true});
+                recalculateSales(await Sale.findAll({where: {deleted: false},include:[{model: Product, as: 'products'}]}));
                 break;
             default:
                 break;
