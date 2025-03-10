@@ -6,6 +6,7 @@ import { Log } from "models/Log";
 import { LogCategory } from "models/Enums";
 import jwt from 'jsonwebtoken';
 import { IToken } from "models/Token";
+import { SaleComplete } from "models/Sale";
 
 export function getEntity(headers:APIGatewayProxyEventHeaders & {entity?:string, Entity?:string}){
     if(headers.Entity){
@@ -61,4 +62,13 @@ export function saveLog(event:ApiGatewayParsedEvent):void{
         route: event.path,
         changes: JSON.stringify(event.body)
     })
+}
+
+export function recalculateTotal(hasDiscount:boolean,sale:SaleComplete){
+    return hasDiscount
+    ? sale.products.reduce((acc: number, product: any) => {
+            const totalProduct = (parseFloat(product.saleProduct.price) * parseFloat(product.quantity)) * parseFloat(product.discount);
+            return acc + Math.round(totalProduct)
+        }, 0)
+    : sale.products.reduce((acc, product) => acc + product.saleProduct.price * (product.saleProduct.quantity), 0);
 }

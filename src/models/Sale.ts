@@ -1,7 +1,10 @@
 import {  Column, Table, DataType, PrimaryKey, AutoIncrement, ForeignKey, BelongsTo ,Model} from 'sequelize-typescript';
 import { CreationOptional, Op } from 'sequelize';
 import { EntityList, EntityListValues, SaleStates, SalesStatesValues, StateProduct} from './Enums';
-import { Client } from './Client';
+import { Client, IClient } from './Client';
+import { ISaleProduct, SaleProduct } from './SaleProduct';
+import { IProduct } from './Product';
+import { Provider } from './Provider';
 
 export type ISale = {
     id?: number,
@@ -38,7 +41,19 @@ export type ProductsInSale = {
     entity: EntityList,
 }
 export type SaleWithProduct = ISale & {products: ProductsInSale[]}
-
+export type SaleWithProductAndProductsSale = ISale & {products: (ProductsInSale & {saleProduct: ISaleProduct})[]}
+export type SaleComplete = ISale & {
+    createdAt: string,
+    distinctProviders: number,
+    daysToDueDate: number,
+    total: number
+    client: IClient,
+    products: (IProduct & {
+        provider: Provider
+        saleProduct: SaleProduct
+    })[],
+    get: ({plain}:{plain: boolean}) => any
+}
 @Table({
     tableName: 'sales'
 })
