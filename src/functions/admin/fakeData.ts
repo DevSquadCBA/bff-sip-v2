@@ -174,8 +174,8 @@ async function recalculateSales(sales:SaleComplete[]){
     for (let i = 0; i < sales.length; i++) {
         const sale = sales[i].get({plain: true});
         let total = 0;
-        sale.products = sale.products.map(e=>({...e, saleProduct: e.SaleProduct}));
-        //console.log({products: sale.products});
+        sale.products = sale.products.map(e=>({...e, saleProduct: e.SaleProduct? e.SaleProduct?.get({plain: true}): e.saleProduct}));
+        console.log({products: sale.products});
         const hasDiscount = sale.products.some((p:any)=>p.saleProduct.discount && p.saleProduct.discount>0);        
         total = Math.round(recalculateTotal(hasDiscount, sale));
         await Sale.update({total: total}, {where: {id: sale.id}});
@@ -232,25 +232,30 @@ const domain = async (event:Event): Promise<{body:string, statusCode:number}> =>
     }
 
     if(event.queryStringParameters?.recalculate){
-        await recalculateSales(await Sale.findAll({
-                where:{
-                    deleted: false,
-                    entity: 'muebles'
-                },
-                include: [
-                    {model: Client,attributes: { exclude: ['deleted'] }},
-                    {model: Product,
-                        attributes: { exclude: ['deleted']},
-                        as: 'products', 
-                        through: {
-                            attributes: { exclude: ['deleted', 'saleId', 'productId'] }, as: 'saleProduct'},
-                            include: [{model: Provider, as: 'provider'}]
-                        },
-                ],
-            }));
-        return {
-            body: 'ok',
-            statusCode: 200
+        try{
+            await recalculateSales(await Sale.findAll({
+                    where:{
+                        deleted: false,
+                        entity: 'muebles'
+                    },
+                    include: [
+                        {model: Client,attributes: { exclude: ['deleted'] }},
+                        {model: Product,
+                            attributes: { exclude: ['deleted']},
+                            as: 'products', 
+                            through: {
+                                attributes: { exclude: ['deleted', 'saleId', 'productId'] }, as: 'saleProduct'},
+                                include: [{model: Provider, as: 'provider'}]
+                            },
+                    ],
+                }) as unknown as SaleComplete[]);
+            return {
+                body: 'ok',
+                statusCode: 200
+            }
+        }catch(e){
+            console.dir(e)
+            throw new InternalServerError('algo se rompio en la consulta :c')
         }
     }
 
