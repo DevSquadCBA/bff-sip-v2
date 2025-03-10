@@ -1,11 +1,12 @@
 import dayjs from 'dayjs';
 import { SaleStates } from 'models/Enums';
-import {Sale, ProductsInSale } from 'models/Sale';
+import {Sale, ProductsInSale, SaleComplete } from 'models/Sale';
 import { SaleProduct } from 'models/SaleProduct';
 import { InvalidIdError } from 'types/errors';
 import { ApiGatewayParsedEvent } from 'types/response-factory/proxies';
 import { Validators } from 'utils/Validator';
 import { LambdaResolver } from 'utils/lambdaResolver';
+import { recalculateTotal } from 'utils/utils';
 type ISaleUpdateContract = {
     state: SaleStates,
     products: Omit<ProductsInSale,'saleProducts'>[]
@@ -29,7 +30,7 @@ const domain = async (event:Event): Promise<{body:string, statusCode:number}> =>
         state: e.state,
         details: e.details,
         salePrice: e.salePrice,
-        price: e.saleProduct?.price || (e.salePrice * (e.saleProduct?.quantity || 1)),
+        price: e.saleProduct?.price || (e.salePrice),
         discount: e.saleProduct?.discount||1
     }));
 
@@ -38,20 +39,17 @@ const domain = async (event:Event): Promise<{body:string, statusCode:number}> =>
     }
 
     const hasDiscount = mappedProducts.some((p:any)=>p.discount && p.discount>0);
-    let total;
+    let total = recalculateTotal(hasDiscount, saleToUpdate as unknown as SaleComplete);
 
-    if(!hasDiscount){
-        console.log('no discount');
-        total = mappedProducts.reduce((acc, product)=> {
-            return acc + (product.quantity * product.salePrice)
-        }, 0);
-    }else{
-        console.log('discount');
-        console.log({mappedProducts});
-        total = mappedProducts.reduce((acc, product)=>{
-            return acc + Math.round(((parseFloat(product.salePrice) * parseFloat(product.quantity)) * ( parseFloat(product.discount) || 1)));
-        },0)
-    }
+    // if(!hasDiscount){
+    //     total = mappedProducts.reduce((acc, product)=> {
+    //         return acc + (product.quantity * product.salePrice)
+    //     }, 0);
+    // }else{
+    //     total = mappedProducts.reduce((acc, product)=>{
+    //         return acc + Math.round(((parseFloat(product.salePrice) * parseFloat(product.quantity)) * ( parseFloat(product.discount) || 1)));
+    //     },0)
+    // }
     console.log({total});
 
     // actualizo el total de la venta, por si acaso

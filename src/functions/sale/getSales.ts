@@ -2,10 +2,11 @@ import { Client } from 'models/Client';
 import { SaleStates } from 'models/Enums';
 import { Product } from 'models/Product';
 import { Provider } from 'models/Provider';
-import { Sale } from 'models/Sale';
+import { Sale, SaleComplete, SaleWithProductAndProductsSale } from 'models/Sale';
 import { Op } from 'sequelize';
 import { ApiGatewayParsedEvent } from 'types/response-factory/proxies';
 import { LambdaResolver } from 'utils/lambdaResolver';
+import { recalculateTotal } from 'utils/utils';
 interface Event extends ApiGatewayParsedEvent {}
 
 type whereCondition = {
@@ -14,7 +15,7 @@ type whereCondition = {
     state?: string|any
 }
 
-const domain = async (event:Event): Promise<{body:Sale[], statusCode:number}> => {
+const domain = async (event:Event): Promise<{body:SaleWithProductAndProductsSale[], statusCode:number}> => {
     let where:whereCondition = {
         deleted: false,
         entity: event.headers.entity,
@@ -50,9 +51,17 @@ const domain = async (event:Event): Promise<{body:Sale[], statusCode:number}> =>
                     include: [{model: Provider, as: 'provider'}]
             }
         ]
-    });
+    }) as unknown as SaleComplete[];
+    const salesTotalFormatted = sales.map((sale:SaleComplete)=>{
+        const hasDiscount = sale.products.some((p:any)=>p.saleProduct.discount && p.saleProduct.discount>0);
+        const total = recalculateTotal(hasDiscount,sale as unknown as SaleComplete);
+        return {
+            ...sale.get({plain: true}),
+            total
+        }
+    })
     return {
-        body: sales,
+        body: salesTotalFormatted,
         statusCode: 200
     }    
 }
