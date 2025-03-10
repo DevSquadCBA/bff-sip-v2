@@ -67,7 +67,9 @@ export function saveLog(event:ApiGatewayParsedEvent):void{
 export function recalculateTotal(hasDiscount:boolean,sale:SaleComplete){
     return hasDiscount
     ? sale.products.reduce((acc: number, product: any) => {
-            const totalProduct = (parseFloat(product.saleProduct.price) * parseFloat(product.quantity)) * parseFloat(product.discount);
+            const quantity = parseFloat(product.quantity? product.quantity: product.saleProduct.quantity);
+            const discount = parseFloat(product.discount? product.discount: product.saleProduct.discount);
+            const totalProduct = (parseFloat(product.saleProduct.price) * quantity) * discount;
             return acc + Math.round(totalProduct)
         }, 0)
     : sale.products.reduce((acc, product) => acc + product.saleProduct.price * (product.saleProduct.quantity), 0);
