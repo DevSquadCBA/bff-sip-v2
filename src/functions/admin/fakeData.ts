@@ -250,13 +250,13 @@ const domain = async (event:Event): Promise<{body:string, statusCode:number}> =>
                             },
                     ],
                 }) as unknown as SaleComplete[]);
-            return {
-                body: 'ok',
-                statusCode: 200
-            }
         }catch(e){
             console.dir(e)
             throw new InternalServerError('algo se rompio en la consulta :c')
+        }
+        return {
+            body: 'ok',
+            statusCode: 200
         }
     }
 
