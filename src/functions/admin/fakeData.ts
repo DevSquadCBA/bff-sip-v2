@@ -174,7 +174,7 @@ async function recalculateSales(sales:SaleComplete[]){
     for (let i = 0; i < sales.length; i++) {
         const sale = sales[i].get({plain: true});
         let total = 0;
-        sale.products = sale.products.map(e=>({...e, saleProduct: e.SaleProduct? e.SaleProduct?.get({plain: true}): e.saleProduct}));
+        sale.products = sale.products.map(e=>({...e, saleProduct: e.SaleProduct? e.SaleProduct : e.saleProduct}));
         console.log({products: sale.products});
         const hasDiscount = sale.products.some((p:any)=>p.saleProduct.discount && p.saleProduct.discount>0);        
         total = Math.round(recalculateTotal(hasDiscount, sale));
