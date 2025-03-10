@@ -10,12 +10,13 @@ import { IProduct, Product } from 'models/Product';
 
 import sequelize from 'services/sequelize';
 import { IProvider, Provider } from 'models/Provider';
-import { ISale, Sale } from 'models/Sale';
+import { ISale, Sale, SaleComplete } from 'models/Sale';
 import { EntityList,  SalesStatesValues, StateProduct, StateProductValues } from 'models/Enums';
 import { ISaleProduct, SaleProduct } from 'models/SaleProduct';
 import dayjs from 'dayjs';
 import { User } from 'models/User';
 import { Rol } from 'models/Rol';
+import { recalculateTotal } from 'utils/utils';
 
 interface Event extends ApiGatewayParsedEvent {
     headers:{
@@ -168,23 +169,15 @@ async function fakeData(){
     recalculateSales(await Sale.findAll({where: {deleted: false},include:[{model: Product, as: 'products'}]}));
 }
 
-async function recalculateSales(sales:Sale[]){
+async function recalculateSales(sales:SaleComplete[]){
     // recalculate the sales price
     for (let i = 0; i < sales.length; i++) {
         const sale = sales[i].get({plain: true});
-        const saleProducts = await SaleProduct.findAll({where: {saleId: sale.id}});
         let total = 0;
-        const hasDiscount = saleProducts.some((p:any)=>p.discount && p.discount>0);
-        for (let j = 0; j < saleProducts.length; j++) {
-            const product = sale.products.find((p:any)=>p.id === saleProducts[j].productId)
-            const saleProduct = saleProducts[j].get({plain: true});
-            if(hasDiscount){
-                total += (parseFloat(product.salePrice) * parseInt(saleProduct.quantity)) * (saleProduct.discount || 1);
-            }else{
-                total += (parseFloat(product.salePrice) * parseInt(saleProduct.quantity)) 
-            }
-        }
-        total = Math.round(total);
+        sale.products = sale.products.map(e=>({...e, saleProduct: e.SaleProduct}));
+        //console.log({products: sale.products});
+        const hasDiscount = sale.products.some((p:any)=>p.saleProduct.discount && p.saleProduct.discount>0);        
+        total = Math.round(recalculateTotal(hasDiscount, sale));
         await Sale.update({total: total}, {where: {id: sale.id}});
     }
 }
@@ -237,6 +230,30 @@ const domain = async (event:Event): Promise<{body:string, statusCode:number}> =>
             statusCode: 200
         }
     }
+
+    if(event.queryStringParameters?.recalculate){
+        await recalculateSales(await Sale.findAll({
+                where:{
+                    deleted: false,
+                    entity: 'muebles'
+                },
+                include: [
+                    {model: Client,attributes: { exclude: ['deleted'] }},
+                    {model: Product,
+                        attributes: { exclude: ['deleted']},
+                        as: 'products', 
+                        through: {
+                            attributes: { exclude: ['deleted', 'saleId', 'productId'] }, as: 'saleProduct'},
+                            include: [{model: Provider, as: 'provider'}]
+                        },
+                ],
+            }));
+        return {
+            body: 'ok',
+            statusCode: 200
+        }
+    }
+
     try{
         await sequelize.sync({alter:true, force:true});
         await fakeData();
