@@ -174,10 +174,17 @@ async function recalculateSales(sales:SaleComplete[]){
     for (let i = 0; i < sales.length; i++) {
         const sale = sales[i].get({plain: true});
         let total = 0;
-        sale.products = sale.products.map(e=>({...e, saleProduct: e.SaleProduct? e.SaleProduct : e.saleProduct}));
+        sale.products = sale.products.map(e=>({...e, saleProduct: e.SaleProduct? e.SaleProduct: e.saleProduct}));
         console.log({products: sale.products});
         const hasDiscount = sale.products.some((p:any)=>p.saleProduct.discount && p.saleProduct.discount>0);        
-        total = Math.round(recalculateTotal(hasDiscount, sale));
+        total = hasDiscount
+            ? sale.products.reduce((acc: number, product: any) => {
+                    console.log({product,hasDiscount});
+                    const totalProduct = (parseFloat(product.saleProduct.price) * parseFloat(product.saleProduct.quantity)) * parseFloat(product.saleProduct.discount);
+                    return acc + Math.round(totalProduct)
+                }, 0)
+            : sale.products.reduce((acc, product) => acc + product.saleProduct.price * (product.saleProduct.quantity), 0);
+        total = Math.round(total);
         await Sale.update({total: total}, {where: {id: sale.id}});
     }
 }
