@@ -2,11 +2,12 @@ import dayjs from 'dayjs';
 import { Client, IClient } from 'models/Client';
 import { IProduct, Product } from 'models/Product';
 import { Provider } from 'models/Provider';
-import { Sale,  ISale } from 'models/Sale';
+import { Sale,  ISale, SaleComplete } from 'models/Sale';
 import { SaleProduct } from 'models/SaleProduct';
 import { ApiGatewayParsedEvent } from 'types/response-factory/proxies';
 import { Validators } from 'utils/Validator';
 import { LambdaResolver } from 'utils/lambdaResolver';
+import { recalculateTotal } from 'utils/utils';
 interface Event extends ApiGatewayParsedEvent {
     queryStringParameters: {
         offset: string
@@ -21,19 +22,6 @@ function differenceInCalendarDays(createdAt:string, estimatedDays:number, now: D
     const creationDate = dayjs(createdAt);
     const daysToDeadLine = creationDate.add(estimatedDays, 'day');
     return daysToDeadLine.toDate();
-}
-
-type SaleComplete = ISale & {
-    createdAt: string,
-    distinctProviders: number,
-    daysToDueDate: number,
-    total: number
-    client: IClient,
-    products: (IProduct & {
-        provider: Provider
-        saleProduct: SaleProduct
-    })[],
-    get: ({plain}:{plain: boolean}) => any
 }
 
 const domain = async (event:Event): Promise<{body:ISale[], statusCode:number}> => {
@@ -71,18 +59,13 @@ const domain = async (event:Event): Promise<{body:ISale[], statusCode:number}> =
         const allProviderIds = sale.products.map(product => product.providerId);
         const distinctProviders = [...new Set(allProviderIds)];
         const productsCount = sale.products.length;
-        const total = hasDiscount
-            ? sale.products.reduce((acc: number, product: any) => {
-                    const total = (parseFloat(product.saleProduct.price) * parseFloat(product.quantity)) * parseFloat(product.discount);
-                    return acc + Math.round(total)
-                }, 0)
-            : sale.products.reduce((acc, product) => acc + product.saleProduct.price * (product.saleProduct.quantity), 0);
+        const total = recalculateTotal(hasDiscount,sale);
         return {
           ...sale,
           distinctProviders: distinctProviders.length,
           productsCount,
           deadline:differenceInCalendarDays(sale.createdAt,sale.estimatedDays, new Date()),
-          total
+          grandTotal: total
         };
     });
 
