@@ -34,5 +34,5 @@ RUN yarn install
 RUN yarn global add nodemon
 
 # Run and attach node ./scripts/server.js
-# CMD ["node", "./scripts/server.js"]
-CMD ["yarn", "dev"]
+CMD ["node", "./scripts/server.js"]
+#CMD ["yarn", "dev"]
