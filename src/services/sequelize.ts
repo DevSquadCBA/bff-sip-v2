@@ -40,5 +40,6 @@ Product.hasMany(SaleProduct, { foreignKey: 'productId', as: 'saleProducts' });
 Product.belongsTo(Provider, { foreignKey: 'providerId', as: 'provider'});
 Sale.belongsTo(Client, { foreignKey: 'clientId'});
 
+User.belongsTo(Log, { foreignKey: 'id', as: 'user'});
 
 export default sequelize;
