@@ -10,8 +10,8 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2
     ./aws/install
 
 # Install SAM CLI
-RUN curl "https://github.com/aws/aws-sam-cli/releases/latest/download/aws-sam-cli-linux-x86_64.zip" -o "sam.zip" && \
-    unzip sam.zip -d sam && \
+RUN wget "https://github.com/aws/aws-sam-cli/releases/latest/download/aws-sam-cli-linux-x86_64.zip" -O "aws-sam-cli-linux-x86_64.zip" && \
+    unzip aws-sam-cli-linux-x86_64.zip -d sam && \
     ./sam/install
 
 # Install NodeJS
@@ -30,5 +30,9 @@ COPY . /app
 
 RUN yarn install
 
+# install nodemon
+RUN yarn global add nodemon
+
 # Run and attach node ./scripts/server.js
-CMD ["node", "./scripts/server.js"]
+# CMD ["node", "./scripts/server.js"]
+CMD ["yarn", "dev"]
