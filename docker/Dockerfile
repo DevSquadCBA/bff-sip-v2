@@ -31,7 +31,7 @@ COPY . /app
 RUN yarn install
 
 # install nodemon
-RUN yarn global add nodemon
+RUN yarn global add esbuild
 
 # Run and attach node ./scripts/server.js
 CMD ["node", "./scripts/server.js"]
