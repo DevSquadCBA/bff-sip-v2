@@ -24,22 +24,27 @@ const domain = async (event:Event): Promise<{body:string, statusCode:number}> =>
     if(!id){throw new InvalidIdError('Invalid idSale');}
 
     const saleToUpdate = typeof event.body === 'string'? JSON.parse(event.body) as ISaleUpdateContract : event.body;
-    const mappedProducts = saleToUpdate.products.map((e:ProductsInSale)=>({
-        productId: e.id || e.productId,
-        quantity: e.saleProduct?.quantity || 1,
-        state: e.state,
-        details: e.details,
-        salePrice: e.salePrice,
-        price: e.saleProduct?.price || (e.salePrice),
-        discount: e.saleProduct?.discount||1
-    }));
+    const mappedProducts = saleToUpdate.products.map((e:ProductsInSale)=>{
+        const saleProduct = e.saleProduct ? e.saleProduct : e.saleProducts ? e.saleProducts : null;
+        return {
+            saleId: id,
+            productId: e.id || e.productId,
+            quantity: saleProduct?.quantity || e.quantity,
+            state: e.state,
+            details: e.details,
+            salePrice: e.salePrice,
+            price: saleProduct?.price || e.purchasePrice,
+            discount: saleProduct?.discount || 1,
+            saleProduct: saleProduct
+        };
+    });
 
     for(const product of mappedProducts){
         await SaleProduct.update(product, {where: {saleId: id, productId: product.productId}, logging:true})
     }
 
     const hasDiscount = mappedProducts.some((p:any)=>p.discount && p.discount>0);
-    let total = recalculateTotal(hasDiscount, saleToUpdate as unknown as SaleComplete);
+    let total = recalculateTotal(hasDiscount, {products:mappedProducts} as unknown as SaleComplete);
 
     // if(!hasDiscount){
     //     total = mappedProducts.reduce((acc, product)=> {
@@ -76,7 +81,7 @@ const domain = async (event:Event): Promise<{body:string, statusCode:number}> =>
         if(saleToUpdate.state  === SaleStates.comprobante ){
             deadline = dayjs().add(sale.estimatedDays, 'day');
         }
-        await Sale.update({state: saleToUpdate.state, deadline, paid}, {where: {id: id}});
+        await Sale.update({state: SaleStates.comprobante, deadline, paid}, {where: {id: id}});
         msg = `Se ha actualizado el estado de la venta a ${saleToUpdate.state}`;
     }
     //para el resto de estados, simplemente actualizo el estado, aprovecho a calcular la fecha de vencimiento y demás

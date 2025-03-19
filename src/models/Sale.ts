@@ -39,6 +39,7 @@ export type ProductsInSale = {
     state?: StateProduct,
     details?: string,
     entity: EntityList,
+    saleProducts?: ISaleProduct
 }
 export type SaleWithProduct = ISale & {products: ProductsInSale[]}
 export type SaleWithProductAndProductsSale = ISale & {products: (ProductsInSale & {saleProduct: ISaleProduct})[]}
